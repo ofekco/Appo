@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/tabs_screen.dart';
 
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -19,7 +18,9 @@ class MyApp extends StatelessWidget {
       ),
       home: TabsScreen(),
       onUnknownRoute: (settings) {
-        return MaterialPageRoute(builder: (c) => TabsScreen(),);
+        return MaterialPageRoute(
+          builder: (c) => TabsScreen(),
+        );
       },
     );
   }
