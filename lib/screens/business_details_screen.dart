@@ -1,6 +1,6 @@
+import 'package:Appo/models/Dummy_data.dart';
 import 'package:flutter/material.dart';
 import '../models/Business.dart';
-
 
 class BusinessDetailsScreen extends StatelessWidget {
   final Business business;
@@ -31,18 +31,8 @@ class BusinessDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('${business.name}'),),
-      body: SingleChildScrollView(
-        child: 
-          Container(
-            height: 300, 
-            width: double.infinity,
-            child: Image.network(business.imageUrl, fit: BoxFit.cover),
-          ),
-          
-        ),
-      );
-    
+    return Container(
+      
+    );
   }
 }

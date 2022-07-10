@@ -1,4 +1,6 @@
 
+import 'package:Appo/models/colors.dart';
+import 'package:Appo/screens/business_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'profil_screen.dart';
@@ -13,7 +15,7 @@ class _TabsScreenState extends State<TabsScreen> {
 
   List<Map<String, Object>> _pages = [
     {'page': HomeScreen(), 'title': 'Home'},
-    {'page': ProfileScreen(), 'title': 'Profile'},    
+    {'page': BusinessListScreen(), 'title': 'Profile'},    
   ];
 
   int _selectedPageIndex = 0;
@@ -28,10 +30,12 @@ class _TabsScreenState extends State<TabsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Row(
+        appBar: AppBar(title: Row(mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Appo', style: TextStyle(fontWeight: FontWeight.bold),),
-          Image.asset('assets/images/logoNoBack.png', width: 150, height: 150,),
+          Text('Appo', style: TextStyle(fontWeight: FontWeight.bold, color: Palette.kToDark[800], fontSize: 24),),
+          Image.asset('assets/images/logo.JPG', width: 50, height: 50,),
+          
+          //Drawer(backgroundColor: Palette.kToDark[800], child: Icon(Icons.line_style, color: Palette.kToDark[800],))
             ],
           ),
          ),
@@ -41,7 +45,7 @@ class _TabsScreenState extends State<TabsScreen> {
           onTap: _selectPage,
           backgroundColor: Theme.of(context).canvasColor,
           unselectedItemColor: Colors.grey,
-          selectedItemColor: Theme.of(context).accentColor,
+          selectedItemColor: Theme.of(context).primaryColor,
           currentIndex: _selectedPageIndex,
           items: const [
             BottomNavigationBarItem(
