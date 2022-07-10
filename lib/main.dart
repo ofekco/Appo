@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/tabs_screen.dart';
+import './models/colors.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -10,17 +12,17 @@ class MyApp extends StatelessWidget {
       title: 'Appo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.pink,
-        accentColor: const Color.fromRGBO(227, 49, 115, 1),
+        primaryColor: Palette.kToDark[800],
+        primarySwatch: Palette.kToDark,
+        brightness: Brightness.light,
+        accentColor: Palette.kToDark[500],
         canvasColor: Colors.white,
-        cardColor: const Color.fromRGBO(249, 172, 200, 1),
+        cardColor: Palette.kToDark[0],
         focusColor: const Color.fromRGBO(237, 125, 166, 1),
       ),
       home: TabsScreen(),
       onUnknownRoute: (settings) {
-        return MaterialPageRoute(
-          builder: (c) => TabsScreen(),
-        );
+        return MaterialPageRoute(builder: (c) => TabsScreen(),);
       },
     );
   }

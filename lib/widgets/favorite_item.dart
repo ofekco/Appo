@@ -17,10 +17,13 @@ class FavoriteItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Container(width: 120, height: 120,
             margin: EdgeInsets.all(5),
             child: Column(children: <Widget> [
-              CircleAvatar(backgroundImage: NetworkImage(bis.imageUrl), radius: 40,),
+              CircleAvatar(radius: 42, backgroundColor: Colors.grey.withOpacity(0.2),
+                child: CircleAvatar(backgroundImage: NetworkImage(bis.imageUrl), radius: 40,)),
               Text(bis.name, style: Theme.of(context).textTheme.bodyText1),
             ]
       ),
