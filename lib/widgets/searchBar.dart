@@ -31,14 +31,13 @@ class SearchBar extends StatelessWidget {
                 borderRadius: const BorderRadius.all(
                   Radius.circular(32.0),
                 ),
-                onTap: () {
+                onTap: 
                   //FocusScope.of(context).requestFocus(FocusNode());
-                  iconClickedFunc;
-                },
+                  iconClickedFunc,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Icon(Icons.search,
-                      size: 20,
+                      size: 15,
                       color: Theme.of(context).canvasColor),
                 ),
               ),
@@ -67,7 +66,7 @@ class SearchBar extends StatelessWidget {
                   child: TextField(textDirection: TextDirection.rtl,
                     onChanged: (String txt) {},
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 14,
                     ),
                     textAlign: TextAlign.right,
                     cursorColor: Theme.of(context).accentColor,
