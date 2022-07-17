@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/tabs_screen.dart';
 import './models/colors.dart';
+import 'screens/business_details_screen.dart';
 
 
 void main() => runApp(MyApp());
@@ -21,6 +22,9 @@ class MyApp extends StatelessWidget {
         focusColor: const Color.fromRGBO(237, 125, 166, 1),
       ),
       home: TabsScreen(),
+      // routes: {
+      //   BusinessDetailsScreen.routeName: (context) => BusinessDetailsScreen(),
+      // },
       onUnknownRoute: (settings) {
         return MaterialPageRoute(builder: (c) => TabsScreen(),);
       },

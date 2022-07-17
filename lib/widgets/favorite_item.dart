@@ -7,18 +7,8 @@ class FavoriteItem extends StatelessWidget {
 
   FavoriteItem(this.bis);
 
-  void selectCategory(BuildContext ctx) 
-  {
-    Navigator.of(ctx).push(MaterialPageRoute(builder: (_) {
-      return BusinessDetailsScreen(bis);
-      })
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-
-
     return Container(width: 120, height: 120,
             margin: EdgeInsets.all(5),
             child: Column(children: <Widget> [

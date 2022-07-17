@@ -1,29 +1,26 @@
-import 'package:Appo/models/type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
-class Business {
+enum ServiceType {
+  Salon, Barber, Doctor
+}
+
+class Type {
   final int id;
-  final String name;
-  final String owner;
-  final String city;
-  final String address;
-  final String phoneNumber;
+  final String title;
   final String imageUrl;
+  bool isSelected;
   final ServiceType serviceType;
 
-  const Business({
+  Type({
     @required this.id,
-    @required this.name,
-    @required this.owner,
-    @required this.city,
-    @required this.address,
-    @required this.phoneNumber,
+    @required this.title,
     @required this.imageUrl,
-    @required this.serviceType
+    this.isSelected=false,
+    @required this.serviceType,
   });
 
-  String get Type {
+  String get getServiceType {
     switch(serviceType)
     {
       case ServiceType.Salon:

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../models/Business.dart';
 import '../screens/business_details_screen.dart';
+import '../models/type.dart';
 
+//Business card for businesses list (search page)
 class BusinessCard extends StatelessWidget {
   final Business business;
 
@@ -26,12 +28,13 @@ class BusinessCard extends StatelessWidget {
 
   void selectCard(BuildContext ctx)
   {
-    Navigator.of(ctx).push(
-      MaterialPageRoute(builder: (_) {
-        return BusinessDetailsScreen(business);
-        }
-      ),
-    );
+    // Navigator.of(ctx).push(
+    //   MaterialPageRoute(builder: (_) {
+    //     return BusinessDetailsScreen(business);
+    //     }
+    //   ),
+    // );
+    Navigator.of(ctx).pushNamed(BusinessDetailsScreen.routeName, arguments: business.id);
   }
 
   @override

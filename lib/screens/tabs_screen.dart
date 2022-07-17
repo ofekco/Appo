@@ -15,7 +15,7 @@ class _TabsScreenState extends State<TabsScreen> {
 
   List<Map<String, Object>> _pages = [
     {'page': HomeScreen(), 'title': 'Home'},
-    {'page': BusinessListScreen(), 'title': 'Profile'},    
+    {'page': ProfileScreen(), 'title': 'Profile'},    
   ];
 
   int _selectedPageIndex = 0;
