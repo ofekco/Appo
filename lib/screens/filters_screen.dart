@@ -1,6 +1,8 @@
-import 'package:Appo/models/Business.dart';
 import 'package:Appo/models/colors.dart';
+import 'package:Appo/widgets/slider_view.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:Appo/models/Dummy_data.dart';
 
 class FiltersScreen extends StatefulWidget {
 
@@ -9,7 +11,8 @@ class FiltersScreen extends StatefulWidget {
 }
 
 class _FiltersScreenState extends State<FiltersScreen> {
-  Widget allAccommodationUI() {
+
+  Widget allTypesUI() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -18,7 +21,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
           padding:
               const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
           child: Text(
-            'Type of Accommodation',
+            'Service Types:',
             textAlign: TextAlign.left,
             style: TextStyle(
                 color: Colors.grey,
@@ -29,7 +32,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
         Padding(
           padding: const EdgeInsets.only(right: 16, left: 16),
           child: Column(
-            children: getAccomodationListUI(),
+            children: getTypesList(),
           ),
         ),
         const SizedBox(
@@ -39,18 +42,67 @@ class _FiltersScreenState extends State<FiltersScreen> {
     );
   }
 
- 
-
-  List<Widget> getAccomodationListUI() {
-    final List<Widget> noList = <Widget>[];
-    for (int i = 0; i < DUMMY_TYPES.length; i++) { 
-      final String type = DUMMY_TYPES.keys.elementAt(i);
-      noList.add(
-        Material(
+  //This method check change the position of the toggle button.
+  //if button 'all' is pressed - change the position of all the other buttons.
+  void onTogglePressed(int index) 
+  {
+    if (index == 0) {
+      if (DUMMY_TYPES[0].isSelected) {
+        DUMMY_TYPES.forEach((d) {
+          d.isSelected = false;
+        });
+      } else {
+        DUMMY_TYPES.forEach((d) {
+          d.isSelected = true;
+        });
+      }
+    }
+    else {
+      DUMMY_TYPES[index].isSelected =
+          !DUMMY_TYPES[index].isSelected;
+    }
+  }
+  
+  
+  Widget distanceViewUI() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding:
+              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+          child: Text(
+            'Distance from city center',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                color: Colors.grey,
+                fontSize: MediaQuery.of(context).size.width > 360 ? 18 : 16,
+                fontWeight: FontWeight.normal),
+          ),
+        ),
+        SliderView(
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+      ],
+    );
+  } 
+  
+  //This method builds one toggle button for 1 type.
+  Material getTypeItem(int i)
+  {
+    final type = DUMMY_TYPES[i];
+    return Material(
           color: Colors.transparent,
           child: InkWell(
-            borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(4.0)),
             onTap: () {
+              setState(() {
+                onTogglePressed(i);
+              });
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -58,39 +110,54 @@ class _FiltersScreenState extends State<FiltersScreen> {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      type,
+                      type.title,
                       style: TextStyle(color: Colors.black),
                     ),
+                  ),
+                  CupertinoSwitch(
+                    activeColor: type.isSelected
+                        ? Palette.kToDark[500]
+                        : Colors.grey.withOpacity(0.6),
+                    onChanged: (bool value) {
+                      setState(() {
+                        onTogglePressed(i);
+                      });
+                    },
+                    value: type.isSelected,
                   ),
                 ],
               ),
             ),
           ),
-        ),
-      );
-      if (i == 0) {
-        noList.add(const Divider(
-          height: 1,
-        ));
+        );
+  }
+
+  //This method builds the list of toggle buttons for service types
+  List<Widget> getTypesList() {
+    final List<Widget> list = <Widget>[];
+    for (int i = 0; i < DUMMY_TYPES.length; i++) 
+    { 
+      list.add(getTypeItem(i));
+      if (i == 0) 
+      {
+        list.add(const Divider(height: 1));
       }
     }
-    return noList;
+    return list;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Palette.kToDark[0],
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
+    return Scaffold(
+        appBar: AppBar(title: Text('Edit filters')),
         body: Column(
           children: <Widget>[
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    
-                    allAccommodationUI()
+                    distanceViewUI(),
+                    allTypesUI()
                   ],
                 ),
               ),
@@ -99,6 +166,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
             const Divider(
               height: 1,
             ),
+
             Padding(
               padding: const EdgeInsets.only(
                   left: 16, right: 16, bottom: 16, top: 8),
@@ -138,7 +206,6 @@ class _FiltersScreenState extends State<FiltersScreen> {
             )
           ],
         ),
-      ),
     );
   }
 }

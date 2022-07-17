@@ -1,5 +1,30 @@
-import 'package:flutter/material.dart';
+import '../models/type.dart';
 import './Business.dart';
+
+List<Type> DUMMY_TYPES = [
+  Type(id: 0, 
+  title: 'all', 
+  imageUrl: '', 
+  serviceType: null),
+
+  Type(id: 1,
+  title: 'salon',
+  imageUrl: 'https://www.medinet.co.il/wp-content/uploads/2021/01/%D7%9E%D7%A0%D7%99%D7%A7%D7%95%D7%A8-%D7%A4%D7%93%D7%99%D7%A7%D7%95%D7%A8.jpg',
+  serviceType: ServiceType.Salon,
+  ),
+
+  Type(id: 2,
+  title: 'barber',
+  imageUrl: 'https://www.appointfix.com/blog/wp-content/uploads/2021/12/barber-shop-decor-ideas.jpg',
+  serviceType: ServiceType.Barber
+  ),
+
+  Type(id: 3,
+  title: 'doctor',
+  imageUrl: 'https://www.clalitsmile.co.il/tm-content/uploads/2021/04/shutterstock_358265852.jpg',
+  serviceType: ServiceType.Doctor
+  ),
+];
 
 const DUMMY_FAV = const [
   Business(
