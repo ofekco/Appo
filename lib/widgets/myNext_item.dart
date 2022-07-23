@@ -1,4 +1,4 @@
-import 'package:Appo/models/Dummy_data.dart';
+import 'package:Appo/models/database_methods.dart';
 import 'package:flutter/material.dart';
 import '../models/Business.dart';
 
@@ -49,13 +49,25 @@ class MyNextItem extends StatelessWidget {
                 ),
             ),
     
-            //Top image container
-            Container(width: width, height: height/8, 
-              padding: const EdgeInsets.only(top: 65, left: 20, right: 20, bottom: 20), 
-              margin: EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15),),
-                image: DecorationImage(image: NetworkImage(DUMMY_TYPES[2].imageUrl), fit: BoxFit.cover,))
+            //Top image container (type image)
+            FutureBuilder(
+            future: DatabaseMethods.findTypeByTitleAsync(bis.serviceType),
+            builder:((context, type) {
+                      if(type.data == null)
+                      {
+                        return Container();
+                      }
+                      else {
+                        return Container(width: width, height: height/8, 
+                          padding: const EdgeInsets.only(top: 65, left: 20, right: 20, bottom: 20), 
+                          margin: EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15),),
+                            image: DecorationImage(
+                              image: NetworkImage(type.data.imageUrl), fit: BoxFit.cover)));
+                      }
+                  }
+                ),
               ),
             
             // circular logo 
