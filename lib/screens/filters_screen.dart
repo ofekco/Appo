@@ -3,6 +3,8 @@ import 'package:Appo/widgets/slider_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:Appo/models/Dummy_data.dart';
+import 'package:Appo/models/businesses.dart';
+import '../models/database_methods.dart' as data;
 
 class FiltersScreen extends StatefulWidget {
 
@@ -47,22 +49,21 @@ class _FiltersScreenState extends State<FiltersScreen> {
   void onTogglePressed(int index) 
   {
     if (index == 0) {
-      if (DUMMY_TYPES[0].isSelected) {
-        DUMMY_TYPES.forEach((d) {
+      if (data.DatabaseMethods.TypesList[0].isSelected) {
+        data.DatabaseMethods.TypesList.forEach((d) {
           d.isSelected = false;
         });
       } else {
-        DUMMY_TYPES.forEach((d) {
+        data.DatabaseMethods.TypesList.forEach((d) {
           d.isSelected = true;
         });
       }
     }
     else {
-      DUMMY_TYPES[index].isSelected =
-          !DUMMY_TYPES[index].isSelected;
+      data.DatabaseMethods.TypesList[index].isSelected =
+          !data.DatabaseMethods.TypesList[index].isSelected;
     }
   }
-  
   
   Widget distanceViewUI() {
     return Column(
@@ -93,7 +94,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
   //This method builds one toggle button for 1 type.
   Material getTypeItem(int i)
   {
-    final type = DUMMY_TYPES[i];
+    final type = data.DatabaseMethods.TypesList[i];
     return Material(
           color: Colors.transparent,
           child: InkWell(
@@ -135,7 +136,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
   //This method builds the list of toggle buttons for service types
   List<Widget> getTypesList() {
     final List<Widget> list = <Widget>[];
-    for (int i = 0; i < DUMMY_TYPES.length; i++) 
+    for (int i = 0; i < data.DatabaseMethods.TypesList.length; i++) 
     { 
       list.add(getTypeItem(i));
       if (i == 0) 
@@ -146,28 +147,36 @@ class _FiltersScreenState extends State<FiltersScreen> {
     return list;
   }
 
+  void applyFilters()
+  {
+    Businesses businessesList = Businesses.instance;
+    businessesList.UpdateFilteredList();
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Edit filters')),
-        body: Column(
-          children: <Widget>[
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    distanceViewUI(),
-                    allTypesUI()
-                  ],
-                ),
+      appBar: AppBar(title: Text('Edit filters')),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  distanceViewUI(),
+                  allTypesUI()
+                ],
               ),
             ),
+          ),
 
-            const Divider(
-              height: 1,
-            ),
+          const Divider(
+            height: 1,
+          ),
 
-            Padding(
+          //Apply button
+          Padding(
               padding: const EdgeInsets.only(
                   left: 16, right: 16, bottom: 16, top: 8),
               child: Container(
@@ -189,7 +198,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                     borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                     highlightColor: Colors.transparent,
                     onTap: () {
-                      Navigator.pop(context);
+                      applyFilters();
                     },
                     child: Center(
                       child: Text(

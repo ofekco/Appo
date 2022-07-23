@@ -1,8 +1,9 @@
+import 'package:Appo/models/database_methods.dart';
 import 'package:Appo/models/type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
-class Business {
+class Business with ChangeNotifier {
   final int id;
   final String name;
   final String owner;
@@ -10,9 +11,10 @@ class Business {
   final String address;
   final String phoneNumber;
   final String imageUrl;
-  final ServiceType serviceType;
+  final String serviceType;
+  bool isFavorite = false;
 
-  const Business({
+  Business({
     @required this.id,
     @required this.name,
     @required this.owner,
@@ -20,24 +22,34 @@ class Business {
     @required this.address,
     @required this.phoneNumber,
     @required this.imageUrl,
-    @required this.serviceType
+    @required this.serviceType,
+
   });
 
-  String get Type {
-    switch(serviceType)
+  factory Business.fromJson(Map<String, dynamic> json) {
+    return Business(
+      id: json['id'] as int,
+      name: json['name'] as String,
+      owner: json['owner'] as String,
+      city: json['city'] as String,
+      address: json['address'] as String,
+      phoneNumber: json['phoneNumber'] as String,
+      imageUrl: json['imageUrl'] as String,
+      serviceType: json['serviceType'] as String
+    );
+  }
+
+  void toggleFavoriteStatus() 
+  {
+    isFavorite = !isFavorite;
+    if(isFavorite == true)
     {
-      case ServiceType.Salon:
-        return 'Salon';
-        break;
-      case ServiceType.Barber:
-        return 'Barber';
-        break;
-      case ServiceType.Doctor:
-        return 'Doctor';
-        break;
-      default:
-        return 'Unknown';
+      DatabaseMethods.postFavorite(this);
     }
+    else{
+      DatabaseMethods.removeFromFavorites(this);
+    }
+    notifyListeners();
   }
 }
 

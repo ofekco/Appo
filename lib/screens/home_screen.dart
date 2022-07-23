@@ -2,8 +2,10 @@ import 'package:Appo/models/Business.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:Appo/models/Dummy_data.dart';
+import 'package:Appo/models/businesses.dart';
 import 'package:Appo/widgets/myNext_item.dart';
 import 'package:Appo/widgets/wrap_inkwell.dart';
+import 'package:provider/provider.dart';
 import '../widgets/searchBar.dart';
 import './business_list_screen.dart';
 import '../screens/business_details_screen.dart';
@@ -26,7 +28,17 @@ class HomeScreen  extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  //Provider.of<Business>(context);
+  Businesses _businesses = Businesses.instance;
   
+  void initState() { 
+    Future.delayed(Duration.zero).then((_) => //wait getData to finish before build is called
+    {
+      _businesses.getData()
+    });
+    super.initState();
+  }
+
   void itemClicked(BuildContext ctx, Business bis) 
   {
     Navigator.of(ctx).push(MaterialPageRoute(builder: (_) {
@@ -86,20 +98,30 @@ class _HomeScreenState extends State<HomeScreen> {
     
         buildSectionTitle(context, 'עסקים שאהבתי'),
 
-        Container(height: PageHeight*0.3, width: double.infinity, alignment: Alignment.topLeft,
-          child: ListView.builder(
-              itemBuilder: (ctx, index) =>  
-                WrapInkWell(
-                  FavoriteItem(DUMMY_BUSINESSES[index]), 
-                  () => itemClicked(ctx, DUMMY_BUSINESSES[index])
-                ),
-              itemCount: DUMMY_BUSINESSES.length,
-              padding: const EdgeInsets.all(10), shrinkWrap: true,
-              scrollDirection: Axis.horizontal, 
-              physics: const AlwaysScrollableScrollPhysics(), 
-            ),
+        Container(height: PageHeight*0.3, width: double.infinity, alignment: Alignment.topRight,
+          child: FutureBuilder(
+            future: _businesses.getFavorites(),
+            builder: (context, favorites) {
+              if(favorites.data == null)
+              {
+                return Container();
+              }
+              else {
+                return ListView.builder(
+                itemBuilder: (ctx, index) =>  
+                  WrapInkWell(
+                    FavoriteItem(favorites.data[index]), 
+                    () => itemClicked(ctx, favorites.data[index])
+                  ),
+                itemCount: favorites.data.length,
+                padding: const EdgeInsets.all(10), 
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal, 
+                physics: const AlwaysScrollableScrollPhysics(), 
+              );}
+            },
+          ),
         ),
-    
         ],
       ),
     );

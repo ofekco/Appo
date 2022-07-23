@@ -1,3 +1,5 @@
+import 'package:Appo/models/colors.dart';
+import 'package:Appo/widgets/favorite_button.dart';
 import 'package:Appo/widgets/section_button.dart';
 import 'package:flutter/material.dart';
 import '../models/Business.dart';
@@ -57,29 +59,34 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
     var size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: AppBar(backgroundColor: Color(0xff8160c7)),
-      body: SingleChildScrollView(
-        child: Container(
-          width: size.width,
-          height: size.height,
-          color: Colors.white,
-          child: CustomPaint(
-           painter: CurvePainter(),
-            child: Column(
-              children: [
+      body: Stack(children: <Widget>[
+        Container(
+          color: Colors.white, //screen background color
+        ),
+
+        SingleChildScrollView(child: 
+          Column(children: <Widget>[
+                Container(
+                  width: size.width,
+                  height: size.height,
+                  color: Colors.white,
+                  child: CustomPaint(
+                  painter: CurvePainter(),
+                    child: Column(
+                      children: [
 
                 SizedBox(
-                  height: size.height*0.25,
+                  height: size.height*0.17,
                 ),
 
                 //image
                 Container(
                   padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                   child: CircleAvatar(
-                    radius: size.width*0.09,
+                    radius: size.width*0.22,
                     backgroundColor: Colors.white,
                     child: CircleAvatar(
-                      radius: size.width*0.08, 
+                      radius: size.width*0.2, 
                       backgroundImage: NetworkImage(widget.business.imageUrl),
                       )
                   ),
@@ -89,34 +96,46 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
                   height: 10,
                 ),
 
-                //business name
-                Text("${widget.business.name}", style: 
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 18, letterSpacing: 1.15),
+                //business name + favorite button
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center, 
+                  children:[
+
+                    //business name
+                    Text("${widget.business.name}", style: 
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 18, letterSpacing: 1.15),
+                    ),
+                    //favorite button
+                    FavoriteButton(widget.business),
+                  ], 
                 ),
 
                 SizedBox(height: 5,),
 
-                Text("${widget.business.Type}", style: TextStyle(color: Colors.grey.shade400),
+                //business type
+                Text("${widget.business.serviceType}", style: TextStyle(color: Colors.grey.shade400),
                 ),
 
                 SizedBox(
                   height: 3,
                 ),
-                Text(
+
+                Text( //business address 
                   "${widget.business.address}, ${widget.business.city}",
                   style: TextStyle(
                     color: Colors.grey.shade400,
                   ),
                 ),
+
                 SizedBox(
                   height: 15,
                 ),
 
-                ElevatedButton(
+                ElevatedButton( //make an appoitment button
                   clipBehavior: Clip.antiAlias,
                   style: ElevatedButton.styleFrom(
                     onPrimary: Colors.white,
-                    primary: Color(0xff8160c7)),
+                    primary: Palette.kToDark[500]),
                     
                   child: const Text('קבע תור'),
                   onPressed: () {},
@@ -126,19 +145,39 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
                   height: 20,
                 ),
                 
-                Row(
+
+                Row( //buttons row
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: widget.sectionButtonsList),
 
                 Divider(height: 5, )
 
               ],
+            ),
           ),
-      ),
-      
-    )));
+        )
+      ],),),
+        
+        //back button
+        Positioned(
+          top: 0.0,
+          left: 0.0,
+          right: 0.0,
+          child: AppBar(
+            title: Text(''),
+            leading: new IconButton(
+              icon: new Icon(Icons.arrow_back_ios, color: Colors.white),
+              onPressed: () => Navigator.of(context).pop(),
+              ),
+            backgroundColor: Colors.transparent, 
+            elevation: 0.0, //No shadow
+          ),),
+        ]
+      )
+    );
   }
 }
+
 
 class CurvePainter extends CustomPainter {
   @override
@@ -146,7 +185,7 @@ class CurvePainter extends CustomPainter {
     var paint = Paint();
     paint.style = PaintingStyle.fill;
     paint.shader = LinearGradient(
-            colors: [Color(0xff8160c7), Color(0xff8f77dc), Color(0xff8f67bc)],
+            colors: [Palette.kToDark[500], Palette.kToDark[50], Palette.kToDark[50]],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight)
         .createShader(

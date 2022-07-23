@@ -6,19 +6,21 @@ import '../widgets/businesses_list.dart';
 import '../widgets/searchBar.dart';
 import './filters_screen.dart';
 
+//search screen
 class BusinessListScreen extends StatelessWidget {
   
   Widget getFilterBar(BuildContext context)
   {
     return Material(
-      color: Colors.transparent,child:InkWell(
-      focusColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      hoverColor: Colors.transparent,
-      splashColor: Colors.grey.withOpacity(0.2),
-      borderRadius: const BorderRadius.all(
-        Radius.circular(4.0),),
-      onTap: () {
+      color: Colors.transparent,
+      child: InkWell( //filters button
+        focusColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        hoverColor: Colors.transparent,
+        splashColor: Colors.grey.withOpacity(0.2),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(4.0),),
+        onTap: () {
           FocusScope.of(context).requestFocus(FocusNode());
           Navigator.push<dynamic>(context,
               MaterialPageRoute<dynamic>(
@@ -26,24 +28,20 @@ class BusinessListScreen extends StatelessWidget {
                 fullscreenDialog: true),
               );
             },
-      child: Padding(
-        padding: const EdgeInsets.only(left: 8),
-        child: Row(
-          children: <Widget>[
-            Text('Filter', style: TextStyle(
-                            fontWeight: FontWeight.w100,
-                            fontSize: 16,
-                          ),
-                ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.sort,
-                      color: Palette.kToDark[500]),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8),
+          child: Row(
+            children: <Widget>[
+              Text('Filter', style: TextStyle(fontWeight: FontWeight.w100, fontSize: 16,),),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.sort, color: Palette.kToDark[500]),
               ),
-          ],
+            ],
+          ),
         ),
-      ),
-    ));        
+      )
+    );        
   }
 
   @override
