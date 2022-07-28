@@ -2,9 +2,10 @@ import 'package:Appo/models/colors.dart';
 import 'package:Appo/widgets/slider_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:Appo/models/Dummy_data.dart';
 import 'package:Appo/models/businesses.dart';
-import '../models/database_methods.dart' as data;
+import 'package:provider/provider.dart';
+import '../helpers/DB_helper.dart';
+import '../models/type.dart';
 
 class FiltersScreen extends StatefulWidget {
 
@@ -49,19 +50,19 @@ class _FiltersScreenState extends State<FiltersScreen> {
   void onTogglePressed(int index) 
   {
     if (index == 0) {
-      if (data.DatabaseMethods.TypesList[0].isSelected) {
-        data.DatabaseMethods.TypesList.forEach((d) {
+      if (DB_Helper.TypesList[0].isSelected) {
+        DB_Helper.TypesList.forEach((d) {
           d.isSelected = false;
         });
       } else {
-        data.DatabaseMethods.TypesList.forEach((d) {
+        DB_Helper.TypesList.forEach((d) {
           d.isSelected = true;
         });
       }
     }
     else {
-      data.DatabaseMethods.TypesList[index].isSelected =
-          !data.DatabaseMethods.TypesList[index].isSelected;
+      DB_Helper.TypesList[index].isSelected =
+          !DB_Helper.TypesList[index].isSelected;
     }
   }
   
@@ -94,7 +95,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
   //This method builds one toggle button for 1 type.
   Material getTypeItem(int i)
   {
-    final type = data.DatabaseMethods.TypesList[i];
+    final type = DB_Helper.TypesList[i];
     return Material(
           color: Colors.transparent,
           child: InkWell(
@@ -136,7 +137,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
   //This method builds the list of toggle buttons for service types
   List<Widget> getTypesList() {
     final List<Widget> list = <Widget>[];
-    for (int i = 0; i < data.DatabaseMethods.TypesList.length; i++) 
+    for (int i = 0; i < DB_Helper.TypesList.length; i++) 
     { 
       list.add(getTypeItem(i));
       if (i == 0) 
@@ -149,8 +150,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
 
   void applyFilters()
   {
-    Businesses businessesList = Businesses.instance;
-    businessesList.UpdateFilteredList();
+    //Businesses businessesList = Businesses.instance;
+    Provider.of<Businesses>(context, listen: false).UpdateFilteredList();
     Navigator.pop(context);
   }
 

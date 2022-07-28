@@ -1,4 +1,4 @@
-import 'package:Appo/models/database_methods.dart';
+import 'package:Appo/helpers/DB_helper.dart';
 import 'package:flutter/material.dart';
 import '../models/Business.dart';
 
@@ -51,7 +51,7 @@ class MyNextItem extends StatelessWidget {
     
             //Top image container (type image)
             FutureBuilder(
-            future: DatabaseMethods.findTypeByTitleAsync(bis.serviceType),
+            future: DB_Helper.findTypeByTitleAsync(bis.serviceType),
             builder:((context, type) {
                       if(type.data == null)
                       {

@@ -11,7 +11,6 @@ import './business_list_screen.dart';
 import '../screens/business_details_screen.dart';
 import '../widgets/favorite_item.dart';
 
-
 class MyCustomScrollBehavior extends MaterialScrollBehavior {
   // Override behavior methods and getters like dragDevices
   @override
@@ -21,21 +20,18 @@ class MyCustomScrollBehavior extends MaterialScrollBehavior {
       };
 }
 
-class HomeScreen  extends StatefulWidget {
-  
+class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  //Provider.of<Business>(context);
-  Businesses _businesses = Businesses.instance;
-  
   void initState() { 
-    Future.delayed(Duration.zero).then((_) => //wait getData to finish before build is called
-    {
-      _businesses.getData()
-    });
+    // Future.delayed(Duration.zero).then((_) => //wait getData to finish before build is called
+    // {
+    //   _businesses.getData()
+    // });
+    Provider.of<Businesses>(context, listen: false).getAllBusinesses();
     super.initState();
   }
 
@@ -100,25 +96,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
         Container(height: PageHeight*0.3, width: double.infinity, alignment: Alignment.topRight,
           child: FutureBuilder(
-            future: _businesses.getFavorites(),
+            future: Provider.of<Businesses>(context).getFavorites(),
             builder: (context, favorites) {
               if(favorites.data == null)
               {
                 return Container();
               }
               else {
-                return ListView.builder(
-                itemBuilder: (ctx, index) =>  
-                  WrapInkWell(
-                    FavoriteItem(favorites.data[index]), 
-                    () => itemClicked(ctx, favorites.data[index])
-                  ),
-                itemCount: favorites.data.length,
-                padding: const EdgeInsets.all(10), 
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal, 
-                physics: const AlwaysScrollableScrollPhysics(), 
-              );}
+                return Consumer<Businesses>( 
+                  builder: (ctx, bisData, child) => 
+                  ListView.builder(
+                  itemBuilder: (ctx, index) =>  
+                    WrapInkWell(
+                      FavoriteItem(favorites.data[index]), 
+                      () => itemClicked(ctx, favorites.data[index])
+                    ),
+                  itemCount: favorites.data.length,
+                  padding: const EdgeInsets.all(10), 
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal, 
+                  physics: const AlwaysScrollableScrollPhysics(), 
+                              ),
+                );}
             },
           ),
         ),
