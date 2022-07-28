@@ -1,4 +1,4 @@
-import 'package:Appo/models/database_methods.dart';
+import 'package:Appo/helpers/DB_helper.dart';
 import 'package:Appo/models/type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -12,6 +12,8 @@ class Business with ChangeNotifier {
   final String phoneNumber;
   final String imageUrl;
   final String serviceType;
+  final double latitude;
+  final double longitude;
   bool isFavorite = false;
 
   Business({
@@ -23,7 +25,7 @@ class Business with ChangeNotifier {
     @required this.phoneNumber,
     @required this.imageUrl,
     @required this.serviceType,
-
+    this.longitude, this.latitude
   });
 
   factory Business.fromJson(Map<String, dynamic> json) {
@@ -35,7 +37,9 @@ class Business with ChangeNotifier {
       address: json['address'] as String,
       phoneNumber: json['phoneNumber'] as String,
       imageUrl: json['imageUrl'] as String,
-      serviceType: json['serviceType'] as String
+      serviceType: json['serviceType'] as String,
+      latitude: json['latitude'],
+      longitude: json['longitude'],
     );
   }
 
@@ -44,10 +48,10 @@ class Business with ChangeNotifier {
     isFavorite = !isFavorite;
     if(isFavorite == true)
     {
-      DatabaseMethods.postFavorite(this);
+      DB_Helper.postFavorite(this);
     }
     else{
-      DatabaseMethods.removeFromFavorites(this);
+      DB_Helper.removeFromFavorites(this);
     }
     notifyListeners();
   }

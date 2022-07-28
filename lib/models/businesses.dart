@@ -1,25 +1,27 @@
+import 'package:flutter/cupertino.dart';
 import './Business.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import './consts.dart' as consts;
-import './database_methods.dart';
+import '../helpers/DB_helper.dart';
 import './Type.dart';
 
-//All the businesses from the server
-class Businesses {
+//All the businesses data from the server
+class Businesses with ChangeNotifier{
 
   List<Business> _businesses;
   List<Business> _filteredList;
+  List<Business> _favorites;
 
-  //the class implemented as a singlethon
-  Businesses._privateConstructor() {
+  Businesses() {
     _businesses = [];
     _filteredList = [];
+    _favorites = [];
   }
 
-  static final Businesses _instance = Businesses._privateConstructor();
+  //static final Businesses _instance = Businesses._privateConstructor();
 
-  static Businesses get instance => _instance;
+  //static Businesses get instance => _instance;
 
   List<Business> get BusinessesList {
     return _businesses;
@@ -29,63 +31,51 @@ class Businesses {
     return _filteredList;
   }
 
+  List<Business> get Favorites {
+    return _favorites;
+  }
+
   Business findByID(int id)
   {
     return _businesses.firstWhere((b) => b.id == id);
   }
 
-  Future<void> getData() async 
+  //gets the businessesList from the server and stored it to Businesses list
+  Future<void> getAllBusinesses() async 
   {
-    http.Response response =  await http.get(consts.businesses_url);
-    var jsonData = jsonDecode(response.body);
-
-    _businesses =  jsonData.map<Business>((json) => Business.fromJson(json)).toList();
+    _businesses = await DB_Helper.getAllBusinesses();
     _filteredList = _businesses;
-    // for(var item in jsonData)
-    // {
-    //   if(item != null)
-    //   {
-    //     Business bis = Business(
-    //       id: item['id'],
-    //       name: item['name'],
-    //       owner: item['owner'],
-    //       city: item['city'], 
-    //       address: item['address'],
-    //       phoneNumber: item['phoneNumber'], 
-    //       imageUrl: item['imageUrl'],
-    //       serviceType: item['serviceType'],
-    //     );
-    //     _businesses.add(bis);
-    //   }
-    // }
+    
+    notifyListeners();
   }
 
   //gets from database the favorites businesses. for now - favorites of customer id:0
   Future<List<Business>> getFavorites() async 
   {
-    http.Response response = await http.get(consts.dummy_favorites);
-    var jsonData = jsonDecode(response.body);
+    var jsonData = await DB_Helper.getFavorites(0); //returns json
 
-    List<Business> res = [];
+    List<Business> favoritesList = [];
 
     if(jsonData != null)
     {
       if(_businesses.length == 0)
       {
-            await getData();
+        await DB_Helper.getAllBusinesses();
       }
       for(var item in jsonData) 
       {
         if(item != null)
         {
           Business bis = findByID(item['businessId']); //maybe replace with get request to the server to get the business
-          res.add(bis);
+          favoritesList.add(bis);
           bis.isFavorite = true;
         }
       }
       
     }
-    return res;
+    _favorites = favoritesList;
+    notifyListeners();
+    return favoritesList;
   }
 
   void UpdateFilteredList()
@@ -93,7 +83,7 @@ class Businesses {
     List<Business> newFilteredList = [];
     _businesses.forEach((item) 
     {
-      Type type = DatabaseMethods.findTypeByTitle(item.serviceType);
+      Type type = DB_Helper.findTypeByTitle(item.serviceType);
       if(type.isSelected)
       {
         newFilteredList.add(item);
@@ -101,5 +91,6 @@ class Businesses {
     });
 
     _filteredList = newFilteredList;
+    notifyListeners();
   } 
 }

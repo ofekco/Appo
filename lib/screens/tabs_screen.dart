@@ -4,6 +4,7 @@ import 'package:Appo/screens/business_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'profil_screen.dart';
+import '../widgets/drawer.dart';
 
 class TabsScreen extends StatefulWidget {
 
@@ -12,10 +13,12 @@ class TabsScreen extends StatefulWidget {
 }
 
 class _TabsScreenState extends State<TabsScreen> {
+  Widget home = HomeScreen();
+  Widget profile = ProfileScreen();
 
   List<Map<String, Object>> _pages = [
-    {'page': HomeScreen(), 'title': 'Home'},
-    {'page': ProfileScreen(), 'title': 'Profile'},    
+    {'page': HomeScreen, 'title': 'Home'},
+    {'page': ProfileScreen, 'title': 'Profile'},    
   ];
 
   int _selectedPageIndex = 0;
@@ -25,7 +28,6 @@ class _TabsScreenState extends State<TabsScreen> {
       _selectedPageIndex = index;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,9 @@ class _TabsScreenState extends State<TabsScreen> {
           ),
          ),
         
-        body: _pages[_selectedPageIndex]['page'],
+        endDrawer: NavDrawer(),
+
+        body: _selectedPageIndex == 0? home : profile,
         bottomNavigationBar: BottomNavigationBar(
           onTap: _selectPage,
           backgroundColor: Theme.of(context).canvasColor,

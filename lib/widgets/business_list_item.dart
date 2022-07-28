@@ -1,7 +1,7 @@
 import 'package:Appo/models/Business.dart';
 import 'package:Appo/widgets/favorite_button.dart';
 import 'package:flutter/material.dart';
-import '../models/database_methods.dart';
+import 'package:provider/provider.dart';
 
 class BusinessListItem extends StatefulWidget {
   final Business _business;
@@ -15,6 +15,7 @@ class BusinessListItem extends StatefulWidget {
 class _BusinessListItemState extends State<BusinessListItem> {
   @override
   Widget build(BuildContext context) {
+    
     return Container(
         decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(16.0)),
@@ -39,6 +40,7 @@ class _BusinessListItemState extends State<BusinessListItem> {
                     child: widget._business.imageUrl == null? Container() : Image.network(
                     widget._business.imageUrl, fit: BoxFit.cover,),
                   ),
+                  
                   Container(
                     color: Theme.of(context).canvasColor,           
                     child: Row(
@@ -89,13 +91,14 @@ class _BusinessListItemState extends State<BusinessListItem> {
                        ],
                      ),
 
+                    
                     Positioned( //favorite button
-                      top: 8, right: 8, child: Material(
-                      color: Colors.transparent,
-                      child: FavoriteButton(widget._business),
-                  ),
-                ),
-              //)
+                        top: 8, right: 8, child: Material(
+                        color: Colors.transparent,
+                        child: FavoriteButton(widget._business),
+                                      ),
+                    ),
+                    
              ],
          ),
         ),

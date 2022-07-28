@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:Appo/models/Business.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import './Type.dart';
-import './consts.dart' as consts;
+import '../models/Type.dart';
+import '../models/http_exception.dart';
+import '../models/consts.dart' as consts;
 
-class DatabaseMethods {
+class DB_Helper {
   static List<Type> _types = [];
 
   static List<Type> get TypesList {
@@ -60,7 +60,12 @@ class DatabaseMethods {
     try {
         await http.patch('https://appo-ae26e-default-rtdb.firebaseio.com/customers/0/favorites/${itemToAdd.id}.json', body: json.encode({ //encode gets a map
           'businessId': itemToAdd.id
-      }));
+      })).then((res) {
+        if(res.statusCode >= 400)
+        {
+          throw HttpException('Could not add favorite business');
+        }
+      });
     }
     catch(err) {
       print(err);
@@ -71,7 +76,10 @@ class DatabaseMethods {
   static Future<void> removeFromFavorites(Business itemToRemove) async
   {
     try {
-        await http.delete('https://appo-ae26e-default-rtdb.firebaseio.com/customers/0/favorites/${itemToRemove.id}.json');
+        final response = await http.delete('https://appo-ae26e-default-rtdb.firebaseio.com/customers/0/favorites/${itemToRemove.id}.json');
+        if(response.statusCode >= 400) {
+          throw HttpException('Could not delete product!');
+        }
     }
     catch(err) {
       print(err);
@@ -79,5 +87,35 @@ class DatabaseMethods {
     }
   }
 
- 
+  static Future<List<Business>> getAllBusinesses() async 
+  {
+    try {
+      http.Response response =  await http.get(consts.businesses_url);
+      var jsonData = jsonDecode(response.body);
+    
+      List<Business> res = [];
+
+      res = jsonData.map<Business>((json) => Business.fromJson(json)).toList();
+      return res;
+    }
+    catch(err) {
+      print(err);
+      throw err;
+    }
+  }
+
+  //gets from database the favorites businesses. for now - favorites of customer id:0
+  static Future<dynamic> getFavorites(int userId) async 
+  {
+    try {
+      http.Response response = await http.get(consts.dummy_favorites);
+      var jsonData = jsonDecode(response.body);
+
+      return jsonData;
+    }
+    catch(err) {
+      print(err);
+      throw err;
+    }
+  }
 }
