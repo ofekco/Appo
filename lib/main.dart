@@ -1,5 +1,7 @@
 import 'package:Appo/models/authentication.dart';
 import 'package:Appo/models/businesses.dart';
+import 'package:Appo/screens/auth_screen.dart';
+import 'package:Appo/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'screens/tabs_screen.dart';
@@ -24,7 +26,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(
           value: Authentication())
       ],
-      child: MaterialApp(
+      child: Consumer<Authentication>(
+        builder: (ctx, auth, _) => MaterialApp(
         title: 'Appo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -36,7 +39,7 @@ class MyApp extends StatelessWidget {
           cardColor: Palette.kToDark[0],
           focusColor: const Color.fromRGBO(237, 125, 166, 1),
         ),
-        home: Splash(),
+        home: auth.isAuth ? HomeScreen() : AuthScreen(),
         // routes: {
         //   BusinessDetailsScreen.routeName: (context) => BusinessDetailsScreen(),
         // },
@@ -44,6 +47,6 @@ class MyApp extends StatelessWidget {
           return MaterialPageRoute(builder: (c) => TabsScreen(),);
         },
       ),
-    );  
+    ));  
   }
 }
