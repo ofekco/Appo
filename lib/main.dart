@@ -1,3 +1,4 @@
+import 'package:Appo/models/authentication.dart';
 import 'package:Appo/models/businesses.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,8 +17,13 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => Businesses(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+         create: (_) => Businesses()),
+        ChangeNotifierProvider.value(
+          value: Authentication())
+      ],
       child: MaterialApp(
         title: 'Appo',
         debugShowCheckedModeBanner: false,
@@ -38,6 +44,6 @@ class MyApp extends StatelessWidget {
           return MaterialPageRoute(builder: (c) => TabsScreen(),);
         },
       ),
-    );
+    );  
   }
 }
