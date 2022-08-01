@@ -71,57 +71,59 @@ class _HomeScreenState extends State<HomeScreen> {
     var PageHeight = size.height;
     var PageWidth = size.width;
 
-    return SingleChildScrollView(
-      child: Column(children: [
-        Container(
-          height: PageWidth/6, 
-          child: SearchBar(() => searchIconClick(context))
-        ),
-
-        buildSectionTitle(context, 'התורים הקרובים שלי'),
-    
-        Container(height: PageHeight*0.35, width: double.infinity, alignment: Alignment.topRight,
-          child: ListView(padding: const EdgeInsets.all(10), shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          children: DUMMY_FAV.map((bis) => 
-            WrapInkWell(
-              MyNextItem(bis), 
-              () => itemClicked(context, bis))
-              ).toList(),
-              
-            ),
-        ),
-    
-        buildSectionTitle(context, 'עסקים שאהבתי'),
-
-        Container(height: PageHeight*0.3, width: double.infinity, alignment: Alignment.topRight,
-          child: FutureBuilder(
-            future: Provider.of<Businesses>(context).getFavorites(),
-            builder: (context, favorites) {
-              if(favorites.data == null)
-              {
-                return Container();
-              }
-              else {
-                return Consumer<Businesses>( 
-                  builder: (ctx, bisData, child) => 
-                  ListView.builder(
-                  itemBuilder: (ctx, index) =>  
-                    WrapInkWell(
-                      FavoriteItem(favorites.data[index]), 
-                      () => itemClicked(ctx, favorites.data[index])
-                    ),
-                  itemCount: favorites.data.length,
-                  padding: const EdgeInsets.all(10), 
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal, 
-                  physics: const AlwaysScrollableScrollPhysics(), 
-                              ),
-                );}
-            },
+    return Material(
+      child: SingleChildScrollView(
+        child: Column(children: [
+          Container(
+            height: PageWidth/6, 
+            child: SearchBar(() => searchIconClick(context))
           ),
+    
+          buildSectionTitle(context, 'התורים הקרובים שלי'),
+      
+          Container(height: PageHeight*0.35, width: double.infinity, alignment: Alignment.topRight,
+            child: ListView(padding: const EdgeInsets.all(10), shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            children: DUMMY_FAV.map((bis) => 
+              WrapInkWell(
+                MyNextItem(bis), 
+                () => itemClicked(context, bis))
+                ).toList(),
+                
+              ),
+          ),
+      
+          buildSectionTitle(context, 'עסקים שאהבתי'),
+    
+          Container(height: PageHeight*0.3, width: double.infinity, alignment: Alignment.topRight,
+            child: FutureBuilder(
+              future: Provider.of<Businesses>(context).getFavorites(),
+              builder: (context, favorites) {
+                if(favorites.data == null)
+                {
+                  return Container();
+                }
+                else {
+                  return Consumer<Businesses>( 
+                    builder: (ctx, bisData, child) => 
+                    ListView.builder(
+                    itemBuilder: (ctx, index) =>  
+                      WrapInkWell(
+                        FavoriteItem(favorites.data[index]), 
+                        () => itemClicked(ctx, favorites.data[index])
+                      ),
+                    itemCount: favorites.data.length,
+                    padding: const EdgeInsets.all(10), 
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal, 
+                    physics: const AlwaysScrollableScrollPhysics(), 
+                                ),
+                  );}
+              },
+            ),
+          ),
+          ],
         ),
-        ],
       ),
     );
   }

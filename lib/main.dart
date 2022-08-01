@@ -23,30 +23,32 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
          create: (_) => Businesses()),
-        ChangeNotifierProvider.value(
-          value: Authentication())
+        ChangeNotifierProvider<Authentication>(
+          create: (_) => Authentication())
       ],
-      child: Consumer<Authentication>(
-        builder: (ctx, auth, _) => MaterialApp(
-        title: 'Appo',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primaryColor: Palette.kToDark[800],
-          primarySwatch: Palette.kToDark,
-          brightness: Brightness.light,
-          accentColor: Palette.kToDark[500],
-          canvasColor: Colors.white,
-          cardColor: Palette.kToDark[0],
-          focusColor: const Color.fromRGBO(237, 125, 166, 1),
+      //child: Consumer<Authentication>(
+        //builder: (ctx, auth, _) => 
+        child: MaterialApp(
+          title: 'Appo',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primaryColor: Palette.kToDark[800],
+            primarySwatch: Palette.kToDark,
+            brightness: Brightness.light,
+            accentColor: Palette.kToDark[500],
+            canvasColor: Colors.white,
+            cardColor: Palette.kToDark[0],
+            focusColor: const Color.fromRGBO(237, 125, 166, 1),
+          ),
+          home: Splash(),
+          //home: auth.isAuth ? HomeScreen() : AuthScreen(),
+          // routes: {
+          //   BusinessDetailsScreen.routeName: (context) => BusinessDetailsScreen(),
+          // },
+          onUnknownRoute: (settings) {
+            return MaterialPageRoute(builder: (c) => TabsScreen(),);
+          },
         ),
-        home: auth.isAuth ? HomeScreen() : AuthScreen(),
-        // routes: {
-        //   BusinessDetailsScreen.routeName: (context) => BusinessDetailsScreen(),
-        // },
-        onUnknownRoute: (settings) {
-          return MaterialPageRoute(builder: (c) => TabsScreen(),);
-        },
-      ),
-    ));  
+    );  
   }
 }

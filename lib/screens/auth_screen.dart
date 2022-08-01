@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'dart:ui';
+import 'package:Appo/models/colors.dart';
 import 'package:Appo/models/http_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,16 +26,21 @@ class AuthScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
+
+                  Flexible(
+                    child: Container(width: double.infinity, height: deviceSize.height/8,
+                      margin: EdgeInsets.only(bottom: 20.0),
+                      child: Center(child: Image.asset('assets/images/logo.JPG',)),
+                    )),
+
                   Flexible(
                     child: Container(
-                      margin: EdgeInsets.only(bottom: 20.0),
+                      margin: EdgeInsets.only(bottom: 60.0),
                       padding:
                           EdgeInsets.symmetric(vertical: 8.0, horizontal: 94.0),
-                      transform: Matrix4.rotationZ(-8 * pi / 180)
-                        ..translate(-10.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        color: Theme.of(context).primaryColor,
+                        color: Palette.kToDark[500],
                         boxShadow: [
                           BoxShadow(
                             blurRadius: 8,
