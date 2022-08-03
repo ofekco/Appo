@@ -49,6 +49,7 @@ class Authentication with ChangeNotifier {
           ),
         ),
       );
+
       notifyListeners();
     } catch (error) {
       throw error;
@@ -84,6 +85,7 @@ class Authentication with ChangeNotifier {
           ),
         ),
       );
+
       notifyListeners();
     } catch (error) {
       throw error;

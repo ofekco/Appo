@@ -26,7 +26,6 @@ class AuthScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-
                   Flexible(
                     child: Container(width: double.infinity, height: deviceSize.height/8,
                       margin: EdgeInsets.only(bottom: 20.0),
@@ -35,9 +34,9 @@ class AuthScreen extends StatelessWidget {
 
                   Flexible(
                     child: Container(
-                      margin: EdgeInsets.only(bottom: 60.0),
+                      margin: EdgeInsets.only(bottom: 50.0),
                       padding:
-                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 94.0),
+                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 65.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color: Palette.kToDark[500],
@@ -49,10 +48,10 @@ class AuthScreen extends StatelessWidget {
                         ],
                       ),
                       child: Text(
-                        'Sign In',
+                        'Welcome To Appo!',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 30,
+                          fontSize: 26,
                           fontWeight: FontWeight.normal,
                         ),
                       ),
@@ -173,9 +172,9 @@ class _AuthCardState extends State<AuthCard> {
       ),
       elevation: 8.0,
       child: Container(
-        height: _authMode == AuthMode.Signup ? 320 : 260,
+        height: _authMode == AuthMode.Signup ? 350 : 260,
         constraints:
-            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
+            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 350 : 260),
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16.0),
         child: Form(
@@ -190,7 +189,6 @@ class _AuthCardState extends State<AuthCard> {
                     if (value.isEmpty || !value.contains('@')) {
                       return 'Invalid email!';
                     }
-                    return null;
                     return null;
                   },
                   onSaved: (value) {
@@ -210,7 +208,8 @@ class _AuthCardState extends State<AuthCard> {
                     _authData['password'] = value;
                   },
                 ),
-                if (_authMode == AuthMode.Signup)
+
+                if(_authMode == AuthMode.Signup) 
                   TextFormField(
                     enabled: _authMode == AuthMode.Signup,
                     decoration: InputDecoration(labelText: 'Confirm Password'),
@@ -220,9 +219,9 @@ class _AuthCardState extends State<AuthCard> {
                             if (value != _passwordController.text) {
                               return 'Passwords do not match!';
                             }
-                          }
-                        : null,
+                          }: null,
                   ),
+                  
                 SizedBox(
                   height: 20,
                 ),
@@ -243,7 +242,8 @@ class _AuthCardState extends State<AuthCard> {
                   ),
                 FlatButton(
                   child: Text(
-                      '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
+                      '${_authMode == AuthMode.Login ? 'Don\'t have an account? Sign up' 
+                        : 'Already a member? Login'}'),
                   onPressed: _switchAuthMode,
                   padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
