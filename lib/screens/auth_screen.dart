@@ -2,15 +2,18 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:Appo/models/colors.dart';
 import 'package:Appo/models/http_exception.dart';
+import 'package:Appo/screens/home_screen.dart';
+import 'package:Appo/screens/registration_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'registration_screen.dart';
 import '../models/authentication.dart';
 
-enum AuthMode { Signup, Login }
+//enum AuthMode { Signup, Login }
 
 class AuthScreen extends StatelessWidget {
   static const routeName = '/auth';
+  
 
   @override
   Widget build(BuildContext context) {
@@ -82,13 +85,14 @@ class AuthCard extends StatefulWidget {
 
 class _AuthCardState extends State<AuthCard> {
   final GlobalKey<FormState> _formKey = GlobalKey();
-  AuthMode _authMode = AuthMode.Login;
+  //AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {
     'email': '',
     'password': '',
   };
   var _isLoading = false;
   final _passwordController = TextEditingController();
+
 
   Future<void> _submit() async {
     if (!_formKey.currentState.validate()) {
@@ -100,12 +104,13 @@ class _AuthCardState extends State<AuthCard> {
       _isLoading = true;
     });
     try {
-      if (_authMode == AuthMode.Login) {
-            await Provider.of<Authentication>(context, listen: false).login(_authData['email'], _authData['password']);
-       } 
-       else {
+      //if (_authMode == AuthMode.Login) {
+          await Provider.of<Authentication>(context, listen: false).login(_authData['email'], _authData['password']);
+          Navigator.of(context).pushNamed(HomeScreen.routeName);
+   //    } 
+       /*else {
             await Provider.of<Authentication>(context, listen: false).signup(_authData['email'], _authData['password']);
-        }
+        }*/
     }
     on HttpException catch (error) {
       var errorMessage = 'Authentication failed';
@@ -133,17 +138,17 @@ class _AuthCardState extends State<AuthCard> {
     });
   }
 
-  void _switchAuthMode() {
-    if (_authMode == AuthMode.Login) {
-      setState(() {
-        _authMode = AuthMode.Signup;
-      });
-    } else {
-      setState(() {
-        _authMode = AuthMode.Login;
-      });
-    }
-  }
+  // void _switchAuthMode() {
+  //   if (_authMode == AuthMode.Login) {
+  //     setState(() {
+  //       _authMode = AuthMode.Signup;
+  //     });
+  //   } else {
+  //     setState(() {
+  //       _authMode = AuthMode.Login;
+  //     });
+  //   }
+  // }
 
    void _showErrorDialog(String message) {
     showDialog(
@@ -172,9 +177,11 @@ class _AuthCardState extends State<AuthCard> {
       ),
       elevation: 8.0,
       child: Container(
-        height: _authMode == AuthMode.Signup ? 350 : 260,
+        //height: _authMode == AuthMode.Signup ? 350 : 260,
+        height: 260,
         constraints:
-            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 350 : 260),
+            //BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 350 : 260),
+            BoxConstraints(minHeight: 260),
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16.0),
         child: Form(
@@ -209,18 +216,18 @@ class _AuthCardState extends State<AuthCard> {
                   },
                 ),
 
-                if(_authMode == AuthMode.Signup) 
-                  TextFormField(
-                    enabled: _authMode == AuthMode.Signup,
-                    decoration: InputDecoration(labelText: 'Confirm Password'),
-                    obscureText: true,
-                    validator: _authMode == AuthMode.Signup
-                        ? (value) {
-                            if (value != _passwordController.text) {
-                              return 'Passwords do not match!';
-                            }
-                          }: null,
-                  ),
+                // if(_authMode == AuthMode.Signup) 
+                //   TextFormField(
+                //     enabled: _authMode == AuthMode.Signup,
+                //     decoration: InputDecoration(labelText: 'Confirm Password'),
+                //     obscureText: true,
+                //     validator: _authMode == AuthMode.Signup
+                //         ? (value) {
+                //             if (value != _passwordController.text) {
+                //               return 'Passwords do not match!';
+                //             }
+                //           }: null,
+                //   ),
                   
                 SizedBox(
                   height: 20,
@@ -230,7 +237,8 @@ class _AuthCardState extends State<AuthCard> {
                 else
                   RaisedButton(
                     child:
-                        Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
+                      //Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
+                      Text('LOGIN'),
                     onPressed: _submit,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
@@ -241,10 +249,12 @@ class _AuthCardState extends State<AuthCard> {
                     textColor: Theme.of(context).primaryTextTheme.button.color,
                   ),
                 FlatButton(
-                  child: Text(
-                      '${_authMode == AuthMode.Login ? 'Don\'t have an account? Sign up' 
-                        : 'Already a member? Login'}'),
-                  onPressed: _switchAuthMode,
+                  child: Text('Don\'t have an account? Sign up'),
+                  //onPressed: _switchAuthMode,
+                  onPressed: () {Navigator.push<dynamic>(context,
+                    MaterialPageRoute<dynamic>(
+                      builder: (BuildContext context) => RegistrationScreen(),
+                      fullscreenDialog: true)); },
                   padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   textColor: Theme.of(context).primaryColor,
@@ -256,4 +266,6 @@ class _AuthCardState extends State<AuthCard> {
       ),
     );
   }
+
+  
 }

@@ -24,7 +24,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
          create: (_) => Businesses()),
         ChangeNotifierProvider<Authentication>(
-          create: (_) => Authentication())
+          create: (_) => Authentication()),
+        
       ],
       //child: Consumer<Authentication>(
         //builder: (ctx, auth, _) => 
@@ -45,9 +46,15 @@ class MyApp extends StatelessWidget {
           // routes: {
           //   BusinessDetailsScreen.routeName: (context) => BusinessDetailsScreen(),
           // },
-          onUnknownRoute: (settings) {
-            return MaterialPageRoute(builder: (c) => TabsScreen(),);
-          },
+          // onUnknownRoute: (settings) {
+          //   return MaterialPageRoute(builder: (c) => TabsScreen(),);
+          // },
+          routes: {
+            '/home': (ctx) => HomeScreen(),
+            '/auth': (ctx) => AuthScreen(),
+            '/register': (ctx) => AuthScreen(), 
+          }
+          
         ),
     );  
   }

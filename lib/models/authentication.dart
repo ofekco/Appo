@@ -8,7 +8,7 @@ class Authentication with ChangeNotifier {
   String _token;
   DateTime _expiryDate;
   String _userId;
-
+ 
   bool get isAuth {
     return token != null;
   }
@@ -21,9 +21,9 @@ class Authentication with ChangeNotifier {
   }
 
 
-  Future<void> signup(String email, String password) async {
-      final url =
-        Uri.parse('https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyAV3px-slgo-jPGEgUJBYJbDaTledtXIj8');
+  Future<void> signup(String email, String password, String name, String phone, String city) async {
+      var url =
+        Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers.json');
         try {
           final response = await http.post(
           url,
@@ -31,26 +31,42 @@ class Authentication with ChangeNotifier {
             {
               'email': email,
               'password': password,
-              'returnSecureToken': true,
+              'name': name,
+              'phone number': phone,
+              'city': city,
             },
           ),
         );
 
-        final responseData = json.decode(response.body);
-        if(responseData['error'] != null) {
-          throw HttpException(responseData['error']['message']);
-        }
-      _token = responseData['idToken'];
-      _userId = responseData['localId'];
-      _expiryDate = DateTime.now().add(
-        Duration(
-          seconds: int.parse(
-            responseData['expiresIn'],
-          ),
-        ),
-      );
+      final responseData = json.decode(response.body);
+      if(responseData['error'] != null) {
+        throw HttpException(responseData['error']['message']);
+      }
 
-      notifyListeners();
+  //      url =
+  //       Uri.parse('https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyAV3px-slgo-jPGEgUJBYJbDaTledtXIj8');
+  //       response = await http.post(
+  //       url,
+  //       body: json.encode(
+  //         {
+  //           'email': email,
+  //           'password': password,
+  //           'returnSecureToken': true,
+  //         },
+  //       ),
+  //     );
+
+  // _token = responseData['idToken'];
+  // _userId = responseData['localId'];
+  // _expiryDate = DateTime.now().add(
+  //   Duration(
+  //     seconds: int.parse(
+  //       responseData['expiresIn'],
+  //     ),
+  //   ),
+  //   );
+
+      notifyListeners(); //put all info in my profil screen
     } catch (error) {
       throw error;
     }
@@ -91,4 +107,50 @@ class Authentication with ChangeNotifier {
       throw error;
     }
   }
+
+  void logout() {
+    _token = null;
+    _userId = null;
+    _expiryDate = null;
+    notifyListeners();
+  }
+
+  
+
+  //  Future<void> signup(String email, String password) async {
+  //     final url =
+  //       Uri.parse('https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyAV3px-slgo-jPGEgUJBYJbDaTledtXIj8');
+  //       try {
+  //         final response = await http.post(
+  //         url,
+  //         body: json.encode(
+  //           {
+  //             'email': email,
+  //             'password': password,
+  //             'returnSecureToken': true,
+  //           },
+  //         ),
+  //       );
+
+  //       final responseData = json.decode(response.body);
+  //       if(responseData['error'] != null) {
+  //         throw HttpException(responseData['error']['message']);
+  //       }
+  //     _token = responseData['idToken'];
+  //     _userId = responseData['localId'];
+  //     _expiryDate = DateTime.now().add(
+  //       Duration(
+  //         seconds: int.parse(
+  //           responseData['expiresIn'],
+  //         ),
+  //       ),
+  //     );
+
+  //     notifyListeners();
+  //   } catch (error) {
+  //     throw error;
+  //   }
+    
+  // }
+
 }
