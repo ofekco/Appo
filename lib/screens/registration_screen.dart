@@ -60,6 +60,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       //               MaterialPageRoute<dynamic>(
       //                 builder: (BuildContext context) => HomeScreen(),
       //                 fullscreenDialog: true));
+      Navigator.of(context).pop();
       Navigator.of(context).pushNamed(HomeScreen.routeName);
     }
     on HttpException catch (error) {

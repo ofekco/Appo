@@ -25,11 +25,10 @@ class MyApp extends StatelessWidget {
          create: (_) => Businesses()),
         ChangeNotifierProvider<Authentication>(
           create: (_) => Authentication()),
-        
       ],
-      //child: Consumer<Authentication>(
-        //builder: (ctx, auth, _) => 
-        child: MaterialApp(
+      child: Consumer<Authentication>(
+        builder: (ctx, auth, _) => 
+         MaterialApp(
           title: 'Appo',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
@@ -41,8 +40,16 @@ class MyApp extends StatelessWidget {
             cardColor: Palette.kToDark[0],
             focusColor: const Color.fromRGBO(237, 125, 166, 1),
           ),
-          home: Splash(),
-          //home: auth.isAuth ? HomeScreen() : AuthScreen(),
+          home: auth.isAuth
+                  ? HomeScreen()
+                  : FutureBuilder(
+                      future: auth.tryAutoLogin(),
+                      builder: (ctx, authResultSnapshot) =>
+                          authResultSnapshot.connectionState ==
+                                  ConnectionState.waiting
+                              ? Splash()
+                              : AuthScreen(),
+                    ),
           // routes: {
           //   BusinessDetailsScreen.routeName: (context) => BusinessDetailsScreen(),
           // },
@@ -56,6 +63,6 @@ class MyApp extends StatelessWidget {
           }
           
         ),
-    );  
+    ));  
   }
 }
