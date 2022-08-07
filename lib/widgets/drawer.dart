@@ -1,6 +1,8 @@
+import 'package:Appo/models/authentication.dart';
 import 'package:Appo/models/colors.dart';
 import 'package:Appo/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class NavDrawer extends StatelessWidget {
 
@@ -66,7 +68,11 @@ class NavDrawer extends StatelessWidget {
 
           Divider(color: Colors.grey),
 
-          buildNavItem(() =>_onTap(context, HomeScreen()),"התנתק", Icon(Icons.logout)),
+          buildNavItem(() { 
+            Provider.of<Authentication>(context).logout();
+            Navigator.of(context).pop(); 
+          },
+           "התנתק", Icon(Icons.logout)),
         ],
       ) ,
     );

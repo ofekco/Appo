@@ -5,7 +5,10 @@ class ProfileScreen  extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('my profile'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Image.asset('assets/images/logo3.png'),
+      ),
     );
   }
 }
