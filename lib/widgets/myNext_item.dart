@@ -1,17 +1,24 @@
 import 'package:Appo/helpers/DB_helper.dart';
 import 'package:flutter/material.dart';
+import '../booking_calendar/model/booking.dart';
 import '../models/Business.dart';
+import 'package:provider/provider.dart';
+import '../models/Businesses.dart';
+import '../models/types.dart';
 
 class MyNextItem extends StatelessWidget {
+  final Booking appointment;
   final Business bis;
 
-  MyNextItem(this.bis);
+  MyNextItem(this.appointment, this.bis);
 
   Widget buildConstrainedBox(BuildContext context)
   {
     var size = MediaQuery.of(context).size;
     var height = size.height;
     var width = size.width;
+
+    Types types = Provider.of<Types>(context);
 
     return ConstrainedBox( 
         constraints: BoxConstraints(
@@ -41,39 +48,34 @@ class MyNextItem extends StatelessWidget {
                 //Text
                 child: Column(
                   children:[
-                    Text(bis.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    Text('מחר, 10:00', style: TextStyle(fontSize: 14)),  
-                    Text('${bis.address} | ${bis.city}', style: TextStyle(fontSize: 12)),  
+                    Text(bis.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)), //business name
+
+                    Text('${appointment.date.day}.${appointment.date.month} | ${appointment.startTime.hour}:${appointment.startTime.minute}',
+                      style: TextStyle(fontSize: 14)),  //appointment date and time
+
+                    Text('${bis.address} | ${bis.city}', style: TextStyle(fontSize: 12)), //business address
                     ],
                   ),
                 ),
             ),
     
             //Top image container (type image)
-            FutureBuilder(
-            future: DB_Helper.findTypeByTitleAsync(bis.serviceType),
-            builder:((context, type) {
-                      if(type.data == null)
-                      {
-                        return Container();
-                      }
-                      else {
-                        return Container(width: width, height: height/8, 
-                          padding: const EdgeInsets.only(top: 65, left: 20, right: 20, bottom: 20), 
-                          margin: EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15),),
-                            image: DecorationImage(
-                              image: NetworkImage(type.data.imageUrl), fit: BoxFit.cover)));
-                      }
-                  }
-                ),
-              ),
             
+            Consumer<Types>(builder: ((_, types, __) => 
+            Types.findTypeByTitle(bis.serviceType) == null ?
+              Container() :
+                Container(width: width, height: height/8, 
+                  padding: const EdgeInsets.only(top: 65, left: 20, right: 20, bottom: 20), 
+                  margin: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15),),
+                    image: DecorationImage(
+                    image: NetworkImage(Types.findTypeByTitle(bis.serviceType).imageUrl), fit: BoxFit.cover))
+                )
+            
+            )),
             // circular logo 
             Center(
-              // top: height/8 - 20 ,
-              // right: width*0.5 - 35, 
               child: Container(margin: EdgeInsets.only(bottom:60),
                 child: CircleAvatar(radius: 37, backgroundColor: Colors.white, 
                   child: CircleAvatar(backgroundImage: NetworkImage(bis.imageUrl), radius: 35, backgroundColor: Colors.black,)),

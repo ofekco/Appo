@@ -5,6 +5,7 @@ import 'package:Appo/widgets/favorite_button.dart';
 import 'package:Appo/widgets/business_details_screen_widgets/section_button.dart';
 import 'package:flutter/material.dart';
 import '../models/Business.dart';
+import '../widgets/drawer.dart';
 
 class BusinessDetailsScreen extends StatefulWidget {
 
@@ -78,6 +79,9 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
     var size = MediaQuery.of(context).size;
 
     return Scaffold(
+      
+      endDrawer: NavDrawer(),
+      
       body: SingleChildScrollView(
         child: Stack(children: <Widget>[
           Container(
@@ -160,7 +164,7 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
                     child: const Text('קבע תור'),
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-                          return BookingCalendarScreen();
+                          return BookingCalendarScreen(widget.business.id);
                           })
                         );
                     },

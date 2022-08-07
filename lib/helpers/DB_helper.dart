@@ -1,37 +1,18 @@
 import 'dart:convert';
+import 'package:Appo/booking_calendar/model/booking.dart';
+import 'package:Appo/booking_calendar/model/time_slot.dart';
 import 'package:Appo/models/Business.dart';
 import 'package:http/http.dart' as http;
 import '../models/Type.dart';
 import '../models/http_exception.dart';
 import '../models/consts.dart' as consts;
+import 'package:intl/intl.dart';
 
 class DB_Helper {
-  static List<Type> _types = [];
-
-  static List<Type> get TypesList {
-    if(_types.length == 0)
-    {
-      getTypesList();
-    }
-    return _types;
-  }
-
-  static Future<Type> findTypeByTitleAsync(String title) async
+  
+  static Future<List<Type>> getTypesList() async 
   {
-    if(_types.length == 0)
-    {
-      await getTypesList();
-    }
-    return _types.firstWhere((t) => t.title == title);
-  }
-
-  static Type findTypeByTitle(String title)
-  {
-    return _types.firstWhere((t) => t.title == title);
-  }
-
-  static Future<void> getTypesList() async 
-  {
+    List<Type> res = [];
     try {
       http.Response response =  await http.get(consts.types_url); 
       var jsonData = jsonDecode(response.body);
@@ -45,7 +26,7 @@ class DB_Helper {
             title: item['title'],
             imageUrl: item['imageUrl'],
           );
-          _types.add(type);
+          res.add(type);
         }
       }
     }
@@ -53,6 +34,8 @@ class DB_Helper {
       print(err);
       throw err;
     }
+
+    return res;
   }
 
   static Future<void> postFavorite(Business itemToAdd) async
@@ -97,6 +80,116 @@ class DB_Helper {
 
       res = jsonData.map<Business>((json) => Business.fromJson(json)).toList();
       return res;
+    }
+    catch(err) {
+      print(err);
+      throw err;
+    }
+  }
+
+  static Future<List<Booking>> getUserUpComingAppointments(int userId) async 
+  {
+    List<Booking> res = [];
+
+    try {
+      final url = 'https://appo-ae26e-default-rtdb.firebaseio.com/customers/$userId/appointments.json';
+      http.Response response =  await http.get(url);
+      var jsonData = jsonDecode(response.body) as Map<String, dynamic>;
+    
+      //res = jsonData.map<Booking>((json) => Booking.fromJson(json)).toList();
+      if(jsonData != null)
+      {
+        jsonData.forEach((id, data) {
+          res.add(Booking.fromJson(data));
+        });
+      }
+    }
+    catch(err) {
+      print(err);
+      throw err;
+    }
+
+    return res;
+  }
+
+  static String _getDateKey(DateTime date)
+  {
+    String day = date.day.toString();
+    String month = date.month.toString();
+
+    if(day.length < 2) {
+      day = '0$day'; 
+    }
+    if(month.length < 2)
+    {
+      month = '0$month';
+    }
+    return '$day$month${date.year}';
+  }
+
+  static Future<List<TimeSlot>> getTimes(int businessId, DateTime date) async 
+  {
+    String dateKey = _getDateKey(date);
+    List<TimeSlot> res = [];
+    try {
+      final url = 'https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey.json';
+      http.Response response = await http.get(url);
+      var jsonData = jsonDecode(response.body) as Map<String, dynamic>;
+      
+      if(jsonData != null)
+      {
+        jsonData.forEach((id, data) {
+          res.add(TimeSlot.fromJson(data));
+        });
+      }
+      
+    }
+    catch(err) {
+      print(err);
+      throw err;
+    }
+
+    return res;
+  }
+
+  static Future<void> uploadNewBooking(int businessId, int userId, DateTime date,
+     DateTime startTime, DateTime endTime) async
+  {
+    final dateKey = _getDateKey(date);
+    final String dateTimeKey = '$dateKey${date.hour.toString()}${date.minute.toString()}';
+
+    try { //add booking to customers appointment list
+        await http.patch('https://appo-ae26e-default-rtdb.firebaseio.com/customers/0/appointments/$dateTimeKey.json', 
+        body: json.encode({ //encode gets a map
+          'businessId': businessId,
+          'date': date.toString(),
+          'startTime': startTime.toString(),
+          'endTime': endTime.toString()
+      })).then((res) {
+        if(res.statusCode >= 400)
+        {
+          throw HttpException('Could not add booking to user appointments');
+        }
+      });
+
+  
+      //add booking to businesses times list
+      final url ='https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey/$dateTimeKey.json';
+      await http.patch(url,
+      body: json.encode({
+        'userId': userId,
+        'startTime': startTime.toString(),
+        'endTime': endTime.toString(),
+        'isBooked': true
+        }
+      )).then((res) {
+        if(res.statusCode >= 400)
+        {
+          print(res.body);
+          throw HttpException('Could not update booking in businesses table. HTTP status code = ${res.statusCode}');
+        }
+      });
+
     }
     catch(err) {
       print(err);

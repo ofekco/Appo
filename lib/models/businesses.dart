@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
+import '../booking_calendar/model/booking.dart';
 import './Business.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import './consts.dart' as consts;
 import '../helpers/DB_helper.dart';
+import '../models/types.dart';
 import './Type.dart';
 
 //All the businesses data from the server
@@ -12,16 +14,14 @@ class Businesses with ChangeNotifier{
   List<Business> _businesses;
   List<Business> _filteredList;
   List<Business> _favorites;
+  List<Booking> _myBookings;
 
   Businesses() {
     _businesses = [];
     _filteredList = [];
     _favorites = [];
+    _myBookings = [];
   }
-
-  //static final Businesses _instance = Businesses._privateConstructor();
-
-  //static Businesses get instance => _instance;
 
   List<Business> get BusinessesList {
     return _businesses;
@@ -35,9 +35,25 @@ class Businesses with ChangeNotifier{
     return _favorites;
   }
 
+  List<Booking> get MyBookings {
+    return _myBookings;
+  }
+
+  void addFavorite(Business business)
+  {
+    _favorites.add(business);
+    notifyListeners();
+  }
+
+  void removeFavorite(Business businessToRemove)
+  {
+    _favorites.remove(businessToRemove);
+    notifyListeners();
+  }
+
   Business findByID(int id)
   {
-    return _businesses.firstWhere((b) => b.id == id);
+    return _businesses.firstWhere((b) => b.id == id, orElse: () => null);
   }
 
   //gets the businessesList from the server and stored it to Businesses list
@@ -78,12 +94,19 @@ class Businesses with ChangeNotifier{
     return favoritesList;
   }
 
+  //gets from DB the upcoming appointments of the specific user id
+  Future<void> getMyUpComingBookings(int userId) async
+  {
+    _myBookings = await DB_Helper.getUserUpComingAppointments(userId);
+    notifyListeners();
+  }
+
   void UpdateFilteredList()
   {
     List<Business> newFilteredList = [];
     _businesses.forEach((item) 
     {
-      Type type = DB_Helper.findTypeByTitle(item.serviceType);
+      Type type = Types.findTypeByTitle(item.serviceType);
       if(type.isSelected)
       {
         newFilteredList.add(item);
