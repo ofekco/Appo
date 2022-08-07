@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:Appo/models/businesses.dart';
 import 'package:provider/provider.dart';
 import '../helpers/DB_helper.dart';
-import '../models/type.dart';
+import '../models/types.dart';
 
 class FiltersScreen extends StatefulWidget {
 
@@ -14,6 +14,12 @@ class FiltersScreen extends StatefulWidget {
 }
 
 class _FiltersScreenState extends State<FiltersScreen> {
+  Types types;
+
+  void initState() {
+    super.initState();
+    types = Provider.of<Types>(context, listen: false);
+  }
 
   Widget allTypesUI() {
     return Column(
@@ -50,19 +56,19 @@ class _FiltersScreenState extends State<FiltersScreen> {
   void onTogglePressed(int index) 
   {
     if (index == 0) {
-      if (DB_Helper.TypesList[0].isSelected) {
-        DB_Helper.TypesList.forEach((d) {
+      if (types.TypesList[0].isSelected) {
+        types.TypesList.forEach((d) {
           d.isSelected = false;
         });
       } else {
-        DB_Helper.TypesList.forEach((d) {
+        types.TypesList.forEach((d) {
           d.isSelected = true;
         });
       }
     }
     else {
-      DB_Helper.TypesList[index].isSelected =
-          !DB_Helper.TypesList[index].isSelected;
+      types.TypesList[index].isSelected =
+          !types.TypesList[index].isSelected;
     }
   }
   
@@ -95,7 +101,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
   //This method builds one toggle button for 1 type.
   Material getTypeItem(int i)
   {
-    final type = DB_Helper.TypesList[i];
+    final type = types.TypesList[i];
     return Material(
           color: Colors.transparent,
           child: InkWell(
@@ -137,7 +143,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
   //This method builds the list of toggle buttons for service types
   List<Widget> getTypesList() {
     final List<Widget> list = <Widget>[];
-    for (int i = 0; i < DB_Helper.TypesList.length; i++) 
+    for (int i = 0; i < types.TypesList.length; i++) 
     { 
       list.add(getTypeItem(i));
       if (i == 0) 

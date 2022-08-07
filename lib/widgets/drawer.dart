@@ -1,5 +1,6 @@
 import 'package:Appo/models/colors.dart';
 import 'package:Appo/screens/home_screen.dart';
+import 'package:Appo/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -10,7 +11,6 @@ class NavDrawer extends StatelessWidget {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) => navigationPage));
   }
-
 
   Widget buildNavItem(Function onTap, String title, Icon icon)
   {
@@ -45,20 +45,20 @@ class NavDrawer extends StatelessWidget {
             ),
           ),
 
-          buildNavItem(() =>_onTap(context, HomeScreen()),"בית", Icon(Icons.home)),
+          buildNavItem(() =>_onTap(context, TabsScreen()),"בית", Icon(Icons.home)),
 
           Divider(color: Colors.grey),
 
-          buildNavItem(() =>_onTap(context, HomeScreen()),"תנאי שימוש", Icon(Icons.rule)),
+          buildNavItem(() =>_onTap(context, TabsScreen()),"תנאי שימוש", Icon(Icons.rule)),
 
           Divider(color: Colors.grey),
 
-          buildNavItem(() =>_onTap(context, HomeScreen()),"הרשם כעסק", Icon(Icons.business)),
+          buildNavItem(() =>_onTap(context, TabsScreen()),"הרשם כעסק", Icon(Icons.business)),
 
           Divider(color: Colors.grey),
 
 
-          buildNavItem(() =>_onTap(context, HomeScreen()),"צור קשר", Icon(Icons.chat)),
+          buildNavItem(() =>_onTap(context, TabsScreen()),"צור קשר", Icon(Icons.chat)),
 
           Divider(color: Colors.grey),
 

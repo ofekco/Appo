@@ -15,13 +15,6 @@ class BusinessesList extends StatefulWidget {
 }
 
 class _BusinessesListState extends State<BusinessesList> {
-  
-  //Future<List<Business>> _getDataTask;
-  
-  // void initState() {
-  //   _businesses.getData();
-  //   super.initState();
-  // }
 
   void itemClicked(BuildContext ctx, Business bis) 
   {
