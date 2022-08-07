@@ -37,7 +37,6 @@ class _TabsScreenState extends State<TabsScreen> {
           Text('Appo', style: TextStyle(fontWeight: FontWeight.bold, color: Palette.kToDark[800], fontSize: 24),),
           Image.asset('assets/images/logo.JPG', width: 50, height: 50,),
           
-          //Drawer(backgroundColor: Palette.kToDark[800], child: Icon(Icons.line_style, color: Palette.kToDark[800],))
             ],
           ),
          ),

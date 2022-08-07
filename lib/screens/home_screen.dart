@@ -22,6 +22,7 @@ class MyCustomScrollBehavior extends MaterialScrollBehavior {
 }
 
 class HomeScreen extends StatefulWidget {
+  static const routeName = '/home';
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
