@@ -3,7 +3,7 @@ import 'package:Appo/models/colors.dart';
 import 'package:Appo/screens/business_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
-import 'profil_screen.dart';
+import 'profile_screen.dart';
 import '../widgets/drawer.dart';
 
 class TabsScreen extends StatefulWidget {
