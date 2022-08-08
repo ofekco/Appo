@@ -1,9 +1,10 @@
-import 'package:Appo/models/authentication.dart';
 import 'package:Appo/models/colors.dart';
 import 'package:Appo/screens/home_screen.dart';
 import 'package:Appo/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../models/authentication.dart';
 
 class NavDrawer extends StatelessWidget {
 
@@ -59,7 +60,6 @@ class NavDrawer extends StatelessWidget {
 
           Divider(color: Colors.grey),
 
-
           buildNavItem(() =>_onTap(context, TabsScreen()),"צור קשר", Icon(Icons.chat)),
 
           Divider(color: Colors.grey),
@@ -69,10 +69,9 @@ class NavDrawer extends StatelessWidget {
           Divider(color: Colors.grey),
 
           buildNavItem(() { 
-            Provider.of<Authentication>(context).logout();
+            Provider.of<Authentication>(context, listen: false).logout();
             Navigator.of(context).pop(); 
-          },
-           "התנתק", Icon(Icons.logout)),
+          },"התנתק", Icon(Icons.logout)),
         ],
       ) ,
     );

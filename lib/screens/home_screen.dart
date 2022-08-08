@@ -1,4 +1,3 @@
-import 'package:Appo/helpers/DB_helper.dart';
 import 'package:Appo/models/Business.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -32,9 +31,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Types typesProvider;
 
   void initState() { 
-    typesProvider = Provider.of<Types>(context, listen: false);
+    // Future.delayed(Duration.zero).then((_) => //wait getData to finish before build is called
+    // {
+    // });
+    Types typesProvider = Provider.of<Types>(context, listen: false);
     typesProvider.getTypes(); //load types list 
-    userBusinessesInstance = Provider.of<Businesses>(context, listen: false);
+    Businesses userBusinessesInstance = Provider.of<Businesses>(context, listen: false);
     userBusinessesInstance.getAllBusinesses();
     userBusinessesInstance.getFavorites();
     userBusinessesInstance.getMyUpComingBookings(0); //change the id according to the id of the user

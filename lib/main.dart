@@ -4,6 +4,7 @@ import 'package:Appo/screens/auth_screen.dart';
 import 'package:Appo/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'models/types.dart';
 import 'screens/tabs_screen.dart';
 import './models/colors.dart';
 import './models/businesses.dart';
@@ -21,8 +22,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
+        ChangeNotifierProvider<Businesses>(
          create: (_) => Businesses()),
+        ChangeNotifierProvider<Types>(
+          create: (_)=> Types()),
         ChangeNotifierProvider<Authentication>(
           create: (_) => Authentication()),
       ],
@@ -41,7 +44,7 @@ class MyApp extends StatelessWidget {
             focusColor: const Color.fromRGBO(237, 125, 166, 1),
           ),
           home: auth.isAuth
-                  ? HomeScreen()
+                  ? TabsScreen()
                   : FutureBuilder(
                       future: auth.tryAutoLogin(),
                       builder: (ctx, authResultSnapshot) =>
@@ -50,12 +53,13 @@ class MyApp extends StatelessWidget {
                               ? Splash()
                               : AuthScreen(),
                     ),
+
           routes: {
             '/home': (ctx) => HomeScreen(),
             '/auth': (ctx) => AuthScreen(),
             '/register': (ctx) => AuthScreen(), 
+            '/first': (ctx) => TabsScreen(),
           }
-          
         ),
     ));  
   }

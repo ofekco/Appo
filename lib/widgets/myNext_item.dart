@@ -60,15 +60,6 @@ class MyNextItem extends StatelessWidget {
             ),
     
             //Top image container (type image)
-
-            //FutureBuilder(
-            //future: DB_Helper.findTypeByTitleAsync(bis.serviceType),
-            // builder:((context, type) {
-            //           if(type.data == null)
-            //           {
-            //             return Container();
-            //           }
-            //           else {
             
             Consumer<Types>(builder: ((_, types, __) => 
             Types.findTypeByTitle(bis.serviceType) == null ?

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
-//service type 
 class Type {
   final int id;
   final String title;

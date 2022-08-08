@@ -4,6 +4,7 @@ import 'package:Appo/models/colors.dart';
 import 'package:Appo/models/http_exception.dart';
 import 'package:Appo/screens/home_screen.dart';
 import 'package:Appo/screens/registration_screen.dart';
+import 'package:Appo/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'registration_screen.dart';
@@ -14,7 +15,6 @@ import '../models/authentication.dart';
 class AuthScreen extends StatelessWidget {
   static const routeName = '/auth';
   
-
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -106,7 +106,7 @@ class _AuthCardState extends State<AuthCard> {
     try {
       //if (_authMode == AuthMode.Login) {
           await Provider.of<Authentication>(context, listen: false).login(_authData['email'], _authData['password']);
-          Navigator.of(context).pushNamed(HomeScreen.routeName);
+          Navigator.of(context).pushNamed(TabsScreen.routeName);
    //    } 
        /*else {
             await Provider.of<Authentication>(context, listen: false).signup(_authData['email'], _authData['password']);
