@@ -22,6 +22,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     'password': '',
     'name': '',
     'phone number': '',
+    'address': '',
     'city': '',
   };
 
@@ -96,6 +97,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     FocusNode passwordFocusNode = new FocusNode();
     FocusNode confirmPasswordFocusNode = new FocusNode();
     FocusNode phoneNumberFocusNode = new FocusNode();
+    FocusNode addressFocusNode = new FocusNode();
     FocusNode cityFocusNode = new FocusNode();
     FocusNode nameFocusNode = new FocusNode();
     
@@ -185,6 +187,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                      onSaved: (value) {
                        _registrationData['phone number'] = value;
                      },
+                   ),
+                   TextFormField(
+                    focusNode: cityFocusNode,
+                     decoration: InputDecoration(
+                      labelText: 'Address',
+                      labelStyle: TextStyle(
+	                    color: cityFocusNode.hasFocus ? Colors.blue : Colors.black)),
+                      onSaved: (value) {
+                        _registrationData['address'] = value;
+                      },
                    ),
                    TextFormField(
                     focusNode: cityFocusNode,

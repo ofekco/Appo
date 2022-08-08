@@ -7,6 +7,7 @@ class Customer {
   String _name;
   String _email;
   String _phoneNumber;
+  String _address;
   String _city;
   String _imageUrl;
   List<Business> _favoriteBusiness;
@@ -30,6 +31,10 @@ class Customer {
     return _city;
   }
 
+  String get address {
+    return _address;
+  }
+
   String get phoneNumber {
     return _phoneNumber;
   }
@@ -39,6 +44,10 @@ class Customer {
   }
 
   void importCustomerDataFromDB(String userId) {
+
+  }
+
+  void updateCustomerDataInDB() {
 
   }
 

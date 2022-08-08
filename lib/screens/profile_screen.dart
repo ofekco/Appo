@@ -1,23 +1,42 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+import '../models/customer.dart';
 import '../widgets/curve_painter.dart';
 import '../widgets/drawer.dart';
+import 'package:image_picker/image_picker.dart';
 
 
-class ProfileScreen  extends StatelessWidget {
+
+class ProfileScreen extends StatefulWidget {
   
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  Customer currentCustomer; 
+
+  Future<void> _takePicture() async {
+    final imageFile = await ImagePicker().pickImage(
+      source: ImageSource.camera,
+      maxWidth: 600,
+    );
+    setState(() {
+      currentCustomer.image = imageFile as File;
+    });
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      endDrawer: NavDrawer(),
+    return Scaffold( 
       body: SingleChildScrollView(
         child: Stack(children: <Widget>[
           Container(
-            color: Colors.white, //screen background color
-          ),
-      
+            color: Colors.white),
           SingleChildScrollView(child: 
             Column(children: <Widget>[
                   Container(
@@ -28,24 +47,41 @@ class ProfileScreen  extends StatelessWidget {
                     painter: CurvePainter(),
                       child: Column(
                         children: [
-      
-                  SizedBox(
-                    height: size.height*0.17,
+                          SizedBox(
+                            height: size.height*0.17,
+                          ),
+                          //image
+                          Container(
+                            padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                            child: CircleAvatar(
+                              radius: size.width*0.32,
+                              backgroundColor: Colors.white,
+                              child: CircleAvatar(
+                                radius: size.width*0.30, 
+                                //backgroundImage: 
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(190, 110, 0, 0),
+                                  child: MaterialButton(
+                                    onPressed: () {
+                                      
+                                    },
+                                    color: Colors.blueGrey,
+                                    textColor: Colors.white,
+                                    child: Icon(
+                                      Icons.camera_alt,
+                                      size: 26,
+                                    ),
+                                    padding: EdgeInsets.all(16),
+                                    shape: CircleBorder(),
+                                  )  
+                                ),
+                              ),
+                            ),
+                          )
+                        ]
+                      ),
+                     ),
                   ),
-      
-                  //image
-                  Container(
-                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                    child: CircleAvatar(
-                      radius: size.width*0.22,
-                      backgroundColor: Colors.white,
-                      child: CircleAvatar(
-                        radius: size.width*0.2, 
-                        //backgroundImage: NetworkImage(),
-                        )
-                    ),
-                  ),
-      
                   SizedBox(
                     height: 10,
                   ),
@@ -62,11 +98,7 @@ class ProfileScreen  extends StatelessWidget {
                 ],
               ),
             ),
-          )
-        ],),),
-          
-          //back button
-          Positioned(
+            Positioned(
             top: 0.0,
             left: 0.0,
             right: 0.0,
@@ -79,9 +111,9 @@ class ProfileScreen  extends StatelessWidget {
               backgroundColor: Colors.transparent, 
               elevation: 0.0, //No shadow
             ),),
-          ]
-        ),
-      )
-    );
+          ])));
+          
   }
 }
+
+
