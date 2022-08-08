@@ -5,10 +5,6 @@ class ProfileScreen  extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Image.asset('assets/images/logo3.png'),
-      ),
-    );
+    return Center(child: Text('profile screen'),);
   }
 }
