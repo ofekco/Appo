@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
+        ChangeNotifierProvider<Businesses>(
          create: (_) => Businesses()),
         ChangeNotifierProvider<Types>(
           create: (_)=> Types()),
@@ -53,21 +53,14 @@ class MyApp extends StatelessWidget {
                               ? Splash()
                               : AuthScreen(),
                     ),
-          // routes: {
-          //   BusinessDetailsScreen.routeName: (context) => BusinessDetailsScreen(),
-          // },
-          // onUnknownRoute: (settings) {
-          //   return MaterialPageRoute(builder: (c) => TabsScreen(),);
-          // },
+
           routes: {
             '/home': (ctx) => HomeScreen(),
             '/auth': (ctx) => AuthScreen(),
             '/register': (ctx) => AuthScreen(), 
+            '/first': (ctx) => TabsScreen(),
           }
-          
         ),
     ));  
   }
 }
-
-

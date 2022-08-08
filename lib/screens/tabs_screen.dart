@@ -7,7 +7,7 @@ import 'profile_screen.dart';
 import '../widgets/drawer.dart';
 
 class TabsScreen extends StatefulWidget {
-
+  static const routeName = '/first';
   @override
   _TabsScreenState createState() => _TabsScreenState();
 }
