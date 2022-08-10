@@ -1,5 +1,6 @@
 import 'package:Appo/booking_calendar/day_slots_controller.dart';
 import 'package:Appo/booking_calendar/model/times_slots.dart';
+import 'package:Appo/booking_calendar/widgets/booking_confirmation.dart';
 import 'package:Appo/booking_calendar/widgets/booking_slot-widget.dart';
 import 'package:Appo/helpers/DB_helper.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,8 @@ import 'package:Appo/booking_calendar/widgets/common_button.dart';
 import 'package:Appo/booking_calendar/widgets/common_card.dart';
 import 'package:Appo/booking_calendar/widgets/booking_dialog.dart';
 import 'package:intl/intl.dart';
+
+import 'model/booking.dart';
 
 class BookingCalendar extends StatefulWidget {
 
@@ -32,18 +35,11 @@ class _BookingCalendarState extends State<BookingCalendar> {
     controller = context.read<DaySlotsController>();
     _focusedDay = now;
     _selectedDay = now;
-
-    //create new day controller
-    // TimeSlots slots = TimeSlots(businessId: widget.businessId, date: _selectedDay);
-    // print(slots.times);
-    // controller = DaySlotsController(businessTimesSlots: slots);
   }
 
   CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
   DateTime _selectedDay;
   DateTime _focusedDay;
-  //DateTime startOfDay;
-  //DateTime endOfDay;
 
   static String formatDateTime(DateTime dt) {
     return DateFormat.Hm().format(dt);
@@ -56,6 +52,25 @@ class _BookingCalendarState extends State<BookingCalendar> {
     controller.resetSelectedSlot();
   }
 
+  void onBookButtonTap(BuildContext ctx) async
+  {
+    controller.toggleUploading();
+    Booking book = await controller.uploadBooking();
+    controller.toggleUploading();
+
+    showModalBottomSheet(
+      backgroundColor: Colors.white,
+      context: ctx,
+      builder: (_) {
+        return BookingConfirmation(book);
+      },
+    );
+
+    setState(() {
+      controller.resetSelectedSlot();
+    });              
+  }
+
   @override
   Widget build(BuildContext context) {
     controller = context.watch<DaySlotsController>();
@@ -63,11 +78,11 @@ class _BookingCalendarState extends State<BookingCalendar> {
     return Consumer<DaySlotsController>(builder: (_, controller, __) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: (controller.isUploading || controller.times == null)
-            ? const BookingDialog()
-            : Column(
-                children: [
-                  CommonCard(
-                    child: TableCalendar(
+          ? const BookingDialog()
+          : Column(
+            children: [
+              CommonCard(
+                child: TableCalendar(
                       locale: 'iw_IL',
                       firstDay: DateTime.now(),
                       lastDay: DateTime.now().add(const Duration(days: 1000)),
@@ -98,10 +113,11 @@ class _BookingCalendarState extends State<BookingCalendar> {
                         _focusedDay = focusedDay;
                       },
                     ),
-                  ),
-                  const SizedBox(height: 8),
+              ),
 
-                  Wrap(
+              const SizedBox(height: 8),
+
+              Wrap(
                     alignment: WrapAlignment.spaceAround,
                     spacing: 8.0,
                     runSpacing: 8.0,
@@ -109,18 +125,18 @@ class _BookingCalendarState extends State<BookingCalendar> {
                     children: [
                       BookingExplanation(
                         color:  Palette.kToDark[50],
-                        text: "Available"),
+                        text: "זמין"),
                       BookingExplanation(
                         color: Palette.kToDark[500],
-                        text: "Selected"),
+                        text: "נבחר"),
                       BookingExplanation(
                         color: Colors.redAccent,
-                        text: "Booked"),
+                        text: "לא זמין"),
                     ],
                    ),
 
-                  const SizedBox(height: 8),
-                      Expanded(
+              const SizedBox(height: 8),
+                Expanded(
                         child: GridView.builder(
                           physics: const BouncingScrollPhysics(),
                           itemCount: controller.allBookingSlots.length,
@@ -146,26 +162,43 @@ class _BookingCalendarState extends State<BookingCalendar> {
                       ),
                     
                   
-                  const SizedBox(
+              const SizedBox(
                     height: 16,
                   ),
 
-                  CommonButton(
-                    text: 'BOOK',
-                    onTap: () async {
-                      controller.toggleUploading();
-                      await controller.uploadBooking();
-                      controller.toggleUploading();
-
-                      setState(() {
-                        controller.resetSelectedSlot();
-                      });
-                    },
-                    isDisabled: controller.selectedSlot == -1,
-                    buttonActiveColor: Palette.kToDark[800],
-                  ),
-                ],
+              CommonButton(
+                text: 'BOOK',
+                onTap: () => showDialog(
+                              context: context, 
+                              builder: (ctx) => 
+                                AlertDialog(alignment: Alignment.topRight,
+                                  title: Icon(Icons.report, color: Palette.kToDark[50], size: 50,),
+                                  content: Text('?בטוח שאת/ה רוצה להזמין את התור', style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold,),),
+                                  backgroundColor: Colors.white,
+                                  actions: [
+                                    ElevatedButton(
+                                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Palette.kToDark[500]), ),
+                                      onPressed: () {
+                                        Navigator.of(ctx).pop(false);
+                                      }, 
+                                      child: Text('לא', style: TextStyle(color: Colors.white),)
+                                    ),
+                                    ElevatedButton(
+                                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Palette.kToDark[500]), ),
+                                      child: Text('כן', style:TextStyle(color: Colors.white)),
+                                      onPressed: () {
+                                        onBookButtonTap(context);
+                                        Navigator.of(ctx).pop(true);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                isDisabled: controller.selectedSlot == -1,
+                buttonActiveColor: Palette.kToDark[800],
               ),
+            ],
+          ),
       ),
     );
   }

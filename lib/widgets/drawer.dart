@@ -11,7 +11,7 @@ class NavDrawer extends StatelessWidget {
   void _onTap(BuildContext context, Widget navigationPage)
   {
     Navigator.of(context).pop();
-    Navigator.of(context).push(MaterialPageRoute(
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (BuildContext context) => navigationPage));
   }
 
