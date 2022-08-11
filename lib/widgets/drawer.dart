@@ -1,3 +1,4 @@
+import 'package:Appo/Business_side/screens/business_home_page.dart';
 import 'package:Appo/models/colors.dart';
 import 'package:Appo/screens/home_screen.dart';
 import 'package:Appo/screens/tabs_screen.dart';
@@ -11,7 +12,7 @@ class NavDrawer extends StatelessWidget {
   void _onTap(BuildContext context, Widget navigationPage)
   {
     Navigator.of(context).pop();
-    Navigator.of(context).push(MaterialPageRoute(
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (BuildContext context) => navigationPage));
   }
 
@@ -56,7 +57,7 @@ class NavDrawer extends StatelessWidget {
 
           Divider(color: Colors.grey),
 
-          buildNavItem(() =>_onTap(context, TabsScreen()),"הרשם כעסק", Icon(Icons.business)),
+          buildNavItem(() =>_onTap(context, BusinessHomeScreen()),"הרשם כעסק", Icon(Icons.business)),
 
           Divider(color: Colors.grey),
 
@@ -64,7 +65,7 @@ class NavDrawer extends StatelessWidget {
 
           Divider(color: Colors.grey),
 
-          buildNavItem(() =>_onTap(context, HomeScreen()),"הגדרות", Icon(Icons.settings)),
+          buildNavItem(() =>_onTap(context, TabsScreen()),"הגדרות", Icon(Icons.settings)),
 
           Divider(color: Colors.grey),
 

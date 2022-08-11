@@ -1,3 +1,4 @@
+import 'package:Appo/Business_side/screens/business_home_page.dart';
 import 'package:Appo/models/authentication.dart';
 import 'package:Appo/models/businesses.dart';
 import 'package:Appo/screens/auth_screen.dart';
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
             accentColor: Palette.kToDark[500],
             canvasColor: Colors.white,
             cardColor: Palette.kToDark[0],
-            focusColor: const Color.fromRGBO(237, 125, 166, 1),
+            focusColor: Palette.kToDark[50],
           ),
           home: auth.isAuth
                   ? TabsScreen()
@@ -59,6 +60,7 @@ class MyApp extends StatelessWidget {
             '/auth': (ctx) => AuthScreen(),
             '/register': (ctx) => AuthScreen(), 
             '/first': (ctx) => TabsScreen(),
+            '/business_home' : (ctx) => BusinessHomeScreen(),
           }
         ),
     ));  

@@ -1,5 +1,6 @@
 import 'package:Appo/models/authentication.dart';
 import 'package:Appo/screens/home_screen.dart';
+import 'package:Appo/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/http_exception.dart';
@@ -61,7 +62,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       //                 builder: (BuildContext context) => HomeScreen(),
       //                 fullscreenDialog: true));
       Navigator.of(context).pop();
-      Navigator.of(context).pushNamed(HomeScreen.routeName);
+      Navigator.of(context).pushNamed(TabsScreen.routeName);
     }
     on HttpException catch (error) {
       var errorMessage = 'Authentication failed';

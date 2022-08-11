@@ -31,12 +31,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Types typesProvider;
 
   void initState() { 
-    // Future.delayed(Duration.zero).then((_) => //wait getData to finish before build is called
-    // {
-    // });
     Types typesProvider = Provider.of<Types>(context, listen: false);
     typesProvider.getTypes(); //load types list 
-    Businesses userBusinessesInstance = Provider.of<Businesses>(context, listen: false);
+    userBusinessesInstance = Provider.of<Businesses>(context, listen: false);
     userBusinessesInstance.getAllBusinesses();
     userBusinessesInstance.getFavorites();
     userBusinessesInstance.getMyUpComingBookings(0); //change the id according to the id of the user
@@ -59,6 +56,23 @@ class _HomeScreenState extends State<HomeScreen> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)
           ),
     );
+  }
+  
+  List<Widget> buildUserAppointmentsList() {
+    List<Widget> res = [];
+    //userBusinessesInstance.MyBookings.map((appo) 
+    if(userBusinessesInstance.MyBookings.isNotEmpty)
+    { 
+      userBusinessesInstance.MyBookings.forEach((appo) {
+        if(!(appo.date.isBefore(DateTime.now())))
+        {
+          Business bis = userBusinessesInstance.findByID(appo.businessId);
+          res.add(WrapInkWell(MyNextItem(appo, bis), () => itemClicked(context, bis)));
+        }
+      });
+    }
+
+    return res;
   }
 
   void searchIconClick(BuildContext ctx)
@@ -93,15 +107,20 @@ class _HomeScreenState extends State<HomeScreen> {
           
           Container(height: PageHeight*0.35, width: double.infinity, alignment: Alignment.topRight,
             child: Consumer<Businesses>( builder: (_, userBusinessesInstance, __) => 
-              userBusinessesInstance.MyBookings.length < 1 ? 
+              userBusinessesInstance.BusinessesList.length < 1 || 
+              userBusinessesInstance.MyBookings.length < 1 ? //check if the data is there
                 Container() :
                 ListView(padding: const EdgeInsets.all(10), shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  children: userBusinessesInstance.MyBookings.map((appo) 
-                  {
-                    Business bis = userBusinessesInstance.findByID(appo.businessId);
-                    return WrapInkWell(MyNextItem(appo, bis), () => itemClicked(context, bis));
-                  }).toList(),
+                  children: buildUserAppointmentsList(),
+                  // children: userBusinessesInstance.MyBookings.map((appo) 
+                  // {
+                  //   if(!(appo.date.isBefore(DateTime.now())))
+                  //   {
+                  //     Business bis = userBusinessesInstance.findByID(appo.businessId);
+                  //     return WrapInkWell(MyNextItem(appo, bis), () => itemClicked(context, bis));
+                  //   }
+                  // })?.toList(),
                 ),
             ),
           ),

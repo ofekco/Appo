@@ -73,16 +73,6 @@ class DaySlotsController extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Future<void> generateBookedSlots() {
-  //   bookedSlots.clear();
-  //   _generateBookingSlots();
-
-  //   for (var i = 0; i < data.length; i++) {
-  //     final item = data[i];
-  //     bookedSlots.add(item);
-  //   }
-  // }
-
   Booking createNewBooking() {
     final bookingDatetime = allBookingSlots.elementAt(selectedSlot);
     Booking newAppo = Booking(
@@ -101,8 +91,9 @@ class DaySlotsController extends ChangeNotifier {
       0, newBooking.date, 
       newBooking.startTime, newBooking.endTime);
       //.then((res) {
-      times[selectedSlot].isBooked = true;
-      notifyListeners();
+    times[selectedSlot].isBooked = true;
+    notifyListeners();
+    return newBooking;
     //});
   }
 }
