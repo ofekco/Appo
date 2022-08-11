@@ -1,3 +1,4 @@
+import 'package:Appo/Business_side/screens/business_home_page.dart';
 import 'package:Appo/models/colors.dart';
 import 'package:Appo/screens/home_screen.dart';
 import 'package:Appo/screens/tabs_screen.dart';
@@ -56,7 +57,7 @@ class NavDrawer extends StatelessWidget {
 
           Divider(color: Colors.grey),
 
-          buildNavItem(() =>_onTap(context, TabsScreen()),"הרשם כעסק", Icon(Icons.business)),
+          buildNavItem(() =>_onTap(context, BusinessHomeScreen()),"הרשם כעסק", Icon(Icons.business)),
 
           Divider(color: Colors.grey),
 
