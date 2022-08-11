@@ -64,7 +64,7 @@ class NavDrawer extends StatelessWidget {
 
           Divider(color: Colors.grey),
 
-          buildNavItem(() =>_onTap(context, HomeScreen()),"הגדרות", Icon(Icons.settings)),
+          buildNavItem(() =>_onTap(context, TabsScreen()),"הגדרות", Icon(Icons.settings)),
 
           Divider(color: Colors.grey),
 
