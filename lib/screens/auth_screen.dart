@@ -103,13 +103,8 @@ class _AuthCardState extends State<AuthCard> {
       _isLoading = true;
     });
     try {
-      //if (_authMode == AuthMode.Login) {
-          await Provider.of<Authentication>(context, listen: false).login(_authData['email'], _authData['password']);
-          Navigator.of(context).pushNamed(AuthScreen.routeName);
-   //    } 
-       /*else {
-            await Provider.of<Authentication>(context, listen: false).signup(_authData['email'], _authData['password']);
-        }*/
+      await Provider.of<Authentication>(context, listen: false).login(_authData['email'], _authData['password']);
+      Navigator.of(context).pushNamed(AuthScreen.routeName);
     }
     on HttpException catch (error) {
       var errorMessage = 'Authentication failed';
@@ -136,18 +131,6 @@ class _AuthCardState extends State<AuthCard> {
       _isLoading = false;
     });
   }
-
-  // void _switchAuthMode() {
-  //   if (_authMode == AuthMode.Login) {
-  //     setState(() {
-  //       _authMode = AuthMode.Signup;
-  //     });
-  //   } else {
-  //     setState(() {
-  //       _authMode = AuthMode.Login;
-  //     });
-  //   }
-  // }
 
    void _showErrorDialog(String message) {
     showDialog(
