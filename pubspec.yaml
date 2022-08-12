@@ -24,7 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.0.3
-  http: ^0.12.2
+  http: ^0.13.5
   booking_calendar: ^1.1.4
   google_maps_flutter: ^2.1.9
   google_maps_flutter_web: ^0.4.0+1

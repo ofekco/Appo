@@ -9,8 +9,6 @@ import 'package:provider/provider.dart';
 import 'registration_screen.dart';
 import '../models/authentication.dart';
 
-//enum AuthMode { Signup, Login }
-
 class AuthScreen extends StatelessWidget {
   static const routeName = '/auth';
   
@@ -84,7 +82,6 @@ class AuthCard extends StatefulWidget {
 
 class _AuthCardState extends State<AuthCard> {
   final GlobalKey<FormState> _formKey = GlobalKey();
-  //AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {
     'email': '',
     'password': '',
@@ -107,22 +104,22 @@ class _AuthCardState extends State<AuthCard> {
       Navigator.of(context).pushNamed(AuthScreen.routeName);
     }
     on HttpException catch (error) {
-      var errorMessage = 'Authentication failed';
+      var errorMessage = 'ההרשמה נכשלה';
       if (error.toString().contains('EMAIL_EXISTS')) {
-        errorMessage = 'This email address is already in use.';
+        errorMessage = 'כתובת מייל כבר רשומה';
       } else if (error.toString().contains('INVALID_EMAIL')) {
-        errorMessage = 'This is not a valid email address';
+        errorMessage = 'כתובת מייל לא חוקית';
       } else if (error.toString().contains('WEAK_PASSWORD')) {
-        errorMessage = 'This password is too weak.';
+        errorMessage = 'הסיסמה חלשה מידי';
       } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
-        errorMessage = 'Could not find a user with that email.';
+        errorMessage = 'כתובת מייל לא נמצאה';
       } else if (error.toString().contains('INVALID_PASSWORD')) {
-        errorMessage = 'Invalid password.';
+        errorMessage = 'סיסמה לא נכונה';
       }
       _showErrorDialog(errorMessage);
     }
     catch(error) {
-      var errorMessage = 'Something went wrong, please try again later';
+      var errorMessage = 'משהו השתבש, נסה שנית מאוחר יותר';
        _showErrorDialog(errorMessage);
 
     }
@@ -136,11 +133,11 @@ class _AuthCardState extends State<AuthCard> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-            title: Text('An Error Occurred!'),
+            title: Text('התרחשה שגיאה'),
             content: Text(message),
             actions: <Widget>[
               FlatButton(
-                child: Text('Okay'),
+                child: Text('OK'),
                 onPressed: () {
                   Navigator.of(ctx).pop();
                 },
@@ -159,10 +156,8 @@ class _AuthCardState extends State<AuthCard> {
       ),
       elevation: 8.0,
       child: Container(
-        //height: _authMode == AuthMode.Signup ? 350 : 260,
         height: 260,
         constraints:
-            //BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 350 : 260),
             BoxConstraints(minHeight: 260),
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16.0),
@@ -172,11 +167,11 @@ class _AuthCardState extends State<AuthCard> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'E-Mail'),
+                  decoration: InputDecoration(labelText: 'כתובת מייל'),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value.isEmpty || !value.contains('@')) {
-                      return 'Invalid email!';
+                      return 'כתובת מייל לא חוקית';
                     }
                     return null;
                   },
@@ -185,31 +180,18 @@ class _AuthCardState extends State<AuthCard> {
                   },
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Password'),
+                  decoration: InputDecoration(labelText: 'סיסמה'),
                   obscureText: true,
                   controller: _passwordController,
                   validator: (value) {
                     if (value.isEmpty || value.length < 5) {
-                      return 'Password is too short!';
+                      return 'הסיסמה קצרה מידי';
                     }
                   },
                   onSaved: (value) {
                     _authData['password'] = value;
                   },
                 ),
-
-                // if(_authMode == AuthMode.Signup) 
-                //   TextFormField(
-                //     enabled: _authMode == AuthMode.Signup,
-                //     decoration: InputDecoration(labelText: 'Confirm Password'),
-                //     obscureText: true,
-                //     validator: _authMode == AuthMode.Signup
-                //         ? (value) {
-                //             if (value != _passwordController.text) {
-                //               return 'Passwords do not match!';
-                //             }
-                //           }: null,
-                //   ),
                   
                 SizedBox(
                   height: 20,
@@ -219,8 +201,7 @@ class _AuthCardState extends State<AuthCard> {
                 else
                   RaisedButton(
                     child:
-                      //Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
-                      Text('LOGIN'),
+                      Text('התחבר'),
                     onPressed: _submit,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
@@ -231,8 +212,7 @@ class _AuthCardState extends State<AuthCard> {
                     textColor: Theme.of(context).primaryTextTheme.button.color,
                   ),
                 FlatButton(
-                  child: Text('Don\'t have an account? Sign up'),
-                  //onPressed: _switchAuthMode,
+                  child: Text('עדיין אין לך חשבון? הירשם'),
                   onPressed: () {Navigator.push<dynamic>(context,
                     MaterialPageRoute<dynamic>(
                       builder: (BuildContext context) => RegistrationScreen(),
