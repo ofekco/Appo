@@ -30,11 +30,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-            title: Text('An Error Occurred!'),
+            title: Text('התרחשה שגיאה'),
             content: Text(message),
             actions: <Widget>[
               FlatButton(
-                child: Text('Okay'),
+                child: Text('OK'),
                 onPressed: () {
                   Navigator.of(ctx).pop();
                 },
@@ -222,7 +222,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     textColor: Theme.of(context).primaryTextTheme.button.color,
                   ),
                   FlatButton(
-                  child: Text('Already a member? Login'),
+                  child: Text('יש לך כבר חשבון? היכנס'),
                   onPressed: () { Navigator.push<dynamic>(context,
                     MaterialPageRoute<dynamic>(
                       builder: (BuildContext context) => AuthScreen(),

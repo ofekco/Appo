@@ -14,7 +14,7 @@ class DB_Helper {
   {
     List<Type> res = [];
     try {
-      http.Response response =  await http.get(consts.types_url); 
+      http.Response response =  await http.get(Uri.parse(consts.types_url)); 
       var jsonData = jsonDecode(response.body);
 
       for(var item in jsonData)
@@ -41,7 +41,7 @@ class DB_Helper {
   static Future<void> postFavorite(Business itemToAdd) async
   {
     try {
-        await http.patch('https://appo-ae26e-default-rtdb.firebaseio.com/customers/0/favorites/${itemToAdd.id}.json', body: json.encode({ //encode gets a map
+        await http.patch(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/0/favorites/${itemToAdd.id}.json'), body: json.encode({ //encode gets a map
           'businessId': itemToAdd.id
       })).then((res) {
         if(res.statusCode >= 400)
@@ -59,7 +59,7 @@ class DB_Helper {
   static Future<void> removeFromFavorites(Business itemToRemove) async
   {
     try {
-        final response = await http.delete('https://appo-ae26e-default-rtdb.firebaseio.com/customers/0/favorites/${itemToRemove.id}.json');
+        final response = await http.delete(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/0/favorites/${itemToRemove.id}.json'));
         if(response.statusCode >= 400) {
           throw HttpException('Could not delete product!');
         }
@@ -73,7 +73,7 @@ class DB_Helper {
   static Future<List<Business>> getAllBusinesses() async 
   {
     try {
-      http.Response response =  await http.get(consts.businesses_url);
+      http.Response response =  await http.get(Uri.parse(consts.businesses_url));
       var jsonData = jsonDecode(response.body);
     
       List<Business> res = [];
@@ -92,7 +92,7 @@ class DB_Helper {
     List<Booking> res = [];
 
     try {
-      final url = 'https://appo-ae26e-default-rtdb.firebaseio.com/customers/$userId/appointments.json';
+      final url = Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/$userId/appointments.json');
       http.Response response =  await http.get(url);
       var jsonData = jsonDecode(response.body) as Map<String, dynamic>;
     
@@ -132,7 +132,7 @@ class DB_Helper {
     String dateKey = _getDateKey(date);
     List<TimeSlot> res = [];
     try {
-      final url = 'https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey.json';
+      final url = Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey.json');
       http.Response response = await http.get(url);
       var jsonData = jsonDecode(response.body) as Map<String, dynamic>;
       
@@ -159,7 +159,7 @@ class DB_Helper {
     final String dateTimeKey = '$dateKey${date.hour.toString()}${date.minute.toString()}';
 
     try { //add booking to customers appointment list
-        await http.patch('https://appo-ae26e-default-rtdb.firebaseio.com/customers/0/appointments/$dateTimeKey.json', 
+        await http.patch(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/0/appointments/$dateTimeKey.json'), 
         body: json.encode({ //encode gets a map
           'businessId': businessId,
           'date': date.toString(),
@@ -174,7 +174,7 @@ class DB_Helper {
 
   
       //add booking to businesses times list
-      final url ='https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey/$dateTimeKey.json';
+      final url =Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey/$dateTimeKey.json');
       await http.patch(url,
       body: json.encode({
         'userId': userId,
@@ -201,7 +201,7 @@ class DB_Helper {
   static Future<dynamic> getFavorites(int userId) async 
   {
     try {
-      http.Response response = await http.get(consts.dummy_favorites);
+      http.Response response = await http.get(Uri.parse(consts.dummy_favorites));
       var jsonData = jsonDecode(response.body);
 
       return jsonData;

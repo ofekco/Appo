@@ -1,11 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import '../models/customer.dart';
 import '../widgets/curve_painter.dart';
 import '../widgets/drawer.dart';
 import 'package:image_picker/image_picker.dart';
-
 
 
 class ProfileScreen extends StatefulWidget {

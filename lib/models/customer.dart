@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:Appo/models/Business.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +11,7 @@ class Customer {
   String _phoneNumber;
   String _city;
   String _imageUrl;
+  File _image;
   List<Business> _favoriteBusiness;
   
 
@@ -32,6 +35,14 @@ class Customer {
 
   String get phoneNumber {
     return _phoneNumber;
+  }
+
+  File get image {
+    return _image;
+  }
+
+  void set image(File imageToSet) {
+    _image = imageToSet;
   }
 
   List<Business> get favoriteBusiness {
