@@ -56,7 +56,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     try {
       await Provider.of<Authentication>(context, listen: false)
       .signup(_registrationData['email'], _registrationData['password'], _registrationData['name'],
-      _registrationData['phone number'], _registrationData['city'],);
+      _registrationData['phone number'], _registrationData['address'], _registrationData['city'],);
       Navigator.of(context).pop();
       Navigator.of(context).pushNamed(TabsScreen.routeName);
     }

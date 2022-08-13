@@ -101,7 +101,7 @@ class _AuthCardState extends State<AuthCard> {
     });
     try {
       await Provider.of<Authentication>(context, listen: false).login(_authData['email'], _authData['password']);
-      Navigator.of(context).pushNamed(AuthScreen.routeName);
+      Navigator.of(context).pushNamed(TabsScreen.routeName);
     }
     on HttpException catch (error) {
       var errorMessage = 'ההרשמה נכשלה';
