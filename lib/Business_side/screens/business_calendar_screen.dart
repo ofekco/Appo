@@ -25,7 +25,7 @@ class _BusinessCalendarScreenState extends State<BusinessCalendarScreen> {
   //get slots as json file - map of dates
   Future<void> getSlots() async 
   {
-    final url = 'https://appo-ae26e-default-rtdb.firebaseio.com/businesses/${widget.businessID}/times.json';
+    final url = Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/businesses/${widget.businessID}/times.json');
     try {
       http.Response response = await http.get(url);
       var jsonData = jsonDecode(response.body) as Map;

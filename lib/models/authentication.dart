@@ -184,7 +184,7 @@ class Authentication with ChangeNotifier {
     _userId = extractedUserData['userId'];
     _expiryDate = expiryDate;
 
-    _importCustomerDataFromDB(_userId);
+    await _importCustomerDataFromDB(_userId);
     notifyListeners();
     _autoLogout();
     return true;

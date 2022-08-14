@@ -235,7 +235,7 @@ class DB_Helper {
   static Future<Map> findCustomerById(int id) async
   {
     try {
-      final url = 'https://appo-ae26e-default-rtdb.firebaseio.com/customers.json';
+      final url = Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers.json');
       http.Response response = await http.get(url);
       var jsonData = jsonDecode(response.body) as Map;
 
