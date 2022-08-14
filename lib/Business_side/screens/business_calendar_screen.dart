@@ -13,7 +13,7 @@ class BusinessCalendarScreen extends StatefulWidget {
 }
 
 class _BusinessCalendarScreenState extends State<BusinessCalendarScreen> {
-  List<CalendarEventData> _appointments = [];
+  List<CalendarEventData<TimeSlot>> _appointments = [];
   bool isLoading = true;
 
   void initState()
@@ -61,37 +61,59 @@ class _BusinessCalendarScreenState extends State<BusinessCalendarScreen> {
           TimeSlot t = TimeSlot.fromJson(json[timeKey]);
           Map user = await DB_Helper.findCustomerById(t.userId);
           String name = user['name'];
-          createEvent(t.startTime, name);
+          createEvent(t, name);
         }
       }
     }
-
-    
   }
 
-  void createEvent(DateTime dateTime, String name)
+  void createEvent(TimeSlot booking, String userName)
   {
-    CalendarEventData event = 
+    CalendarEventData<TimeSlot> event = 
       CalendarEventData(
-      date: dateTime,
-      event: 'appointment',
-      title: name,
+      date: booking.startTime,
+      event: booking,
+      title: userName,
       description: "",
-      startTime: DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute),
-      endTime: DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour + 1, dateTime.minute),
+      startTime: booking.startTime,
+      endTime: booking.endTime,
       );
 
     _appointments.add(event);
   }
 
+  void onEventTap(List<CalendarEventData<dynamic>> event)
+  {
+    showDialog(context: context, builder: (context) => 
+      AlertDialog(
+        title: Text(event.first.title,),
+        content: Text(event.first.startTime.toString()),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('סגור'))
+            ],
+      ),);
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    return  isLoading ? Container() :
+    return  isLoading ? Container(child: Text('loading'),) :
     WeekView(
-      controller: CalendarControllerProvider.of(context).controller..addAll(_appointments), //EventController(),
-      eventTileBuilder: (date, events, boundry, start, end) {
-        
+      controller: CalendarControllerProvider.of(context).controller..addAll(_appointments), 
+      showLiveTimeLineInAllDays: true, // To display live time line in all pages in week view.
+      width: MediaQuery.of(context).size.width, // width of week view.
+      minDay: DateTime(2000),
+      maxDay: DateTime(2050),
+      initialDay: DateTime.now(),
+      heightPerMinute: 1, // height occupied by 1 minute time span.
+      eventArranger: SideEventArranger(), // To define how simultaneous events will be arranged.
+      onEventTap: (event, date) => onEventTap(event),
+      startDay: WeekDays.sunday,
+      eventTileBuilder: (date, event, boundry, start, end) {
         return 
           InkWell(
             child: Container(
@@ -100,34 +122,13 @@ class _BusinessCalendarScreenState extends State<BusinessCalendarScreen> {
                 color: Colors.blue,
                 ),
                 child: Center(
-                  child: Text(events.first.title,
+                  child: Text(event.first.title,
                       style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
             ),
-            onDoubleTap: () => showDialog(context: context, builder: (context) => 
-              AlertDialog(
-                title: Text(events.first.title,),
-                content: Text(start.toString()),
-                  actions: [
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text('Go Back'))
-                  ],
-                ),),
+            onDoubleTap: () => onEventTap(event),
         );
-    },
-      showLiveTimeLineInAllDays: true, // To display live time line in all pages in week view.
-      width: MediaQuery.of(context).size.width, // width of week view.
-      minDay: DateTime(2000),
-      maxDay: DateTime(2050),
-      initialDay: DateTime.now(),
-      heightPerMinute: 1, // height occupied by 1 minute time span.
-      eventArranger: SideEventArranger(), // To define how simultaneous events will be arranged.
-      onEventTap: (events, date) => print(events),
-      onDateLongPress: (date) => print(date),
-      startDay: WeekDays.sunday, // To change the first day of the week.
+      }
     );
   }
 }
