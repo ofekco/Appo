@@ -4,9 +4,7 @@ import 'package:Appo/models/http_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'customer.dart';
-
 
 class Authentication with ChangeNotifier {
   String _token;
@@ -185,7 +183,7 @@ class Authentication with ChangeNotifier {
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
     _expiryDate = expiryDate;
-    
+
     _importCustomerDataFromDB(_userId);
     notifyListeners();
     _autoLogout();

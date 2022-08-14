@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
             '/auth': (ctx) => AuthScreen(),
             '/register': (ctx) => AuthScreen(), 
             '/first': (ctx) => TabsScreen(),
-            '/business_home' : (ctx) => BusinessHomeScreen(),
+            '/business_home' : (ctx) => BusinessHomeScreen(3),
           }
         ),
     ));  

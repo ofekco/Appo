@@ -15,8 +15,8 @@ class Customer {
   File _image;
   List<Business> _favoriteBusiness;
   
-
   Customer(this._userId, this._firebaseToken, this._email, this._name, this._address, this._city, this._phoneNumber);
+
 
   String get userId {
     return _userId;
