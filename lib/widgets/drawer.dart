@@ -57,7 +57,7 @@ class NavDrawer extends StatelessWidget {
 
           Divider(color: Colors.grey),
 
-          buildNavItem(() =>_onTap(context, BusinessHomeScreen()),"הרשם כעסק", Icon(Icons.business)),
+          buildNavItem(() =>_onTap(context, BusinessHomeScreen(3)),"הרשם כעסק", Icon(Icons.business)),
 
           Divider(color: Colors.grey),
 

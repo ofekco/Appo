@@ -83,8 +83,8 @@ class Businesses with ChangeNotifier{
         if(item != null)
         {
           Business bis = findByID(item['businessId']); //maybe replace with get request to the server to get the business
-          favoritesList.add(bis);
           bis.isFavorite = true;
+          favoritesList.add(bis);
         }
       }
       

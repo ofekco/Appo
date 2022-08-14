@@ -11,7 +11,6 @@ class Customer {
   String _imageUrl;
   List<Business> _favoriteBusiness;
   
-
   Customer(this._userId, this._firebaseToken, this._email);
 
   String get userId {
@@ -41,6 +40,6 @@ class Customer {
   void importCustomerDataFromDB(String userId) {
 
   }
-
+  
 }
 

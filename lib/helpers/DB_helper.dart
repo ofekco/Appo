@@ -127,6 +127,26 @@ class DB_Helper {
     return '$day$month${date.year}';
   }
 
+  static DateTime convertDateKeyToDate(String key)
+  {
+    int day = int.parse('${key[0]}${key[1]}');
+    int month = int.parse('${key[2]}${key[3]}');
+    int year = int.parse(key.substring(4));
+
+    return DateTime(year, month, day);
+  }
+
+  static DateTime convertDateTimeKeyToDateTime(String key)
+  {
+    int day = int.parse('${key[0]}${key[1]}');
+    int month = int.parse('${key[2]}${key[3]}');
+    int year = int.parse(key.substring(4,7));
+    int hour = int.parse('${key[8]}${key[8]}');
+    int min = int.parse(key.substring(9));
+
+    return DateTime(year, month, day, hour, min);
+  }
+
   static Future<List<TimeSlot>> getTimes(int businessId, DateTime date) async 
   {
     String dateKey = _getDateKey(date);
@@ -208,6 +228,29 @@ class DB_Helper {
     }
     catch(err) {
       print(err);
+      throw err;
+    }
+  }
+
+  static Future<Map> findCustomerById(int id) async
+  {
+    try {
+      final url = 'https://appo-ae26e-default-rtdb.firebaseio.com/customers.json';
+      http.Response response = await http.get(url);
+      var jsonData = jsonDecode(response.body) as Map;
+
+      for(var item in jsonData.entries)
+      {
+        if(item.value['id'] == id)
+        {
+          return item.value;
+        }
+      }
+
+      return null;
+
+    }
+    catch(err) {
       throw err;
     }
   }
