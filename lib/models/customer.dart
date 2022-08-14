@@ -9,13 +9,14 @@ class Customer {
   String _name;
   String _email;
   String _phoneNumber;
+  String _address;
   String _city;
   String _imageUrl;
   File _image;
   List<Business> _favoriteBusiness;
   
 
-  Customer(this._userId, this._firebaseToken, this._email);
+  Customer(this._userId, this._firebaseToken, this._email, this._name, this._address, this._city, this._phoneNumber);
 
   String get userId {
     return _userId;
@@ -27,6 +28,10 @@ class Customer {
 
   String get email {
     return _email;
+  }
+
+  String get address {
+    return _address;
   }
 
   String get city {
@@ -47,10 +52,6 @@ class Customer {
 
   List<Business> get favoriteBusiness {
     return _favoriteBusiness;
-  }
-
-  void importCustomerDataFromDB(String userId) {
-
   }
 
 }

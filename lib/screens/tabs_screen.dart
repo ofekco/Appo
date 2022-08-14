@@ -2,6 +2,8 @@
 import 'package:Appo/models/colors.dart';
 import 'package:Appo/screens/business_list_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/authentication.dart';
 import 'home_screen.dart';
 import 'profile_screen.dart';
 import '../widgets/drawer.dart';
@@ -16,7 +18,7 @@ class TabsScreen extends StatefulWidget {
 class _TabsScreenState extends State<TabsScreen> {
 
   Widget home = HomeScreen();
-  Widget profile = ProfileScreen();
+  Widget profile;
 
   List<Map<String, Object>> _pages = [
     {'page': HomeScreen, 'title': 'Home'},
@@ -24,6 +26,12 @@ class _TabsScreenState extends State<TabsScreen> {
   ];
 
   int _selectedPageIndex = 0;
+
+  @override
+  void initState() {
+    profile = ProfileScreen(Provider.of<Authentication>(context, listen: false).currentUser);
+    super.initState();
+  }
 
   void _selectPage(int index) {
     setState(() {

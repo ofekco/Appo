@@ -5,15 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'customer.dart';
+
 
 class Authentication with ChangeNotifier {
   String _token;
   DateTime _expiryDate;
   String _userId;
   Timer _authTimer;
+  Customer _currentUser; 
  
   bool get isAuth {
     return token != null;
+  }
+
+  Customer get currentUser {
+    return _currentUser;
   }
 
   String get token {
@@ -23,58 +30,66 @@ class Authentication with ChangeNotifier {
     return null;
   }
 
+  void _setFirebaseUserAuth(String email, String password) async {
+    try {
+        var url =
+          Uri.parse('https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyAV3px-slgo-jPGEgUJBYJbDaTledtXIj8');
+        var response = await http.post(
+        url, body: json.encode(
+          {
+            'email': email,
+            'password': password,
+            'returnSecureToken': true,
+          },
+        ),
+       );
 
-  Future<void> signup(String email, String password, String name, String phone, String city) async {
-      var url =
-        Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers.json');
-        try {
-          var response = await http.post(
-          url,
-          body: json.encode(
-            {
-              'email': email,
-              'password': password,
-              'name': name,
-              'phone number': phone,
-              'city': city,
-            },
-          ),
-        );
+       var responseData = json.decode(response.body);
+        if(responseData['error'] != null) {
+          throw HttpException(responseData['error']['message']);
+        }
+        
+      _token = responseData['idToken'];
+      _userId = responseData['localId'];
+      _expiryDate = DateTime.now().add(
+        Duration(
+        seconds: int.parse(responseData['expiresIn']),
+        ),
+      );
+    }
+    catch (error) {
+      throw error;
+    }
+  }
+
+  void _setAppCustomerAuth(String email, String password, String name, String phone, String address, String city) async {
+    try {
+      var response = await http.patch(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/${_userId}.json'), 
+      body: json.encode({ 
+        'email': email,
+        'password': password,
+        'name': name,
+        'phone number': phone,
+        'city': city})
+      );
 
       var responseData = json.decode(response.body);
       if(responseData['error'] != null) {
         throw HttpException(responseData['error']['message']);
       }
+    }
+    catch (error) {
+      throw error;
+    }
+  }
 
-      url =
-        Uri.parse('https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyAV3px-slgo-jPGEgUJBYJbDaTledtXIj8');
-      response = await http.post(
-      url, body: json.encode(
-        {
-          'email': email,
-          'password': password,
-          'returnSecureToken': true,
-        },
-      ),
-    );
+  Future<void> signup(String email, String password, String name, String phone, String address, String city) async {
+    await _setFirebaseUserAuth(email, password);
+    await _setAppCustomerAuth(email, password, name, phone, address, city);
 
-      responseData = json.decode(response.body);
-      if(responseData['error'] != null) {
-        throw HttpException(responseData['error']['message']);
-      }
-
-    _token = responseData['idToken'];
-    _userId = responseData['localId'];
-    _expiryDate = DateTime.now().add(
-    Duration(
-      seconds: int.parse(
-        responseData['expiresIn'],
-      ),
-    ),
-    );
-
-    _autoLogout();
+    _currentUser = new Customer(_userId, _token, email, name, address, city, phone);
     notifyListeners();
+    _autoLogout();
     final prefs = await SharedPreferences.getInstance();
     final userData = json.encode(
     {
@@ -83,11 +98,6 @@ class Authentication with ChangeNotifier {
       'expiryDate': _expiryDate.toIso8601String(),
     });
       prefs.setString('userData', userData);
-
-    } catch (error) {
-      throw error;
-    }
-    
   }
 
   Future<void> login(String email, String password) async {
@@ -109,30 +119,28 @@ class Authentication with ChangeNotifier {
         if(responseData['error'] != null) {
           throw HttpException(responseData['error']['message']);
         }
-      _token = responseData['idToken'];
-      _userId = responseData['localId'];
-      _expiryDate = DateTime.now().add(
-        Duration(
-          seconds: int.parse(
-            responseData['expiresIn'],
+        _token = responseData['idToken'];
+        _userId = responseData['localId'];
+        _expiryDate = DateTime.now().add(
+          Duration(
+            seconds: int.parse(responseData['expiresIn']),
           ),
-        ),
-      );
-      _autoLogout();
-      notifyListeners();
-      final prefs = await SharedPreferences.getInstance();
-       final userData = json.encode(
-        {
-          'token': _token,
-          'userId': _userId,
-          'expiryDate': _expiryDate.toIso8601String(),
-        },
-      );
-      prefs.setString('userData', userData);
+        );
 
-    } catch (error) {
-      throw error;
-    }
+        await _importCustomerDataFromDB(_userId);
+        _autoLogout();
+        notifyListeners();
+        final prefs = await SharedPreferences.getInstance();
+        final userData = json.encode({
+            'token': _token,
+            'userId': _userId,
+            'expiryDate': _expiryDate.toIso8601String(),
+          },
+        );
+        prefs.setString('userData', userData);
+      } catch (error) {
+        throw error;
+      }
   }
 
   Future<void> logout() async {
@@ -177,48 +185,23 @@ class Authentication with ChangeNotifier {
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
     _expiryDate = expiryDate;
+    
+    _importCustomerDataFromDB(_userId);
     notifyListeners();
     _autoLogout();
     return true;
   }
+
+  void _importCustomerDataFromDB(String userId) async {
+    try {
+      http.Response response =  await http.get(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/${_userId}.json')); 
+      var resCust = jsonDecode(response.body);
+      _currentUser = new Customer(_userId, _token,  resCust['email'],  resCust['name'],  resCust['address'],  resCust['city'], resCust['phone number']);
+    }
+    catch(err) {
+      print(err);
+      throw err;
+    }
   }
+}
 
-  
-
-  //  Future<void> signup(String email, String password) async {
-  //     final url =
-  //       Uri.parse('https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyAV3px-slgo-jPGEgUJBYJbDaTledtXIj8');
-  //       try {
-  //         final response = await http.post(
-  //         url,
-  //         body: json.encode(
-  //           {
-  //             'email': email,
-  //             'password': password,
-  //             'returnSecureToken': true,
-  //           },
-  //         ),
-  //       );
-
-  //       final responseData = json.decode(response.body);
-  //       if(responseData['error'] != null) {
-  //         throw HttpException(responseData['error']['message']);
-  //       }
-  //     _token = responseData['idToken'];
-  //     _userId = responseData['localId'];
-  //     _expiryDate = DateTime.now().add(
-  //       Duration(
-  //         seconds: int.parse(
-  //           responseData['expiresIn'],
-  //         ),
-  //       ),
-  //     );
-
-  //     notifyListeners();
-  //   } catch (error) {
-  //     throw error;
-  //   }
-    
-  // }
-
-//}

@@ -3,6 +3,7 @@ import 'package:Appo/models/authentication.dart';
 import 'package:Appo/models/businesses.dart';
 import 'package:Appo/screens/auth_screen.dart';
 import 'package:Appo/screens/home_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/types.dart';
@@ -45,16 +46,15 @@ class MyApp extends StatelessWidget {
             focusColor: Palette.kToDark[50],
           ),
           home: auth.isAuth
-                  ? TabsScreen()
-                  : FutureBuilder(
-                      future: auth.tryAutoLogin(),
-                      builder: (ctx, authResultSnapshot) =>
-                          authResultSnapshot.connectionState ==
-                                  ConnectionState.waiting
-                              ? Splash()
-                              : AuthScreen(),
-                    ),
-
+            ? TabsScreen()
+            : FutureBuilder(
+                future: auth.tryAutoLogin(),
+                builder: (ctx, authResultSnapshot) =>
+                    authResultSnapshot.connectionState ==
+                            ConnectionState.waiting
+                        ? Splash()
+                        : AuthScreen(),
+              ),
           routes: {
             '/home': (ctx) => HomeScreen(),
             '/auth': (ctx) => AuthScreen(),

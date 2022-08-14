@@ -93,6 +93,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     FocusNode passwordFocusNode = new FocusNode();
     FocusNode confirmPasswordFocusNode = new FocusNode();
     FocusNode phoneNumberFocusNode = new FocusNode();
+    FocusNode addressFocusNode = new FocusNode();
     FocusNode cityFocusNode = new FocusNode();
     FocusNode nameFocusNode = new FocusNode();
     
@@ -109,6 +110,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               children: <Widget>[
                 TextFormField(
                   focusNode: emailFocusNode,
+                  showCursor: true,
+                  cursorColor: Colors.black,
                   decoration: InputDecoration(
                     labelText: 'כתובת מייל', 
                     labelStyle: TextStyle(
@@ -126,6 +129,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
                 TextFormField(
                   focusNode: passwordFocusNode,
+                  showCursor: true,
+                  cursorColor: Colors.black,
                   decoration: InputDecoration(
                     labelText: 'סיסמה',
                     labelStyle: TextStyle(
@@ -143,6 +148,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
                 TextFormField(
                   focusNode: confirmPasswordFocusNode,
+                  showCursor: true,
+                  cursorColor: Colors.black,
                   decoration: InputDecoration(
                     labelText: 'אימות סיסמה',
                     labelStyle: TextStyle(
@@ -156,19 +163,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
                 TextFormField(
                     focusNode: nameFocusNode,
-                     decoration: InputDecoration(
-                      labelText: 'שם מלא',
-                      labelStyle: TextStyle(
-	                    color: nameFocusNode.hasFocus ? Colors.blue : Colors.black)),
-                      onSaved: (value) {
-                        _registrationData['name'] = value;
-                      },
+                    showCursor: true,
+                    cursorColor: Colors.black,
+                    decoration: InputDecoration(
+                    labelText: 'שם מלא',
+                    labelStyle: TextStyle(
+                    color: nameFocusNode.hasFocus ? Colors.blue : Colors.black)),
+                    onSaved: (value) {
+                      _registrationData['name'] = value;
+                    },
                    ),
-                TextFormField(
+                  TextFormField(
                      focusNode: phoneNumberFocusNode,
                      keyboardType: TextInputType.number,
+                     showCursor: true,
+                     cursorColor: Colors.black,
                      decoration: InputDecoration(
-                      
                       labelText: 'מספר טלפון',
                       labelStyle: TextStyle(
 	                    color: phoneNumberFocusNode.hasFocus ? Colors.blue : Colors.black)),
@@ -183,25 +193,29 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                        _registrationData['phone number'] = value;
                      },
                    ),
-                    TextFormField(
-                    focusNode: cityFocusNode,
-                     decoration: InputDecoration(
-                      labelText: 'כתובת',
-                      labelStyle: TextStyle(
-	                    color: cityFocusNode.hasFocus ? Colors.blue : Colors.black)),
-                      onSaved: (value) {
-                        _registrationData['address'] = value;
-                      },
+                  TextFormField(
+                    focusNode: addressFocusNode,
+                    showCursor: true,
+                    cursorColor: Colors.black,
+                    decoration: InputDecoration(
+                    labelText: 'כתובת',
+                    labelStyle: TextStyle(
+                    color: cityFocusNode.hasFocus ? Colors.blue : Colors.black)),
+                    onSaved: (value) {
+                      _registrationData['address'] = value;
+                    },
                    ),
-                   TextFormField(
+                  TextFormField(
                     focusNode: cityFocusNode,
-                     decoration: InputDecoration(
-                      labelText: 'עיר',
-                      labelStyle: TextStyle(
-	                    color: cityFocusNode.hasFocus ? Colors.blue : Colors.black)),
-                      onSaved: (value) {
-                        _registrationData['city'] = value;
-                      },
+                    showCursor: true,
+                    cursorColor: Colors.black,
+                    decoration: InputDecoration(
+                    labelText: 'עיר',
+                    labelStyle: TextStyle(
+                    color: cityFocusNode.hasFocus ? Colors.blue : Colors.black)),
+                    onSaved: (value) {
+                      _registrationData['city'] = value;
+                    },
                    ),
                    SizedBox(
                   height: 20,

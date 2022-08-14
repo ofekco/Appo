@@ -1,13 +1,15 @@
 import 'dart:io';
+import 'package:Appo/models/customer.dart';
 import 'package:flutter/material.dart';
-import '../models/authentication.dart';
-import '../models/customer.dart';
 import '../widgets/curve_painter.dart';
-import '../widgets/drawer.dart';
 import 'package:image_picker/image_picker.dart';
 
 
 class ProfileScreen extends StatefulWidget {
+  Customer _currentUser;
+
+  ProfileScreen(this._currentUser);
+
   
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -21,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       maxWidth: 600,
     );
     setState(() {
-      Authentication.currentUser.image = imageFile as File;
+     widget._currentUser.image = imageFile as File;
     });
     
   }
@@ -32,11 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       body: SingleChildScrollView(
-        child: Stack(children: <Widget>[
-          Container(
-            color: Colors.white, //screen background color
-          ),
-          SingleChildScrollView(child: 
+        child: SingleChildScrollView(child: 
             Column(children: <Widget>[
               Container(
                 width: size.width,
@@ -45,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: CustomPaint(
                 painter: CurvePainter(),
                   child: Column(
-                   children: [
+                    children: [
                     SizedBox(
                       height: size.height*0.17,
                     ),
@@ -56,8 +54,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center, 
                       children:[
-                        Text("Authentication.currentUser.name", style: 
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18, letterSpacing: 1.15),
+                        Text(widget._currentUser.name, style: 
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 26, letterSpacing: 1.15),
                         ),
                       ], 
                     ),
@@ -66,28 +64,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     buildPersonalInfo(),
             ],
                 ),
-           
+            
                 ),
               ),
-        Positioned(
-        top: 0.0,
-        left: 0.0,
-        right: 0.0,
-        child: AppBar(
-          title: Text(''),
-          leading: new IconButton(
-            icon: new Icon(Icons.arrow_back_ios, color: Colors.white),
-            onPressed: () => Navigator.of(context).pop(),
-            ),
-          backgroundColor: Colors.transparent, 
-          elevation: 0.0, //No shadow
-        ),
-      ),
-      ]
-    )
-        )]
+          ]
         )
-    ));        
+            )
+            )
+        );        
   }
 
 
@@ -99,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: Colors.white,
         child: CircleAvatar(
           radius: size.width*0.30, 
-          backgroundImage: AssetImage('asset/images/client.png'),
+          backgroundImage: AssetImage('assets/images/client.jpg'),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(190, 110, 0, 0),
             child: MaterialButton(
@@ -149,7 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(Authentication.currentUser.email,
+              Text(widget._currentUser.email,
                 style: TextStyle(fontSize: 18)),
               SizedBox(width: 15,),
               Icon(Icons.email_outlined),             
@@ -159,7 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(Authentication.currentUser.phoneNumber,
+              Text(widget._currentUser.phoneNumber,
                 style: TextStyle(fontSize: 18)),
               SizedBox(width: 15,),
               Icon(Icons.phone_outlined),             
@@ -169,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(Authentication.currentUser.address + ", " + Authentication.currentUser.city,
+              Text(widget._currentUser.address + ", " + widget._currentUser.city,
                 style: TextStyle(fontSize: 18)),
               SizedBox(width: 15,),
               Icon(Icons.home_outlined),             

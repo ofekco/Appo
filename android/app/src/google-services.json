@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "478137549364",
+    "firebase_url": "https://appo-ae26e-default-rtdb.firebaseio.com",
+    "project_id": "appo-ae26e",
+    "storage_bucket": "appo-ae26e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478137549364:android:2597c97d8812aa73ab8061",
+        "android_client_info": {
+          "package_name": "com.example.appo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "478137549364-9lcg5shi9mn92fnklda76svhake54f0u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAD2Jx4a3hktgmv6IiAotQu2w3cVAOK04Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478137549364-9lcg5shi9mn92fnklda76svhake54f0u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
