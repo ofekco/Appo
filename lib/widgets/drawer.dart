@@ -1,6 +1,5 @@
 import 'package:Appo/Business_side/screens/business_home_page.dart';
 import 'package:Appo/models/colors.dart';
-import 'package:Appo/screens/home_screen.dart';
 import 'package:Appo/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

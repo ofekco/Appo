@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import '../widgets/event_details_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:http/http.dart' as http;
@@ -84,18 +84,21 @@ class _BusinessCalendarScreenState extends State<BusinessCalendarScreen> {
 
   void onEventTap(List<CalendarEventData<dynamic>> event)
   {
-    showDialog(context: context, builder: (context) => 
-      AlertDialog(
-        title: Text(event.first.title,),
-        content: Text(event.first.startTime.toString()),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('סגור'))
-            ],
-      ),);
+    showDialog(context: context, 
+      builder: (context) => EventDetailsDialog(
+        title: event.first.title, descriptions: event.first.startTime.toString(), 
+                  text: 'סגור'));
+      // AlertDialog(
+      //   title: Text(event.first.title,),
+      //   content: Text(event.first.startTime.toString()),
+      //     actions: [
+      //       ElevatedButton(
+      //         onPressed: () {
+      //           Navigator.pop(context);
+      //         },
+      //         child: Text('סגור'))
+      //       ],
+      // ),);
   }
 
 
