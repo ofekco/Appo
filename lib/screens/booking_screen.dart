@@ -1,8 +1,6 @@
-import 'package:Appo/widgets/drawer.dart';
 import 'package:provider/provider.dart';
 import '../booking_calendar/booking_calendar.dart';
 import 'package:flutter/material.dart';
-import '../widgets/drawer.dart';
 import '../booking_calendar/day_slots_controller.dart';
 
 class BookingCalendarScreen extends StatefulWidget {

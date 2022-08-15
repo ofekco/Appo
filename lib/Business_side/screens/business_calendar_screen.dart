@@ -113,7 +113,7 @@ class _BusinessCalendarScreenState extends State<BusinessCalendarScreen> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Text('Go Back'))
+                        child: Text('חזרה'))
                   ],
                 ),),
         );

@@ -1,10 +1,8 @@
 import 'package:Appo/Business_side/screens/business_home_page.dart';
 import 'package:Appo/models/colors.dart';
-import 'package:Appo/screens/home_screen.dart';
 import 'package:Appo/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../models/authentication.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -39,7 +37,7 @@ class NavDrawer extends StatelessWidget {
               color: Palette.kToDark[500],
             ),
             child: ListTile(
-                title: Text("Profile Name", textAlign: TextAlign.right, 
+                title: Text(Provider.of<Authentication>(context).currentUser.name, textAlign: TextAlign.right, 
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18, color: Colors.white),),
                 trailing: IconButton(
                   icon: Icon(Icons.account_circle, color: Colors.white, size: 40,),

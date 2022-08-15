@@ -3,6 +3,8 @@ import 'package:Appo/models/customer.dart';
 import 'package:flutter/material.dart';
 import '../widgets/curve_painter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as syspath;
 
 
 class ProfileScreen extends StatefulWidget {
@@ -18,10 +20,34 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _takePicture() async {
-    final imageFile = await ImagePicker().pickImage(
-      source: ImageSource.camera,
-      maxWidth: 600,
+    var imageFile;
+    showDialog(
+      context: context, 
+      builder: (context) {
+        return SimpleDialog(
+          title: const Text('בחר אפשרות'),
+          children: <Widget>[
+           SimpleDialogOption(
+            child: const Text('צלם תמונה'),
+            onPressed: () async { 
+              imageFile = await ImagePicker().pickImage(
+               source: ImageSource.camera,
+               maxWidth: 600,
+              ); 
+            }),
+           SimpleDialogOption(
+            child: const Text('גלריה'),
+            onPressed: () async { 
+              imageFile = await ImagePicker().pickImage(
+              source: ImageSource.gallery,
+              maxWidth: 600,); 
+            }),
+          ],
+        );   
+      }
     );
+
+   
     setState(() {
      widget._currentUser.image = imageFile as File;
     });
@@ -87,9 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(190, 110, 0, 0),
             child: MaterialButton(
-              onPressed: () {
-                //TODO!!
-              },
+              onPressed: _takePicture,
               color: Colors.blueGrey,
               textColor: Colors.white,
               child: Icon(
