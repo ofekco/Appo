@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import '../booking_calendar/model/booking.dart';
 import './Business.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import './consts.dart' as consts;
 import '../helpers/DB_helper.dart';
 import '../models/types.dart';
 import './Type.dart';
@@ -11,6 +9,7 @@ import './Type.dart';
 //All the businesses data from the server
 class Businesses with ChangeNotifier{
 
+  String _clientId;
   List<Business> _businesses;
   List<Business> _filteredList;
   List<Business> _favorites;
@@ -22,6 +21,10 @@ class Businesses with ChangeNotifier{
     _favorites = [];
     _myBookings = [];
   }
+
+  String get ClientId { return _clientId; }
+  
+  void set ClientId(value) { _clientId = value; }
 
   List<Business> get BusinessesList {
     return _businesses;
@@ -68,7 +71,7 @@ class Businesses with ChangeNotifier{
   //gets from database the favorites businesses. for now - favorites of customer id:0
   Future<List<Business>> getFavorites() async 
   {
-    var jsonData = await DB_Helper.getFavorites(0); //returns json
+    var jsonData = await DB_Helper.getFavorites(_clientId) as Map; //returns json
 
     List<Business> favoritesList = [];
 
@@ -78,7 +81,7 @@ class Businesses with ChangeNotifier{
       {
         await DB_Helper.getAllBusinesses();
       }
-      for(var item in jsonData) 
+      for(var item in jsonData.values) 
       {
         if(item != null)
         {
@@ -95,9 +98,9 @@ class Businesses with ChangeNotifier{
   }
 
   //gets from DB the upcoming appointments of the specific user id
-  Future<void> getMyUpComingBookings(int userId) async
+  Future<void> getMyUpComingBookings() async
   {
-    _myBookings = await DB_Helper.getUserUpComingAppointments(userId);
+    _myBookings = await DB_Helper.getUserUpComingAppointments(_clientId);
     notifyListeners();
   }
 

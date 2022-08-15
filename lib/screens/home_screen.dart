@@ -5,6 +5,7 @@ import 'package:Appo/models/businesses.dart';
 import 'package:Appo/widgets/myNext_item.dart';
 import 'package:Appo/widgets/wrap_inkwell.dart';
 import 'package:provider/provider.dart';
+import '../models/authentication.dart';
 import '../models/types.dart';
 import '../widgets/searchBar.dart';
 import './business_list_screen.dart';
@@ -34,16 +35,17 @@ class _HomeScreenState extends State<HomeScreen> {
     Types typesProvider = Provider.of<Types>(context, listen: false);
     typesProvider.getTypes(); //load types list 
     userBusinessesInstance = Provider.of<Businesses>(context, listen: false);
+    userBusinessesInstance.ClientId = Provider.of<Authentication>(context, listen: false).currentUser.userId;
     userBusinessesInstance.getAllBusinesses();
     userBusinessesInstance.getFavorites();
-    userBusinessesInstance.getMyUpComingBookings(0); //change the id according to the id of the user
+    userBusinessesInstance.getMyUpComingBookings(); //change the id according to the id of the user
     super.initState();
   }
 
   void itemClicked(BuildContext ctx, Business bis) 
   {
     Navigator.of(ctx).push(MaterialPageRoute(builder: (_) {
-      return BusinessDetailsScreen(bis);
+      return BusinessDetailsScreen(bis, userBusinessesInstance.ClientId);
       })
     );
   }
@@ -112,15 +114,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container() :
                 ListView(padding: const EdgeInsets.all(10), shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
+                  reverse: true,
                   children: buildUserAppointmentsList(),
-                  // children: userBusinessesInstance.MyBookings.map((appo) 
-                  // {
-                  //   if(!(appo.date.isBefore(DateTime.now())))
-                  //   {
-                  //     Business bis = userBusinessesInstance.findByID(appo.businessId);
-                  //     return WrapInkWell(MyNextItem(appo, bis), () => itemClicked(context, bis));
-                  //   }
-                  // })?.toList(),
+                  
                 ),
             ),
           ),
@@ -144,6 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal, 
                     physics: const AlwaysScrollableScrollPhysics(), 
+                    reverse: true,
                                 ),
                   ),
                 ),

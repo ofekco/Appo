@@ -3,19 +3,23 @@ import 'package:Appo/screens/booking_screen.dart';
 import 'package:Appo/widgets/business_details_screen_widgets/google_maps_widget.dart';
 import 'package:Appo/widgets/favorite_button.dart';
 import 'package:Appo/widgets/business_details_screen_widgets/section_button.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/Business.dart';
+import '../models/Businesses.dart';
 import '../widgets/curve_painter.dart';
 import '../widgets/drawer.dart';
 
 class BusinessDetailsScreen extends StatefulWidget {
 
   final Business business;
+  final String clientId;
   static const routeName = 'business-details';
   static const sectionsNames = const ['ביקורות', 'מיקום', 'לוח זמנים' ];
   List<SectionButton> sectionButtonsList;
 
-  BusinessDetailsScreen(this.business);
+  BusinessDetailsScreen(this.business, this.clientId);
 
   @override
   State<BusinessDetailsScreen> createState() => _BusinessDetailsScreenState();
@@ -165,7 +169,7 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
                     child: const Text('קבע תור'),
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-                          return BookingCalendarScreen(widget.business.id);
+                          return BookingCalendarScreen(widget.business.id, widget.clientId);
                           })
                         );
                     },

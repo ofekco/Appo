@@ -18,8 +18,9 @@ import 'model/booking.dart';
 class BookingCalendar extends StatefulWidget {
 
   final businessId;
+  final clientId;
 
-  const BookingCalendar({Key key, this.businessId}) : super(key: key); //ctor
+  const BookingCalendar({Key key, this.businessId, this.clientId}) : super(key: key); //ctor
 
   @override
   State<BookingCalendar> createState() => _BookingCalendarState();
@@ -55,7 +56,7 @@ class _BookingCalendarState extends State<BookingCalendar> {
   void onBookButtonTap(BuildContext ctx) async
   {
     controller.toggleUploading();
-    Booking book = await controller.uploadBooking();
+    Booking book = await controller.uploadBooking(widget.clientId);
     controller.toggleUploading();
 
     showModalBottomSheet(

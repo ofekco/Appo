@@ -84,11 +84,11 @@ class DaySlotsController extends ChangeNotifier {
     return newAppo;
   }
 
-  Future<dynamic> uploadBooking() async {
+  Future<dynamic> uploadBooking(String clientId) async {
     Booking newBooking = createNewBooking();
 
     await DB_Helper.uploadNewBooking(newBooking.businessId, 
-      0, newBooking.date, 
+      clientId, newBooking.date, 
       newBooking.startTime, newBooking.endTime);
       //.then((res) {
     times[selectedSlot].isBooked = true;
