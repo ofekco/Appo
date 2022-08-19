@@ -11,7 +11,6 @@ class Customer {
   String _phoneNumber;
   String _address;
   String _city;
-  String _imageUrl;
   File _image;
   List<Business> _favoriteBusiness;
   

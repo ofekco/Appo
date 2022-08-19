@@ -12,6 +12,7 @@ class Authentication with ChangeNotifier {
   String _userId;
   Timer _authTimer;
   Customer _currentUser; 
+  bool _isBusiness;
  
   bool get isAuth {
     return token != null;
@@ -26,6 +27,10 @@ class Authentication with ChangeNotifier {
       return _token;
     }
     return null;
+  }
+
+  bool get isBusiness {
+    return _isBusiness;
   }
 
   void _setFirebaseUserAuth(String email, String password) async {
@@ -88,14 +93,7 @@ class Authentication with ChangeNotifier {
     _currentUser = new Customer(_userId, _token, email, name, address, city, phone);
     notifyListeners();
     _autoLogout();
-    final prefs = await SharedPreferences.getInstance();
-    final userData = json.encode(
-    {
-      'token': _token,
-      'userId': _userId,
-      'expiryDate': _expiryDate.toIso8601String(),
-    });
-      prefs.setString('userData', userData);
+    await storeAuthDataOnDevice();
   }
 
   Future<void> login(String email, String password) async {
@@ -128,14 +126,7 @@ class Authentication with ChangeNotifier {
         await _importCustomerDataFromDB(_userId);
         _autoLogout();
         notifyListeners();
-        final prefs = await SharedPreferences.getInstance();
-        final userData = json.encode({
-            'token': _token,
-            'userId': _userId,
-            'expiryDate': _expiryDate.toIso8601String(),
-          },
-        );
-        prefs.setString('userData', userData);
+        await storeAuthDataOnDevice();
       } catch (error) {
         throw error;
       }
@@ -164,7 +155,8 @@ class Authentication with ChangeNotifier {
 
   Future<void> storeAuthDataOnDevice() async {
     final prefs = await SharedPreferences.getInstance();
-    final userData = json.encode({'token': _token, 'userId': _userId, 'expiryDate': _expiryDate.toIso8601String(), }); 
+    final userData = json.encode({'token': _token, 'userId': _userId,
+     'expiryDate': _expiryDate.toIso8601String(), 'isBusiness': _isBusiness}); 
     prefs.setString('userData', userData);
   }
 
@@ -183,6 +175,7 @@ class Authentication with ChangeNotifier {
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
     _expiryDate = expiryDate;
+    _isBusiness = extractedUserData['isBusiness'];
 
     await _importCustomerDataFromDB(_userId);
     notifyListeners();

@@ -3,7 +3,6 @@ import 'package:Appo/models/authentication.dart';
 import 'package:Appo/models/businesses.dart';
 import 'package:Appo/screens/auth_screen.dart';
 import 'package:Appo/screens/home_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/types.dart';
@@ -16,7 +15,7 @@ import './screens/splash.dart';
 
 void main() {
   initializeDateFormatting()
-      .then((_) => runApp(MyApp()));
+    .then((_) => runApp(MyApp()));
 }
 
 class MyApp extends StatelessWidget {

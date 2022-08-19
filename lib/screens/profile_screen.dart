@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart' as syspath;
 
 
 class ProfileScreen extends StatefulWidget {
-  Customer _currentUser;
+  final Customer _currentUser;
 
   ProfileScreen(this._currentUser);
 
@@ -18,41 +18,73 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+    var _storedImage;
+    var _imageFile;
 
-  Future<void> _takePicture() async {
+  Future<void> _getImage() async {
     var imageFile;
     showDialog(
       context: context, 
       builder: (context) {
-        return SimpleDialog(
-          title: const Text('בחר אפשרות'),
-          children: <Widget>[
-           SimpleDialogOption(
-            child: const Text('צלם תמונה'),
-            onPressed: () async { 
-              imageFile = await ImagePicker().pickImage(
-               source: ImageSource.camera,
-               maxWidth: 600,
-              ); 
-            }),
-           SimpleDialogOption(
-            child: const Text('גלריה'),
-            onPressed: () async { 
-              imageFile = await ImagePicker().pickImage(
-              source: ImageSource.gallery,
-              maxWidth: 600,); 
-            }),
+        return AlertDialog(
+        title: const Text('בחר אפשרות'),
+        actions: <Widget>[
+          ListTile(
+            title: const Text('צלם תמונה'),
+            onTap: () async {
+              await _openCamera(context);
+          }),
+          ListTile(
+            title: const Text('גלריה'),
+            onTap: () async {
+              await _openGallery(context);
+            }),  
           ],
         );   
       }
     );
 
-   
-    setState(() {
-     widget._currentUser.image = imageFile as File;
-    });
-    
-  }
+      
+      if (imageFile == null) {
+        return;
+      }
+      
+
+     setState(() {
+      _storedImage = imageFile as File;
+      });
+
+      final appDir = await syspath.getApplicationDocumentsDirectory();
+      final fileName = path.basename(imageFile.path);
+      final savedImage = await _storedImage.copy('${appDir.path}/${fileName}');
+      widget._currentUser.image = savedImage;
+    }
+
+    void _openCamera(BuildContext context) async {
+      final pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.camera,
+        maxWidth: 600);
+
+      setState(() {
+        _imageFile = pickedFile;
+      });
+
+      Navigator.pop(context);
+    }
+
+    void _openGallery(BuildContext context) async {
+      final pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 600);
+
+      setState(() {
+          _imageFile = pickedFile;
+      });
+
+      Navigator.pop(context);
+    }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       mainAxisAlignment: MainAxisAlignment.center, 
                       children:[
                         Text(widget._currentUser.name, style: 
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 26, letterSpacing: 1.15),
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 28, letterSpacing: 1.15),
                         ),
                       ], 
                     ),
@@ -100,34 +132,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );        
   }
 
-
   Widget buildProfileImage(var size) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+   return Container(
+    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+     child: CircleAvatar(
+      radius: size.width*0.32,
+      backgroundColor: Colors.white,
       child: CircleAvatar(
-        radius: size.width*0.32,
-        backgroundColor: Colors.white,
-        child: CircleAvatar(
-          radius: size.width*0.30, 
-          backgroundImage: AssetImage('assets/images/client.jpg'),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(190, 110, 0, 0),
-            child: MaterialButton(
-              onPressed: _takePicture,
-              color: Colors.blueGrey,
-              textColor: Colors.white,
-              child: Icon(
-                Icons.camera_alt,
-                size: 26,
-              ),
-              padding: EdgeInsets.all(16),
-              shape: CircleBorder(),
-            )  
-          ),
+        radius: size.width*0.30, 
+        backgroundImage: widget._currentUser.image != null ? FileImage(widget._currentUser.image)
+          : AssetImage('assets/images/client.jpg'),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(190, 110, 0, 0),
+          child: MaterialButton(
+            onPressed: _getImage,
+            color: Colors.blueGrey,
+            textColor: Colors.white,
+            child: Icon(
+              Icons.camera_alt,
+              size: 26,
+            ),
+            padding: EdgeInsets.all(16),
+            shape: CircleBorder(),
+          )  
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget buildPersonalInfo() {
     return Container(
@@ -140,7 +172,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 alignment: Alignment.topLeft,
                 child: IconButton(
                   icon: Icon(Icons.edit),
-                  onPressed: () {}, 
+                  onPressed: () {
+
+                  }, 
                 ),
               ),
               Spacer(),
@@ -177,7 +211,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(widget._currentUser.address + ", " + widget._currentUser.city,
+              Text(widget._currentUser.city + ", " + widget._currentUser.address,
                 style: TextStyle(fontSize: 18)),
               SizedBox(width: 15,),
               Icon(Icons.home_outlined),             
