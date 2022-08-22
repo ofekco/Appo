@@ -1,10 +1,15 @@
 import 'dart:convert';
+import 'package:Appo/Business_side/model/appointment.dart';
+import 'package:Appo/models/colors.dart';
 import '../widgets/event_details_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:Appo/booking_calendar/model/time_slot.dart';
+import 'package:Appo/models/customer.dart';
 import 'package:Appo/helpers/DB_helper.dart';
+import '../screens/create_slots_screen.dart';
+
 class BusinessCalendarScreen extends StatefulWidget {
   int businessID = 3;
 
@@ -13,7 +18,7 @@ class BusinessCalendarScreen extends StatefulWidget {
 }
 
 class _BusinessCalendarScreenState extends State<BusinessCalendarScreen> {
-  List<CalendarEventData<TimeSlot>> _appointments = [];
+  List<CalendarEventData<Appointment>> _appointments = [];
   bool isLoading = true;
 
   void initState()
@@ -60,20 +65,22 @@ class _BusinessCalendarScreenState extends State<BusinessCalendarScreen> {
         {
           TimeSlot t = TimeSlot.fromJson(json[timeKey]);
           Map user = await DB_Helper.findCustomerById(t.userId);
-          String name = user['name'];
-          createEvent(t, name);
+          Customer c = Customer.fromJson(user);
+          Appointment appo = Appointment(startTime: t.startTime, endTime: t.endTime, client: c);
+          createEvent(appo);
         }
+        
       }
     }
   }
 
-  void createEvent(TimeSlot booking, String userName)
+  void createEvent(Appointment booking)
   {
-    CalendarEventData<TimeSlot> event = 
-      CalendarEventData(
+    CalendarEventData<Appointment> event = 
+      CalendarEventData<Appointment>(
       date: booking.startTime,
       event: booking,
-      title: userName,
+      title: booking.client.name,
       description: "",
       startTime: booking.startTime,
       endTime: booking.endTime,
@@ -82,12 +89,14 @@ class _BusinessCalendarScreenState extends State<BusinessCalendarScreen> {
     _appointments.add(event);
   }
 
-  void onEventTap(List<CalendarEventData<dynamic>> event)
+
+  void onEventTap(List<CalendarEventData<Object>> event)
   {
     showDialog(context: context, 
       builder: (context) => EventDetailsDialog(
-        title: event.first.title, descriptions: event.first.startTime.toString(), 
-                  text: 'סגור'));
+        startTime: event.first.startTime,
+        client: (event.first.event as Appointment).client
+      ));
       // AlertDialog(
       //   title: Text(event.first.title,),
       //   content: Text(event.first.startTime.toString()),
@@ -104,34 +113,40 @@ class _BusinessCalendarScreenState extends State<BusinessCalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return  isLoading ? Container(child: Text('loading'),) :
-    WeekView(
-      controller: CalendarControllerProvider.of(context).controller..addAll(_appointments), 
-      showLiveTimeLineInAllDays: true, // To display live time line in all pages in week view.
-      width: MediaQuery.of(context).size.width, // width of week view.
-      minDay: DateTime(2000),
-      maxDay: DateTime(2050),
-      initialDay: DateTime.now(),
-      heightPerMinute: 1, // height occupied by 1 minute time span.
-      eventArranger: SideEventArranger(), // To define how simultaneous events will be arranged.
-      onEventTap: (event, date) => onEventTap(event),
-      startDay: WeekDays.sunday,
-      eventTileBuilder: (date, event, boundry, start, end) {
-        return 
-          InkWell(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(7),
-                color: Colors.blue,
-                ),
-                child: Center(
-                  child: Text(event.first.title,
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+    return  isLoading ? Center(child: CircularProgressIndicator(color:Colors.blue)) :
+    Stack(children: [
+      
+      WeekView(
+        controller: CalendarControllerProvider.of(context).controller..addAll(_appointments), 
+        showLiveTimeLineInAllDays: true, // To display live time line in all pages in week view.
+        width: MediaQuery.of(context).size.width, // width of week view.
+        minDay: DateTime(2000),
+        maxDay: DateTime(2050),
+        initialDay: DateTime.now(),
+        heightPerMinute: 1, // height occupied by 1 minute time span.
+        eventArranger: SideEventArranger(), // To define how simultaneous events will be arranged.
+        onEventTap: (event, date) => onEventTap(event),
+        startDay: WeekDays.sunday,
+        eventTileBuilder: (date, event, boundry, start, end) {
+          return 
+            InkWell(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(7),
+                  color: Colors.blue,
                   ),
-            ),
-            onDoubleTap: () => onEventTap(event),
-        );
-      }
+                  child: Center(
+                    child: Text(event.first.title,
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                    ),
+              ),
+              onDoubleTap: () => onEventTap(event),
+          );
+        }
+      ),
+
+    ]
     );
+
   }
 }

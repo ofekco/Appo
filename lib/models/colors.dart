@@ -12,10 +12,10 @@ class Palette {
       300: const Color(0xffD2B655),//40% 
       400: const Color(0xff45B6ED),//50% 
       500: const Color(0xff45B6ED),//60% 
-      600: const Color(0xffC4910A),//70% 
+      600: const Color(0xff023046),//70% 
       700: const Color(0xff0792D6),//80% 
       800: const Color(0xff0792D6),//90% 
-      900: const Color(0xff000000),//100% 
+      900: const Color(0xff03537A),//100% 
     }, 
   ); 
 } 

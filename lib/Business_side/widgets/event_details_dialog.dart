@@ -1,14 +1,13 @@
+import 'package:Appo/models/customer.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class EventDetailsDialog extends StatefulWidget {
-  final String title, descriptions, text;
-  final Image img;
+  final DateTime startTime;
+  final Customer client;
 
   const EventDetailsDialog({Key key, 
-    this.title, 
-    this.descriptions, 
-    this.text, 
-    this.img}) : super(key: key);
+    this.startTime, this.client}) : super(key: key);
 
   @override
   _EventDetailsDialogState createState() => _EventDetailsDialogState();
@@ -47,21 +46,45 @@ class _EventDetailsDialogState extends State<EventDetailsDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(widget.title,style: TextStyle(fontSize: 22,fontWeight: FontWeight.w600),),
+              //name
+              Text(widget.client.name, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
               SizedBox(height: 15,),
-              Text(widget.descriptions,style: TextStyle(fontSize: 14),textAlign: TextAlign.center,),
+              
+              //phone number
+              Row(mainAxisAlignment: MainAxisAlignment.center,
+                children:[
+                  Icon(Icons.phone, ),
+
+                  Text('  ${widget.client.phoneNumber}', style: 
+                    TextStyle(fontSize: 15, fontWeight: FontWeight.w600), 
+                      textAlign: TextAlign.center,),
+                  
+                ], 
+              ),
+              SizedBox(height: 12,),
+
+              //date and time
+              Text(DateFormat.yMMMMEEEEd("he_IL").format(widget.startTime),
+                style: TextStyle(fontSize: 15),textAlign: TextAlign.center,),
+              Text('${DateFormat.Hm("he_IL").format(widget.startTime)} - ${DateFormat.Hm("he_IL").format(widget.startTime.add(Duration(hours: 1)))}',
+                style: TextStyle(fontSize: 15),textAlign: TextAlign.center,),
               SizedBox(height: 22,),
+
+              //close button
               Align(
                 alignment: Alignment.bottomRight,
                 child: FlatButton(
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text(widget.text,style: TextStyle(fontSize: 18),)),
+                    child: Text('סגור', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold), )),
               ),
+
             ],
           ),
         ),
+
+        //client image
         Positioned(
           left: 20,
             right: 20,

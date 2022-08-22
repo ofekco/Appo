@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:Appo/models/Business.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +15,6 @@ class Customer {
   List<Business> _favoriteBusiness;
   
   Customer(this._userId, this._firebaseToken, this._email, this._name, this._address, this._city, this._phoneNumber);
-
 
   String get userId {
     return _userId;
@@ -54,5 +52,9 @@ class Customer {
     return _favoriteBusiness;
   }
 
+  factory Customer.fromJson(Map<String, dynamic> json) {
+    return Customer(json.keys.first, json.keys.first, json['email'], json['name'], json['address'], json['city'], json['phone number']
+    );
+  }
 }
 

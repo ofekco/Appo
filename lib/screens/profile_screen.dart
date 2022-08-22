@@ -4,13 +4,11 @@ import 'package:flutter/material.dart';
 import '../widgets/curve_painter.dart';
 import 'package:image_picker/image_picker.dart';
 
-
 class ProfileScreen extends StatefulWidget {
   Customer _currentUser;
 
   ProfileScreen(this._currentUser);
 
-  
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
@@ -24,8 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
     setState(() {
      widget._currentUser.image = imageFile as File;
-    });
-    
+    }); 
   }
 
   @override
@@ -62,11 +59,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     //details
                     SizedBox(height: 30),
                     buildPersonalInfo(),
-            ],
-                ),
-            
+                  ],
                 ),
               ),
+            ),
           ]
         )
             )
@@ -74,18 +70,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );        
   }
 
-
   Widget buildProfileImage(var size) {
     return Container(
       padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
       child: CircleAvatar(
-        radius: size.width*0.32,
+        radius: size.width*0.22,
         backgroundColor: Colors.white,
         child: CircleAvatar(
-          radius: size.width*0.30, 
+          radius: size.width*0.2, 
           backgroundImage: AssetImage('assets/images/client.jpg'),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(190, 110, 0, 0),
+            padding: const EdgeInsets.fromLTRB(110, 110, 0, 0),
             child: MaterialButton(
               onPressed: () {
                 //TODO!!

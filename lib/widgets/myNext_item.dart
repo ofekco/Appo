@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../booking_calendar/model/booking.dart';
 import '../models/Business.dart';
 import 'package:provider/provider.dart';
-import '../models/Businesses.dart';
+import 'package:intl/intl.dart';
 import '../models/types.dart';
 
 class MyNextItem extends StatelessWidget {
@@ -50,7 +50,7 @@ class MyNextItem extends StatelessWidget {
                   children:[
                     Text(bis.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)), //business name
 
-                    Text('${appointment.date.day}.${appointment.date.month} | ${appointment.startTime.hour}:${appointment.startTime.minute}',
+                    Text('${DateFormat.Hm("he_IL").format(appointment.startTime)} | ${DateFormat.MMMEd("he_IL").format(appointment.startTime)}',
                       style: TextStyle(fontSize: 14)),  //appointment date and time
 
                     Text('${bis.address} | ${bis.city}', style: TextStyle(fontSize: 12)), //business address

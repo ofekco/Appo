@@ -81,12 +81,12 @@ class _BookingCalendarState extends State<BookingCalendar> {
         child: (controller.isUploading || controller.times == null)
           ? const BookingDialog()
           : Column(
-            children: [
+            children: [ 
               CommonCard(
                 child: TableCalendar(
                       locale: 'iw_IL',
                       firstDay: DateTime.now(),
-                      lastDay: DateTime.now().add(const Duration(days: 1000)),
+                      lastDay: DateTime.now().add(const Duration(days: 35)),
                       focusedDay: _focusedDay,
                       calendarFormat: _calendarFormat,
                       calendarStyle:
@@ -161,7 +161,6 @@ class _BookingCalendarState extends State<BookingCalendar> {
                           ),
                         ),
                       ),
-                    
                   
               const SizedBox(
                     height: 16,
