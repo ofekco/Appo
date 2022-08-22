@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:Appo/models/customer.dart';
+import 'package:Appo/widgets/profile_image.dart';
 import 'package:flutter/material.dart';
 import '../widgets/curve_painter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,70 +20,73 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
     var _storedImage;
-    var _imageFile;
-
-  Future<void> _getImage() async {
-    var imageFile;
-    showDialog(
-      context: context, 
-      builder: (context) {
-        return AlertDialog(
-        title: const Text('בחר אפשרות'),
-        actions: <Widget>[
-          ListTile(
-            title: const Text('צלם תמונה'),
-            onTap: () async {
-              await _openCamera(context);
-          }),
-          ListTile(
-            title: const Text('גלריה'),
-            onTap: () async {
-              await _openGallery(context);
-            }),  
-          ],
-        );   
-      }
-    );
+    
+  // Future<void> _getImage() async {
+  //   var imageFile;
+  //   showDialog(
+  //     context: context, 
+  //     builder: (context) {
+  //       return AlertDialog(
+  //       title: const Text('בחר אפשרות'),
+  //       actions: <Widget>[
+  //         ListTile(
+  //           title: const Text('צלם תמונה'),
+  //           onTap: () async {
+  //             await _openCamera(context);
+  //         }),
+  //         ListTile(
+  //           title: const Text('גלריה'),
+  //           onTap: () async {
+  //             await _openGallery(context);
+  //           }),  
+  //         ],
+  //       );   
+  //     }
+  //   );
 
       
-      if (imageFile == null) {
-        return;
-      }
+  //     if (imageFile == null) {
+  //       return;
+  //     }
       
 
-     setState(() {
-      _storedImage = imageFile as File;
-      });
+  //    setState(() {
+  //     _storedImage = imageFile as File;
+  //     });
 
-      final appDir = await syspath.getApplicationDocumentsDirectory();
-      final fileName = path.basename(imageFile.path);
-      final savedImage = await _storedImage.copy('${appDir.path}/${fileName}');
-      widget._currentUser.image = savedImage;
-    }
+  //     final appDir = await syspath.getApplicationDocumentsDirectory();
+  //     final fileName = path.basename(imageFile.path);
+  //     final savedImage = await _storedImage.copy('${appDir.path}/${fileName}');
+  //     widget._currentUser.image = savedImage;
+  //   }
 
-    void _openCamera(BuildContext context) async {
-      final pickedFile = await ImagePicker().pickImage(
-        source: ImageSource.camera,
-        maxWidth: 600);
+  //   void _openCamera(BuildContext context) async {
+  //     final pickedFile = await ImagePicker().pickImage(
+  //       source: ImageSource.camera,
+  //       maxWidth: 600);
 
-      setState(() {
-        _imageFile = pickedFile;
-      });
+  //     setState(() {
+  //       _imageFile = pickedFile;
+  //     });
 
-      Navigator.pop(context);
-    }
+  //     Navigator.pop(context);
+  //   }
 
-    void _openGallery(BuildContext context) async {
-      final pickedFile = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-        maxWidth: 600);
+  //   void _openGallery(BuildContext context) async {
+  //     final pickedFile = await ImagePicker().pickImage(
+  //       source: ImageSource.gallery,
+  //       maxWidth: 600);
 
-      setState(() {
-          _imageFile = pickedFile;
-      });
+  //     setState(() {
+  //         _imageFile = pickedFile;
+  //     });
 
-      Navigator.pop(context);
-    }
+  //     Navigator.pop(context);
+  //   }
+
+  void _selectImage(File pickedImage) {
+    _storedImage = pickedImage;
+  }
 
 
 
@@ -106,7 +110,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: size.height*0.17,
                     ),
                     //image
-                    buildProfileImage(size),
+                    //buildProfileImage(size),
+                    ProfileImage(_selectImage, widget._currentUser),
                     SizedBox(height: 10),
                     //customer name
                     Row(
@@ -120,7 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     //details
                     SizedBox(height: 30),
                     buildPersonalInfo(),
-            ],
+                  ],
                 ),
             
                 ),
@@ -132,34 +137,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );        
   }
 
-  Widget buildProfileImage(var size) {
-   return Container(
-    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-     child: CircleAvatar(
-      radius: size.width*0.32,
-      backgroundColor: Colors.white,
-      child: CircleAvatar(
-        radius: size.width*0.30, 
-        backgroundImage: widget._currentUser.image != null ? FileImage(widget._currentUser.image)
-          : AssetImage('assets/images/client.jpg'),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(190, 110, 0, 0),
-          child: MaterialButton(
-            onPressed: _getImage,
-            color: Colors.blueGrey,
-            textColor: Colors.white,
-            child: Icon(
-              Icons.camera_alt,
-              size: 26,
-            ),
-            padding: EdgeInsets.all(16),
-            shape: CircleBorder(),
-          )  
-        ),
-      ),
-    ),
-  );
-}
+//   Widget buildProfileImage(var size) {
+//    return Container(
+//     padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+//      child: CircleAvatar(
+//       radius: size.width*0.32,
+//       backgroundColor: Colors.white,
+//       child: CircleAvatar(
+//         radius: size.width*0.30, 
+//         backgroundImage: widget._currentUser.image != null ? FileImage(widget._currentUser.image)
+//           : AssetImage('assets/images/client.jpg'),
+//         child: Padding(
+//           padding: const EdgeInsets.fromLTRB(190, 110, 0, 0),
+//           child: MaterialButton(
+//             onPressed: _getImage,
+//             color: Colors.blueGrey,
+//             textColor: Colors.white,
+//             child: Icon(
+//               Icons.camera_alt,
+//               size: 26,
+//             ),
+//             padding: EdgeInsets.all(16),
+//             shape: CircleBorder(),
+//           )  
+//         ),
+//       ),
+//     ),
+//   );
+// }
+
 
   Widget buildPersonalInfo() {
     return Container(

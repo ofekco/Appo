@@ -6,13 +6,17 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'customer.dart';
 
+enum AuthMode {
+  CUSTOMER, BUSINESS
+}
+
 class Authentication with ChangeNotifier {
   String _token;
   DateTime _expiryDate;
   String _userId;
   Timer _authTimer;
   Customer _currentUser; 
-  bool _isBusiness;
+  AuthMode _authMode;
  
   bool get isAuth {
     return token != null;
@@ -29,8 +33,12 @@ class Authentication with ChangeNotifier {
     return null;
   }
 
-  bool get isBusiness {
-    return _isBusiness;
+  AuthMode get authMode {
+    return _authMode;
+  }
+
+  void setAuthMode(AuthMode mode) {
+    _authMode = mode;
   }
 
   void _setFirebaseUserAuth(String email, String password) async {
@@ -156,7 +164,7 @@ class Authentication with ChangeNotifier {
   Future<void> storeAuthDataOnDevice() async {
     final prefs = await SharedPreferences.getInstance();
     final userData = json.encode({'token': _token, 'userId': _userId,
-     'expiryDate': _expiryDate.toIso8601String(), 'isBusiness': _isBusiness}); 
+     'expiryDate': _expiryDate.toIso8601String(), 'authMode': _authMode.toString()}); 
     prefs.setString('userData', userData);
   }
 
@@ -175,7 +183,7 @@ class Authentication with ChangeNotifier {
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
     _expiryDate = expiryDate;
-    _isBusiness = extractedUserData['isBusiness'];
+    _authMode = extractedUserData['isBusiness'];
 
     await _importCustomerDataFromDB(_userId);
     notifyListeners();
@@ -192,6 +200,78 @@ class Authentication with ChangeNotifier {
     catch(err) {
       print(err);
       throw err;
+    }
+  }
+
+  //--------------------------BUSINESS------------------------//
+
+  Future<void> loginAsBusiness(String email, String password) async {
+    final url =
+      Uri.parse('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAV3px-slgo-jPGEgUJBYJbDaTledtXIj8');
+      try {
+        final response = await http.post(
+          url,
+          body: json.encode(
+            {
+              'email': email,
+              'password': password,
+              'returnSecureToken': true,
+            },
+          ),
+        );
+
+        final responseData = json.decode(response.body);
+        if(responseData['error'] != null) {
+          throw HttpException(responseData['error']['message']);
+        }
+        _token = responseData['idToken'];
+        _userId = responseData['localId'];
+        _expiryDate = DateTime.now().add(
+          Duration(
+            seconds: int.parse(responseData['expiresIn']),
+          ),
+        );
+
+        //need to change all this to business
+        await _importCustomerDataFromDB(_userId);
+        _autoLogout();
+        notifyListeners();
+        await storeAuthDataOnDevice();
+      } catch (error) {
+        throw error;
+      }
+  }
+
+
+ Future<void> signupAsBusiness(String email, String password, String name, String phone, String address, String city, String type) async {
+    await _setFirebaseUserAuth(email, password);
+    await _setAppBusinessAuth(email, password, name, phone, address, city, type);
+
+    _currentUser = new Customer(_userId, _token, email, name, address, city, phone);
+    notifyListeners();
+    _autoLogout();
+    await storeAuthDataOnDevice();
+  }
+
+  void _setAppBusinessAuth(String email, String password, String name, String phone, String address, String city, String type) async {
+    try {
+      var response = await http.patch(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/businesses/${_userId}.json'), 
+      body: json.encode({ 
+        'email': email,
+        'password': password,
+        'name': name,
+        'phone number': phone,
+        'city': city,
+        'type': type })
+      );
+
+      var responseData = json.decode(response.body);
+      if(responseData['error'] != null) {
+        throw HttpException(responseData['error']['message']);
+      }
+    }
+    catch (error) {
+      throw error;
     }
   }
 }

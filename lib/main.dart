@@ -1,11 +1,13 @@
 import 'package:Appo/Business_side/screens/business_home_page.dart';
 import 'package:Appo/models/authentication.dart';
 import 'package:Appo/models/businesses.dart';
-import 'package:Appo/screens/auth_screen.dart';
+import 'package:Appo/screens/chooce_login.dart';
+import 'package:Appo/screens/login_screen.dart';
 import 'package:Appo/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/types.dart';
+import 'screens/bussinnes_screens/business_registration_screen.dart';
 import 'screens/tabs_screen.dart';
 import './models/colors.dart';
 import './models/businesses.dart';
@@ -52,7 +54,7 @@ class MyApp extends StatelessWidget {
                     authResultSnapshot.connectionState ==
                             ConnectionState.waiting
                         ? Splash()
-                        : AuthScreen(),
+                        : ChooseLoginScreen(),
               ),
           routes: {
             '/home': (ctx) => HomeScreen(),
@@ -60,6 +62,7 @@ class MyApp extends StatelessWidget {
             '/register': (ctx) => AuthScreen(), 
             '/first': (ctx) => TabsScreen(),
             '/business_home' : (ctx) => BusinessHomeScreen(3),
+            '/register_business' : (ctx) => BusinessRegistrationScreen(),
           }
         ),
     ));  

@@ -1,18 +1,18 @@
 import 'package:Appo/models/authentication.dart';
+import 'package:Appo/screens/login_screen.dart';
 import 'package:Appo/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/http_exception.dart';
-import 'login_screen.dart';
+import '/models/http_exception.dart';
 
 
-class RegistrationScreen extends StatefulWidget {
-  static const routeName = '/register';
+class BusinessRegistrationScreen extends StatefulWidget {
+  static const routeName = '/register_business';
   @override
-  State<RegistrationScreen> createState() => _RegistrationScreenState();
+  State<BusinessRegistrationScreen> createState() => _BusinessRegistrationScreenState();
 }
 
-class _RegistrationScreenState extends State<RegistrationScreen> {
+class _BusinessRegistrationScreenState extends State<BusinessRegistrationScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   var _isLoading = false;
   final _passwordController = TextEditingController();
@@ -24,6 +24,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     'phone number': '',
     'address': '',
     'city': '',
+    'type': '',
   };
 
   void _showErrorDialog(String message) {
@@ -45,6 +46,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
    Future<void> _submit() async {
+    final authProvider = Provider.of<Authentication>(context, listen: false);
     if (!_formKey.currentState.validate()) {
       // Invalid!
       return;
@@ -54,11 +56,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       _isLoading = true;
     });
     try {
-      await Provider.of<Authentication>(context, listen: false)
-      .signup(_registrationData['email'], _registrationData['password'], _registrationData['name'],
-      _registrationData['phone number'], _registrationData['address'], _registrationData['city'],);
-      Navigator.of(context).pop();
-      Navigator.of(context).pushNamed(TabsScreen.routeName);
+      if(authProvider.authMode == AuthMode.CUSTOMER) {
+        await authProvider.signup(_registrationData['email'], _registrationData['password'], _registrationData['name'],
+          _registrationData['phone number'], _registrationData['address'], _registrationData['city'],);
+          Navigator.of(context).pop();
+          Navigator.of(context).pushNamed(TabsScreen.routeName);
+      }
+      else {
+        // await authProvider.signupAsBusiness(_registrationData['email'], _registrationData['password'], _registrationData['name'],
+        //  _registrationData['phone number'], _registrationData['address'], _registrationData['city'], _registrationData['type']);
+        //   Navigator.of(context).pop();
+        //   Navigator.of(context).pushNamed(TabsScreen.routeName);
+      }
+      
     }
     on HttpException catch (error) {
       var errorMessage = 'ההרשמה נכשלה';
@@ -96,6 +106,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     FocusNode addressFocusNode = new FocusNode();
     FocusNode cityFocusNode = new FocusNode();
     FocusNode nameFocusNode = new FocusNode();
+    FocusNode typeFocusNode = new FocusNode();
+
     
     return Scaffold(
       appBar: AppBar(
@@ -166,7 +178,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     showCursor: true,
                     cursorColor: Colors.black,
                     decoration: InputDecoration(
-                    labelText: 'שם מלא',
+                    labelText: 'שם העסק',
                     labelStyle: TextStyle(
                     color: nameFocusNode.hasFocus ? Colors.blue : Colors.black)),
                     onSaved: (value) {
@@ -216,6 +228,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       _registrationData['city'] = value;
                     },
                    ),
+                  TextFormField(
+                    focusNode: typeFocusNode,
+                    showCursor: true,
+                    cursorColor: Colors.black,
+                    decoration: InputDecoration(
+                    labelText: 'סוג בית העסק',
+                    labelStyle: TextStyle(
+                    color: cityFocusNode.hasFocus ? Colors.blue : Colors.black)),
+                    onSaved: (value) {
+                      _registrationData['type'] = value;
+                    },
+                   ),  
+                    
                    SizedBox(
                   height: 20,
                 ),
