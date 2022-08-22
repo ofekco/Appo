@@ -44,25 +44,29 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
           default: return calendar;
     }
   }
-
-  
   
   @override
   Widget build(BuildContext context) {
     return CalendarControllerProvider(
       controller: EventController(),
       child: Scaffold(
+
         floatingActionButton: _selectedPageIndex == 0 ? FloatingActionButton(
           backgroundColor: Palette.kToDark[600],
           mini: true,
           foregroundColor: Colors.white,
           child: Icon(Icons.edit),
           tooltip: 'הגדר זמני עבודה נוספים',
-          onPressed: () { Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-                          return CreateSlotsScreen(widget.businessID);
-                          })
-                        );}
+          onPressed: () { 
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) 
+              {
+                return CreateSlotsScreen(widget.businessID);
+              })
+            );
+          }
         ) : null,
+
         appBar: AppBar(title: Row(mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text('Appo', style: TextStyle(fontWeight: FontWeight.bold, color: Palette.kToDark[800], fontSize: 24),),

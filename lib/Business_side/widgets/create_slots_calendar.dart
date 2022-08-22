@@ -1,6 +1,6 @@
 import 'package:Appo/booking_calendar/day_slots_controller.dart';
-import 'package:Appo/booking_calendar/widgets/booking_slot-widget.dart';
 import 'package:flutter/material.dart';
+import 'package:Appo/booking_calendar/widgets/booking_slot-widget.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:Appo/booking_calendar/widgets/common_button.dart';
@@ -19,7 +19,6 @@ class CreateSlotsCalendar extends StatefulWidget {
 }
 
 class _CreateSlotsCalendarState extends State<CreateSlotsCalendar> {
-  DaySlotsController controller; //selected day controller
   CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
   DateTime _selectedDay;
   DateTime _focusedDay;
@@ -32,7 +31,6 @@ class _CreateSlotsCalendarState extends State<CreateSlotsCalendar> {
   @override
   void initState() {
     super.initState();
-    controller = context.read<DaySlotsController>();
     _focusedDay = now;
     _selectedDay = now;
     selectedStart = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day, 8, 0);
@@ -45,28 +43,8 @@ class _CreateSlotsCalendarState extends State<CreateSlotsCalendar> {
 
   void selectNewDateRange() {
     //replace controller to another day 
-    controller.date = _selectedDay;
-    controller.getTimesFromDB();
-    controller.resetSelectedSlot();
-  }
-
-  void onBookButtonTap(BuildContext ctx) async
-  {
-    // controller.toggleUploading();
-    // Booking book = await controller.uploadBooking(widget.clientId);
-    // controller.toggleUploading();
-
-    // showModalBottomSheet(
-    //   backgroundColor: Colors.white,
-    //   context: ctx,
-    //   builder: (_) {
-    //     return BookingConfirmation(book);
-    //   },
-    // );
-
-    // setState(() {
-    //   controller.resetSelectedSlot();
-    // });              
+    selectedStart = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day, 8, 0);
+    selectedEnd = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day, 20, 0);
   }
 
   List<DropdownMenuItem> _getAllHours() {
@@ -76,6 +54,7 @@ class _CreateSlotsCalendarState extends State<CreateSlotsCalendar> {
       hours.add(DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day, i, 30));
     }
     return hours.map<DropdownMenuItem<DateTime>>((DateTime value) {
+            print(value);
             return DropdownMenuItem<DateTime>(
               value: value,
               child: Text(DateFormat.Hm("he_IL").format(value)),
@@ -166,14 +145,9 @@ class _CreateSlotsCalendarState extends State<CreateSlotsCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    controller = context.watch<DaySlotsController>();
-    
-
-    return Consumer<DaySlotsController>(builder: (_, controller, __) => Padding(
+    return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: (controller.isUploading || controller.times == null)
-          ? const BookingDialog()
-          : Column(
+        child: Column(
             children: [ 
               CommonCard(
                 child: TableCalendar(
@@ -240,35 +214,9 @@ class _CreateSlotsCalendarState extends State<CreateSlotsCalendar> {
 
                     ],
                    ),
-
-              const SizedBox(height: 8),
-                // Expanded(
-                //         child: GridView.builder(
-                //           physics: const BouncingScrollPhysics(),
-                //           itemCount: controller.allBookingSlots.length,
-                //           itemBuilder: (context, index) {
-                //             final slot =
-                //                 controller.allBookingSlots.elementAt(index);
-
-                //             return BookingSlot(
-                //               isBooked: controller.isSlotBooked(index),
-                //               isSelected: index == controller.selectedSlot,
-                //               onTap: () => controller.selectSlot(index),
-                //               child: Center(
-                //                 child: Text(formatDateTime(slot)),
-                //               ),
-                //             );
-                //           },
-                //           gridDelegate:
-                //               SliverGridDelegateWithFixedCrossAxisCount(
-                //             crossAxisCount: 3,
-                //             childAspectRatio: 1.5,
-                //           ),
-                //         ),
-                //       ),
-                  
+                
               const SizedBox(
-                    height: 16,
+                    height: 30,
                   ),
 
               CommonButton(
@@ -277,6 +225,6 @@ class _CreateSlotsCalendarState extends State<CreateSlotsCalendar> {
             
           ),]
       ),
-    ));
+    );
   }
 }

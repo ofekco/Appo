@@ -97,17 +97,6 @@ class _BusinessCalendarScreenState extends State<BusinessCalendarScreen> {
         startTime: event.first.startTime,
         client: (event.first.event as Appointment).client
       ));
-      // AlertDialog(
-      //   title: Text(event.first.title,),
-      //   content: Text(event.first.startTime.toString()),
-      //     actions: [
-      //       ElevatedButton(
-      //         onPressed: () {
-      //           Navigator.pop(context);
-      //         },
-      //         child: Text('סגור'))
-      //       ],
-      // ),);
   }
 
 
@@ -144,7 +133,6 @@ class _BusinessCalendarScreenState extends State<BusinessCalendarScreen> {
           );
         }
       ),
-
     ]
     );
 

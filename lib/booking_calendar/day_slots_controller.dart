@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 
 class DaySlotsController extends ChangeNotifier {
 
-  //TimeSlots businessTimesSlots;
-
   DaySlotsController({@required this.date, @required this.businessId})
   {
     getTimesFromDB();
