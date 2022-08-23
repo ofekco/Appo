@@ -19,77 +19,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-    var _storedImage;
-    
-  // Future<void> _getImage() async {
-  //   var imageFile;
-  //   showDialog(
-  //     context: context, 
-  //     builder: (context) {
-  //       return AlertDialog(
-  //       title: const Text('בחר אפשרות'),
-  //       actions: <Widget>[
-  //         ListTile(
-  //           title: const Text('צלם תמונה'),
-  //           onTap: () async {
-  //             await _openCamera(context);
-  //         }),
-  //         ListTile(
-  //           title: const Text('גלריה'),
-  //           onTap: () async {
-  //             await _openGallery(context);
-  //           }),  
-  //         ],
-  //       );   
-  //     }
-  //   );
-
-      
-  //     if (imageFile == null) {
-  //       return;
-  //     }
-      
-
-  //    setState(() {
-  //     _storedImage = imageFile as File;
-  //     });
-
-  //     final appDir = await syspath.getApplicationDocumentsDirectory();
-  //     final fileName = path.basename(imageFile.path);
-  //     final savedImage = await _storedImage.copy('${appDir.path}/${fileName}');
-  //     widget._currentUser.image = savedImage;
-  //   }
-
-  //   void _openCamera(BuildContext context) async {
-  //     final pickedFile = await ImagePicker().pickImage(
-  //       source: ImageSource.camera,
-  //       maxWidth: 600);
-
-  //     setState(() {
-  //       _imageFile = pickedFile;
-  //     });
-
-  //     Navigator.pop(context);
-  //   }
-
-  //   void _openGallery(BuildContext context) async {
-  //     final pickedFile = await ImagePicker().pickImage(
-  //       source: ImageSource.gallery,
-  //       maxWidth: 600);
-
-  //     setState(() {
-  //         _imageFile = pickedFile;
-  //     });
-
-  //     Navigator.pop(context);
-  //   }
-
-  void _selectImage(File pickedImage) {
-    _storedImage = pickedImage;
+  File _shownImage;
+  Map<String, bool> isEditable = {
+    'email': false,
+    'phoneNumber': false,
+    'address': false,
   }
-
-
-
+    
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -110,8 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: size.height*0.17,
                     ),
                     //image
-                    //buildProfileImage(size),
-                    ProfileImage(_selectImage, widget._currentUser),
+                    buildProfileImage(size),
                     SizedBox(height: 10),
                     //customer name
                     Row(
@@ -137,35 +72,93 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );        
   }
 
-//   Widget buildProfileImage(var size) {
-//    return Container(
-//     padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-//      child: CircleAvatar(
-//       radius: size.width*0.32,
-//       backgroundColor: Colors.white,
-//       child: CircleAvatar(
-//         radius: size.width*0.30, 
-//         backgroundImage: widget._currentUser.image != null ? FileImage(widget._currentUser.image)
-//           : AssetImage('assets/images/client.jpg'),
-//         child: Padding(
-//           padding: const EdgeInsets.fromLTRB(190, 110, 0, 0),
-//           child: MaterialButton(
-//             onPressed: _getImage,
-//             color: Colors.blueGrey,
-//             textColor: Colors.white,
-//             child: Icon(
-//               Icons.camera_alt,
-//               size: 26,
-//             ),
-//             padding: EdgeInsets.all(16),
-//             shape: CircleBorder(),
-//           )  
-//         ),
-//       ),
-//     ),
-//   );
-// }
+ Future<void> _getImage() async {
+    var imageFile;
+    showDialog(
+      context: context, 
+      builder: (context) {
+        return AlertDialog(
+        title: const Text('בחר אפשרות'),
+        actions: <Widget>[
+          ListTile(
+            title: const Text('צלם תמונה'),
+            onTap: () async {
+              imageFile = await _openCamera(context);
+          }),
+          ListTile(
+            title: const Text('גלריה'),
+            onTap: () async {
+              imageFile = await _openGallery(context);
+            }),  
+          ],
+        );   
+      }
+    );
+    
+    final appDir = await syspath.getApplicationDocumentsDirectory();
+    final fileName = path.basename(imageFile.path);
+    final savedImage = await imageFile.copy('${appDir.path}/${fileName}');
+    widget._currentUser.image = savedImage;
 
+     setState(() {
+      _shownImage = widget._currentUser.image;
+      });
+    }
+
+    Future<File> _openCamera(BuildContext context) async {
+      final _pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.camera, maxWidth: 600);
+
+      if (_pickedFile == null) {
+        return null;
+      }
+
+      Navigator.pop(context);
+      return File(_pickedFile.path);
+    }
+
+    Future<File> _openGallery(BuildContext context) async {
+      final _pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery, maxWidth: 600);
+
+      if (_pickedFile == null) {
+        return null;
+      }  
+
+      Navigator.pop(context);
+      return File(_pickedFile.path);
+    }
+
+  Widget buildProfileImage(var size) {
+    _shownImage = widget._currentUser.image != null ? FileImage(widget._currentUser.image)
+          : AssetImage('assets/images/client.jpg');
+
+   return Container(
+    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+     child: CircleAvatar(
+      radius: size.width*0.32,
+      backgroundColor: Colors.white,
+      child: CircleAvatar(
+        radius: size.width*0.30, 
+        backgroundImage: _shownImage as ImageProvider,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(190, 110, 0, 0),
+          child: MaterialButton(
+            onPressed: _getImage,
+            color: Colors.blueGrey,
+            textColor: Colors.white,
+            child: Icon(
+              Icons.camera_alt,
+              size: 26,
+            ),
+            padding: EdgeInsets.all(16),
+            shape: CircleBorder(),
+          )  
+        ),
+      ),
+    ),
+  );
+}
 
   Widget buildPersonalInfo() {
     return Container(
@@ -175,11 +168,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Row(
             children: [
               Container(
+
                 alignment: Alignment.topLeft,
                 child: IconButton(
-                  icon: Icon(Icons.edit),
+                  icon: isEditable['email'] == true ? Icon(Icons.save) : Icon(Icons.edit),
                   onPressed: () {
-
+                    
                   }, 
                 ),
               ),
@@ -197,17 +191,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(widget._currentUser.email,
-                style: TextStyle(fontSize: 18)),
-              SizedBox(width: 15,),
-              Icon(Icons.email_outlined),             
-            ],
-          ),
+              IconButton(
+                icon: isEditable['email'] ? Icon(Icons.save_outlined) : Icon(Icons.edit_outlined),
+                onPressed: () {
+                  setState(() {
+                    isEditable['email'] = !isEditable['email'];
+                  });
+                }),
+                isEditable['email'] ? TextField(
+                  controller: TextEditingController(text: widget._currentUser.email),
+                  onSubmitted: (value) {
+                    widget._currentUser.email = value; //TODO: a set function in customer that also updates in fireBase
+                  }): Text(widget._currentUser.email,
+                    style: TextStyle(fontSize: 18)),
+                  
+                  SizedBox(width: 15,),
+                  Icon(Icons.email_outlined),  
+            ]
+          ), 
           SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(widget._currentUser.phoneNumber,
+              IconButton(
+                icon: isEditable['phoneNumber'] ? Icon(Icons.save_outlined) : Icon(Icons.edit_outlined),
+                onPressed: () {
+                  setState(() {
+                    isEditable['phoneNumber'] = !isEditable['phoneNumber'];
+                  });
+                }),
+                isEditable['phoneNumber'] ? TextField(
+                  controller: TextEditingController(text: widget._currentUser.phoneNumber),
+                  onSubmitted: (value) {
+                    widget._currentUser.phoneNumber = value; //TODO: a set function in customer that also updates in fireBase
+                  }): Text(widget._currentUser.phoneNumber,
                 style: TextStyle(fontSize: 18)),
               SizedBox(width: 15,),
               Icon(Icons.phone_outlined),             
@@ -217,8 +234,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(widget._currentUser.city + ", " + widget._currentUser.address,
-                style: TextStyle(fontSize: 18)),
+               IconButton(
+                icon: isEditable['address'] ? Icon(Icons.save_outlined) : Icon(Icons.edit_outlined),
+                onPressed: () {
+                  setState(() {
+                    isEditable['address'] = !isEditable['address'];
+                  });
+                }),
+                isEditable['address'] ? Column(
+                  children: [
+                    TextField(
+                      controller: TextEditingController(text: widget._currentUser.city),
+                      onSubmitted: (value) {
+                        widget._currentUser.city = value; //TODO: a set function in customer that also updates in fireBase
+                    }),
+                    TextField(
+                      controller: TextEditingController(text: widget._currentUser.address),
+                      onSubmitted: (value) {
+                        widget._currentUser.address = value; //TODO: a set function in customer that also updates in fireBase
+                    }),
+                  ],
+                )
+                : Text(widget._currentUser.city + ", " + widget._currentUser.address,
+                 style: TextStyle(fontSize: 18)),
               SizedBox(width: 15,),
               Icon(Icons.home_outlined),             
             ],

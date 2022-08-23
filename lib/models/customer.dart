@@ -1,9 +1,8 @@
 import 'dart:io';
-
 import 'package:Appo/models/Business.dart';
 import 'package:flutter/material.dart';
 
-class Customer {
+class Customer{
   final String _userId; 
   String _firebaseToken;
   String _name;
@@ -19,6 +18,10 @@ class Customer {
 
   String get userId {
     return _userId;
+  }
+
+  String get firebaseToken {
+    return _firebaseToken;
   }
 
   String get name {

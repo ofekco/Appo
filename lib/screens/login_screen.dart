@@ -101,6 +101,8 @@ class _AuthCardState extends State<AuthCard> {
           break;
         }
         case AuthMode.BUSINESS: {
+          Provider.of<Authentication>(context, listen: false).loginAsBusiness(_authData['email'], _authData['password']);
+
           break;
         }
       }
