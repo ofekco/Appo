@@ -254,4 +254,36 @@ class DB_Helper {
       throw err;
     }
   }
+
+  static Future<void> postDateTimeToBusiness(int businessId, DateTime date, 
+    DateTime startTime, DateTime endTime) async 
+  {
+    final dateKey = _getDateKey(date);
+    final String dateTimeKey = '$dateKey${startTime.hour.toString()}${startTime.minute.toString()}';
+
+    //add time to businesses times list
+    try {
+      final url = Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey/$dateTimeKey.json');
+      await http.patch(url,
+      body: json.encode({
+        'userId': null,
+        'startTime': startTime.toString(),
+        'endTime': endTime.toString(),
+        'isBooked': false
+        }
+      )).then((res) {
+        if(res.statusCode >= 400)
+        {
+          print(res.body);
+          throw Exception('Could not update time ${startTime.toString()} in businesses table. HTTP status code = ${res.statusCode}');
+        }
+      });
+
+    }
+    catch(err) {
+      print(err);
+      throw err;
+    }
+  }
+
 }

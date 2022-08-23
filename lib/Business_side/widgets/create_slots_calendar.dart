@@ -1,15 +1,15 @@
-import 'package:Appo/booking_calendar/day_slots_controller.dart';
+
 import 'package:flutter/material.dart';
-import 'package:Appo/booking_calendar/widgets/booking_slot-widget.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:Appo/booking_calendar/widgets/common_button.dart';
 import 'package:Appo/booking_calendar/widgets/common_card.dart';
-import 'package:Appo/booking_calendar/widgets/booking_dialog.dart';
+import 'package:Appo/helpers/DB_helper.dart';
 import 'package:intl/intl.dart';
 
 class CreateSlotsCalendar extends StatefulWidget {
-
+  final START_HOUR = 8;
+  final END_HOUR = 20;
   final businessId;
 
   const CreateSlotsCalendar({Key key, this.businessId}) : super(key: key); //ctor
@@ -20,12 +20,12 @@ class CreateSlotsCalendar extends StatefulWidget {
 
 class _CreateSlotsCalendarState extends State<CreateSlotsCalendar> {
   CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
-  DateTime _selectedDay;
+  DateTime _selectedDay; 
   DateTime _focusedDay;
-  DateTime selectedStart; //the selected hour for start of working day 
-  DateTime selectedEnd; //the selected hour for end of working day 
-  DateTime selectedBreakStart;
-  DateTime selectedBreakEnd;
+  DateTime selectedStart; //the selected hour for the start of working day 
+  DateTime selectedEnd; //the selected hour for the end of working day 
+  List<DateTime> selectedBreaksStart = [null, null]; //list of the selected hours for the start of breaks 
+  List<DateTime> selectedBreaksEnd = [null, null]; //list of the selected hours for the end of breaks 
   final now = DateTime.now();
 
   @override
@@ -33,8 +33,8 @@ class _CreateSlotsCalendarState extends State<CreateSlotsCalendar> {
     super.initState();
     _focusedDay = now;
     _selectedDay = now;
-    selectedStart = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day, 8, 0);
-    selectedEnd = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day, 20, 0);
+    selectedStart = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day, widget.START_HOUR, 0); 
+    selectedEnd = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day, widget.END_HOUR, 0);
   }
 
   static String formatDateTime(DateTime dt) {
@@ -42,24 +42,25 @@ class _CreateSlotsCalendarState extends State<CreateSlotsCalendar> {
   }
 
   void selectNewDateRange() {
-    //replace controller to another day 
-    selectedStart = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day, 8, 0);
-    selectedEnd = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day, 20, 0);
+    selectedStart = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day, widget.START_HOUR, 0);
+    selectedEnd = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day, widget.END_HOUR, 0);
+    selectedBreaksEnd[0]= selectedBreaksEnd[1]=null;
+    selectedBreaksStart[0]=selectedBreaksStart[1]=null;
   }
 
   List<DropdownMenuItem> _getAllHours() {
     List<DateTime> hours = [];
     for (int i = 8; i <= 20; i++) {
-      hours.add(DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day, i, 0));
-      hours.add(DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day, i, 30));
+      hours.add(DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day, i, 0)); //שעה עגולה
+      hours.add(DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day, i, 30));// חצי שעה
     }
     return hours.map<DropdownMenuItem<DateTime>>((DateTime value) {
-            print(value);
-            return DropdownMenuItem<DateTime>(
-              value: value,
-              child: Text(DateFormat.Hm("he_IL").format(value)),
-            );
-          }).toList();
+      print(value);
+        return DropdownMenuItem<DateTime>(
+          value: value,
+          child: Text(DateFormat.Hm("he_IL").format(value)),
+        );
+    }).toList();
   } 
 
   List<DropdownMenuItem> _getHoursInBetween() {
@@ -109,15 +110,15 @@ class _CreateSlotsCalendarState extends State<CreateSlotsCalendar> {
     );
   }
 
-  Widget startBreakDropDown()
+  Widget startBreakDropDown(int breakNumber)
   {
     return Padding(padding: EdgeInsets.symmetric(horizontal: 10),
       child: DropdownButton<DateTime>(
-        value: selectedBreakStart,
+        value: selectedBreaksStart[breakNumber],
         onChanged: (DateTime val) {
-          selectedBreakStart = val;
+          selectedBreaksStart[breakNumber] = val;
           setState(() {
-            selectedBreakStart;           
+            selectedBreaksStart[breakNumber];           
           });
         },
         icon: Icon(Icons.arrow_drop_down),
@@ -126,21 +127,38 @@ class _CreateSlotsCalendarState extends State<CreateSlotsCalendar> {
     );
   }
 
-  Widget endBreakDropDown()
+  Widget endBreakDropDown(int breakNumber)
   {
     return Padding(padding: EdgeInsets.symmetric(horizontal: 10),
       child: DropdownButton<DateTime>(
-        value: selectedBreakEnd,
+        value: selectedBreaksEnd[breakNumber],
         onChanged: (DateTime val) {
-          selectedBreakEnd = val;
+          selectedBreaksEnd[breakNumber] = val;
           setState(() {
-            selectedBreakEnd;           
+            selectedBreaksEnd[breakNumber];           
           });
         },
         icon: Icon(Icons.arrow_drop_down),
         items: _getHoursInBetween(),
       ),
     );
+  }
+
+  void setSlots() async {
+    List<DateTime> slots=[];
+    for (int i = 0; i < (selectedBreaksStart[0].difference(selectedStart).inHours); i++) {
+      slots.add(selectedStart.add(Duration(hours: i)));
+    }
+    for (int i = 0; i < (selectedBreaksStart[1].difference(selectedBreaksEnd[0]).inHours); i++) {
+      slots.add(selectedBreaksEnd[0].add(Duration(hours: i)));
+    }
+    for (int i = 0; i < (selectedEnd.difference(selectedBreaksEnd[1]).inHours); i++) {
+      slots.add(selectedBreaksEnd[1].add(Duration(hours: i)));
+    }
+
+    await slots.forEach((slot) {
+      DB_Helper.postDateTimeToBusiness(widget.businessId, slot, slot, slot.add(Duration(hours: 1)));
+    });
   }
 
   @override
@@ -194,24 +212,32 @@ class _CreateSlotsCalendarState extends State<CreateSlotsCalendar> {
                       Row(mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           startDropDown(),
-                          Text('שעת התחלה'),
+                          Text(':תחילת יום עבודה'),
                       ]),
 
                       Row(mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           endDropDown(),
-                          Text('שעת סיום'),
+                          Text(':סוף יום עבודה'),
                       ]),
 
                       Row(mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          endBreakDropDown(),
+                          endBreakDropDown(0),
                           Text('עד '),
-                          startBreakDropDown(),
-                          Text(':זמן הפסקה')
+                          startBreakDropDown(0),
+                          Text(': הפסקה ראשונה')
                         ]
                       ),
 
+                      Row(mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          endBreakDropDown(1),
+                          Text('עד '),
+                          startBreakDropDown(1),
+                          Text(': הפסקה שנייה')
+                        ]
+                      ),
                     ],
                    ),
                 
@@ -221,7 +247,7 @@ class _CreateSlotsCalendarState extends State<CreateSlotsCalendar> {
 
               CommonButton(
                 text: 'הגדר',
-                onTap: () {},
+                onTap: () =>setSlots(),
             
           ),]
       ),
