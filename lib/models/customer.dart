@@ -28,21 +28,42 @@ class Customer{
     return _name;
   }
 
+  void set name(String newName) {
+     _name = newName; 
+  }
+
   String get email {
     return _email;
+  }
+
+  void set email(String newEmail) {
+     _email = newEmail; 
   }
 
   String get address {
     return _address;
   }
 
+   void set address(String newAddress) {
+     _address = newAddress; 
+  }
+
   String get city {
     return _city;
+  }
+
+   void set city(String newCity) {
+     _city = newCity; 
   }
 
   String get phoneNumber {
     return _phoneNumber;
   }
+
+   void set phoneNumber(String newNumber) {
+     _phoneNumber = newNumber; 
+  }
+  
 
   File get image {
     return _image;

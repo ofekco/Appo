@@ -247,7 +247,7 @@ class Authentication with ChangeNotifier {
     await _setFirebaseUserAuth(email, password);
     await _setAppBusinessAuth(email, password, name, phone, address, city, type);
 
-    _currentUser = new Customer(_userId, _token, email, name, address, city, phone);
+   // _currentUser = new Business(_userId, _token, email, name, address, city, phone); TODO!
     notifyListeners();
     _autoLogout();
     await storeAuthDataOnDevice();

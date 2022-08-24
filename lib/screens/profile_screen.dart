@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:Appo/models/customer.dart';
 import 'package:Appo/widgets/profile_image.dart';
@@ -6,6 +7,9 @@ import '../widgets/curve_painter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as syspath;
+import 'package:Appo/models/http_exception.dart';
+import 'package:http/http.dart' as http;
+import 'package:firebase_database/firebase_database.dart';
 
 
 class ProfileScreen extends StatefulWidget {
@@ -24,7 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     'email': false,
     'phoneNumber': false,
     'address': false,
-  }
+  };
     
   @override
   Widget build(BuildContext context) {
@@ -198,10 +202,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     isEditable['email'] = !isEditable['email'];
                   });
                 }),
-                isEditable['email'] ? TextField(
+                isEditable['email'] ? TextFormField(
                   controller: TextEditingController(text: widget._currentUser.email),
-                  onSubmitted: (value) {
-                    widget._currentUser.email = value; //TODO: a set function in customer that also updates in fireBase
+                  validator: (value) {
+                    if (value.isEmpty || !value.contains('@')) {
+                      return 'כתובת מייל לא חוקית';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    widget._currentUser.email = value; 
+                    _updateEmailInDB(value);
                   }): Text(widget._currentUser.email,
                     style: TextStyle(fontSize: 18)),
                   
@@ -222,8 +233,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }),
                 isEditable['phoneNumber'] ? TextField(
                   controller: TextEditingController(text: widget._currentUser.phoneNumber),
+                  keyboardType: TextInputType.number,
                   onSubmitted: (value) {
-                    widget._currentUser.phoneNumber = value; //TODO: a set function in customer that also updates in fireBase
+                    widget._currentUser.phoneNumber = value; 
+                    //TODO: a set function in customer that also updates in fireBase
                   }): Text(widget._currentUser.phoneNumber,
                 style: TextStyle(fontSize: 18)),
               SizedBox(width: 15,),
@@ -264,6 +277,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _updateEmailInDB(String newEmail) async {
+    String _userId = widget._currentUser.userId;
+    DatabaseReference firebaseDB = FirebaseDatabase.instance.ref('https://appo-ae26e-default-rtdb.firebaseio.com/customers/${_userId}');
+
+    try {
+      await firebaseDB.update({
+        'email': newEmail });
+    } catch (error) {
+      throw error;
+    }
+
+    firebaseDB = FirebaseDatabase.instance.ref('https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyAV3px-slgo-jPGEgUJBYJbDaTledtXIj8/${_userId}');
+     
+     try {
+      await firebaseDB.update({
+        'email': newEmail });
+    } catch (error) {
+      throw error;
+    }
   }
 }
 

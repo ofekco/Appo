@@ -4,7 +4,7 @@ import 'package:Appo/screens/registration_screen.dart';
 import 'package:Appo/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'bussinnes_screens/business_registration_screen.dart';
+import 'package:Appo/Business_side/screens/registration_screen.dart' as businessSide;
 import 'registration_screen.dart';
 import '../models/authentication.dart';
 
@@ -224,7 +224,7 @@ class _AuthCardState extends State<AuthCard> {
                        Navigator.of(context).pushNamed(RegistrationScreen.routeName);
                     }
                     else {
-                      Navigator.of(context).pushNamed(BusinessRegistrationScreen.routeName);
+                      Navigator.of(context).pushNamed(businessSide.BusinessRegistrationScreen.routeName);
                     }
                      },
                   padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),

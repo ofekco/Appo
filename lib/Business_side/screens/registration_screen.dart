@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 
-class RegistrationScreen extends StatefulWidget {
+class BusinessRegistrationScreen extends StatefulWidget {
   static const routeName = '/register1';
   @override
-  State<RegistrationScreen> createState() => _RegistrationScreenState();
+  State<BusinessRegistrationScreen> createState() => _BusinessRegistrationScreenState();
 }
 
-class _RegistrationScreenState extends State<RegistrationScreen> {
+class _BusinessRegistrationScreenState extends State<BusinessRegistrationScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   var _isLoading = false;
   final _passwordController = TextEditingController();
