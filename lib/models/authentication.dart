@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:Appo/models/Business.dart';
 import 'package:Appo/models/http_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -15,7 +16,7 @@ class Authentication with ChangeNotifier {
   DateTime _expiryDate;
   String _userId;
   Timer _authTimer;
-  Customer _currentUser; 
+  var _currentUser; 
   AuthMode _authMode;
  
   bool get isAuth {
@@ -31,6 +32,18 @@ class Authentication with ChangeNotifier {
       return _token;
     }
     return null;
+  }
+
+  void set token(String newToken) {
+    _token = newToken;
+  }
+
+  void set expiryDate(String newExpiryDate) {
+    _expiryDate = DateTime.now().add(
+        Duration(
+        seconds: int.parse(newExpiryDate),
+        ),
+      );
   }
 
   AuthMode get authMode {
@@ -247,7 +260,7 @@ class Authentication with ChangeNotifier {
     await _setFirebaseUserAuth(email, password);
     await _setAppBusinessAuth(email, password, name, phone, address, city, type);
 
-   // _currentUser = new Business(_userId, _token, email, name, address, city, phone); TODO!
+    _currentUser = new Business(id: _userId, name: name, city: city, address: address, phoneNumber: phone, serviceType: type);
     notifyListeners();
     _autoLogout();
     await storeAuthDataOnDevice();
