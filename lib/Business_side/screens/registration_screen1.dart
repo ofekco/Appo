@@ -1,16 +1,15 @@
 
 import 'package:Appo/Business_side/model/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 
-class BusinessRegistrationScreen extends StatefulWidget {
-  static const routeName = '/register1';
+class BusinessRegistrationScreen1 extends StatefulWidget {
+  static const routeName = '/register_business1';
   @override
-  State<BusinessRegistrationScreen> createState() => _BusinessRegistrationScreenState();
+  State<BusinessRegistrationScreen1> createState() => _BusinessRegistrationScreen1State();
 }
 
-class _BusinessRegistrationScreenState extends State<BusinessRegistrationScreen> {
+class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen1> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   var _isLoading = false;
   final _passwordController = TextEditingController();
@@ -18,6 +17,7 @@ class _BusinessRegistrationScreenState extends State<BusinessRegistrationScreen>
   final Map<String, String>_registrationData = {
     'name': '',
     'phone number': '',
+    'email': '',
     'address': '',
     'city': '',
   };
@@ -84,7 +84,7 @@ class _BusinessRegistrationScreenState extends State<BusinessRegistrationScreen>
 
   Widget buildProfileImage(var size) {
     return Container(
-      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+      padding: EdgeInsets.fromLTRB(10, 40, 0, 0),
       child: CircleAvatar(
         radius: size.width*0.22,
         backgroundColor: Colors.white,
@@ -133,9 +133,8 @@ class _BusinessRegistrationScreenState extends State<BusinessRegistrationScreen>
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-
                 buildProfileImage(_deviceSize),
-
+                SizedBox(height: 10,),
                 Padding(padding: const EdgeInsets.only(top: 20.0),
                   child: Directionality(textDirection: TextDirection.rtl,
                     child: TextFormField(//owner name
@@ -194,6 +193,39 @@ class _BusinessRegistrationScreenState extends State<BusinessRegistrationScreen>
                          onSaved: (value) {
                            _registrationData['phone number'] = value;
                          },
+                       ),
+                  ),
+                ),
+
+                Padding(padding: const EdgeInsets.only(top: 20.0),
+                  child: Directionality(textDirection: TextDirection.rtl,
+                    child: TextFormField(//owner name
+                        focusNode: emailFocusNode,
+                        showCursor: true,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                          labelText: 'כתובת מייל',
+                          labelStyle: const TextStyle(color: Colors.black),
+                          fillColor: Colors.white,
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: const BorderSide(color: Colors.blue,),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: const BorderSide(color: Colors.grey),
+                            ),
+                          ),
+                        onSaved: (value) {
+                          _registrationData['email'] = value;
+                        },
+                         validator: (value) {
+                          if (value.isEmpty || !value.contains('@')) {
+                            return 'כתובת מייל לא חוקית';
+                          }
+                          return null;
+                        },
                        ),
                   ),
                 ),

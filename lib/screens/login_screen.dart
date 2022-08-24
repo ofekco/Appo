@@ -4,9 +4,10 @@ import 'package:Appo/screens/registration_screen.dart';
 import 'package:Appo/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:Appo/Business_side/screens/registration_screen.dart' as businessSide;
+import 'package:Appo/Business_side/screens/registration_screen1.dart' as businessSide;
 import 'registration_screen.dart';
 import '../models/authentication.dart';
+import 'package:Appo/Business_side/screens/registration_explanation_screen.dart';
 
 class AuthScreen extends StatelessWidget {
   static const routeName = '/auth';
@@ -224,7 +225,7 @@ class _AuthCardState extends State<AuthCard> {
                        Navigator.of(context).pushNamed(RegistrationScreen.routeName);
                     }
                     else {
-                      Navigator.of(context).pushNamed(businessSide.BusinessRegistrationScreen.routeName);
+                      Navigator.of(context).pushNamed(RegisterationExplenationScreen.routeName);
                     }
                      },
                   padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),

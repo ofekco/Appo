@@ -1,5 +1,7 @@
 import 'package:Appo/Business_side/screens/business_home_page.dart';
 import 'package:Appo/models/colors.dart';
+import 'package:Appo/screens/login_screen.dart';
+import 'package:Appo/screens/profile_screen.dart';
 import 'package:Appo/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +14,12 @@ class NavDrawer extends StatelessWidget {
     Navigator.of(context).pop();
     Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (BuildContext context) => navigationPage));
+  }
+
+  void _onTapBecomeBusiness(BuildContext context) async {
+    Navigator.of(context).pop();
+    await Provider.of<Authentication>(context).logout();
+    Navigator.of(context).pushNamed(AuthScreen.routeName);
   }
 
   Widget buildNavItem(Function onTap, String title, Icon icon)
@@ -41,7 +49,8 @@ class NavDrawer extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18, color: Colors.white),),
                 trailing: IconButton(
                   icon: Icon(Icons.account_circle, color: Colors.white, size: 40,),
-                  onPressed: () {},
+                  onPressed: () {
+                  },
                 ),
                 onTap: () {},
             ),
@@ -55,7 +64,7 @@ class NavDrawer extends StatelessWidget {
 
           Divider(color: Colors.grey),
 
-          buildNavItem(() =>_onTap(context, BusinessHomeScreen(3)),"הרשם כעסק", Icon(Icons.business)),
+          buildNavItem(() =>_onTapBecomeBusiness(context),"הרשם כעסק", Icon(Icons.business)),
 
           Divider(color: Colors.grey),
 

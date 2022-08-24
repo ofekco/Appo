@@ -51,7 +51,7 @@ class Businesses with ChangeNotifier{
     notifyListeners();
   }
 
-  Business findByID(int id)
+  Business findByID(String id)
   {
     return _businesses.firstWhere((b) => b.id == id, orElse: () => null);
   }

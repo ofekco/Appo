@@ -1,18 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:Appo/models/authentication.dart';
 import 'package:Appo/models/customer.dart';
-import 'package:Appo/widgets/profile_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../widgets/curve_painter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as syspath;
-import 'package:Appo/models/http_exception.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_database/firebase_database.dart';
 
 
 class ProfileScreen extends StatefulWidget {
+  static const routeName = '/customer_profile';  
   final Customer _currentUser;
 
   ProfileScreen(this._currentUser);
@@ -23,12 +24,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  File _shownImage;
-  Map<String, bool> isEditable = {
-    'email': false,
-    'phoneNumber': false,
-    'address': false,
-  };
+  var _shownImage;
+  bool isEditable = false;
     
   @override
   Widget build(BuildContext context) {
@@ -172,12 +169,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Row(
             children: [
               Container(
-
                 alignment: Alignment.topLeft,
                 child: IconButton(
-                  icon: isEditable['email'] == true ? Icon(Icons.save) : Icon(Icons.edit),
+                  icon: isEditable == true ? Icon(Icons.save) : Icon(Icons.edit),
                   onPressed: () {
-                    
+                    if(isEditable == true) {
+                      _updateDataInDB();
+                    }
+                    setState(() {
+                      isEditable = !isEditable;
+                    });
                   }, 
                 ),
               ),
@@ -195,49 +196,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              IconButton(
-                icon: isEditable['email'] ? Icon(Icons.save_outlined) : Icon(Icons.edit_outlined),
-                onPressed: () {
-                  setState(() {
-                    isEditable['email'] = !isEditable['email'];
-                  });
-                }),
-                isEditable['email'] ? TextFormField(
-                  controller: TextEditingController(text: widget._currentUser.email),
-                  validator: (value) {
-                    if (value.isEmpty || !value.contains('@')) {
-                      return 'כתובת מייל לא חוקית';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    widget._currentUser.email = value; 
-                    _updateEmailInDB(value);
-                  }): Text(widget._currentUser.email,
-                    style: TextStyle(fontSize: 18)),
-                  
-                  SizedBox(width: 15,),
-                  Icon(Icons.email_outlined),  
+              isEditable == true ? TextFormField(
+                initialValue: widget._currentUser.email,
+                decoration: InputDecoration(
+                  border: new UnderlineInputBorder(
+                    borderSide: new BorderSide(
+                    color: Colors.black
+                    )
+                  )
+                ),
+                showCursor: true,
+                validator: (value) {
+                  if (value.isEmpty || !value.contains('@')) {
+                    return 'כתובת מייל לא חוקית';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  widget._currentUser.email = value; 
+                }): Text(widget._currentUser.email,
+                  style: TextStyle(fontSize: 18)),
+                
+                SizedBox(width: 15,),
+                Icon(Icons.email_outlined),  
             ]
           ), 
           SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              IconButton(
-                icon: isEditable['phoneNumber'] ? Icon(Icons.save_outlined) : Icon(Icons.edit_outlined),
-                onPressed: () {
-                  setState(() {
-                    isEditable['phoneNumber'] = !isEditable['phoneNumber'];
-                  });
-                }),
-                isEditable['phoneNumber'] ? TextField(
-                  controller: TextEditingController(text: widget._currentUser.phoneNumber),
-                  keyboardType: TextInputType.number,
-                  onSubmitted: (value) {
-                    widget._currentUser.phoneNumber = value; 
-                    //TODO: a set function in customer that also updates in fireBase
-                  }): Text(widget._currentUser.phoneNumber,
+              isEditable == true ? TextFormField(
+               initialValue: widget._currentUser.phoneNumber,
+                keyboardType: TextInputType.number,
+                showCursor: true,
+                decoration: InputDecoration(
+                  border: new UnderlineInputBorder(
+                    borderSide: new BorderSide(
+                    color: Colors.black
+                    )
+                  )
+                ),
+                onSaved: (value) {
+                  widget._currentUser.phoneNumber = value; 
+                }): Text(widget._currentUser.phoneNumber,
                 style: TextStyle(fontSize: 18)),
               SizedBox(width: 15,),
               Icon(Icons.phone_outlined),             
@@ -247,31 +248,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-               IconButton(
-                icon: isEditable['address'] ? Icon(Icons.save_outlined) : Icon(Icons.edit_outlined),
-                onPressed: () {
-                  setState(() {
-                    isEditable['address'] = !isEditable['address'];
-                  });
-                }),
-                isEditable['address'] ? Column(
-                  children: [
-                    TextField(
-                      controller: TextEditingController(text: widget._currentUser.city),
-                      onSubmitted: (value) {
-                        widget._currentUser.city = value; //TODO: a set function in customer that also updates in fireBase
-                    }),
-                    TextField(
-                      controller: TextEditingController(text: widget._currentUser.address),
-                      onSubmitted: (value) {
-                        widget._currentUser.address = value; //TODO: a set function in customer that also updates in fireBase
-                    }),
-                  ],
-                )
-                : Text(widget._currentUser.city + ", " + widget._currentUser.address,
-                 style: TextStyle(fontSize: 18)),
-              SizedBox(width: 15,),
-              Icon(Icons.home_outlined),             
+              isEditable == true ? Column(
+                children: [
+                  TextFormField(
+                    initialValue: widget._currentUser.city,
+                    showCursor: true,
+                    decoration: InputDecoration(
+                     border: new UnderlineInputBorder(
+                      borderSide: new BorderSide(
+                      color: Colors.black
+                    )
+                  )
+                ),
+                    onSaved: (value) {
+                      widget._currentUser.city = value;
+                  }),
+                  TextFormField(
+                    initialValue: widget._currentUser.address,
+                    showCursor: true,
+                    decoration: InputDecoration(
+                      border: new UnderlineInputBorder(
+                        borderSide: new BorderSide(
+                        color: Colors.black
+                    )
+                  )
+                ),
+                    onSaved: (value) {
+                      widget._currentUser.address = value; 
+                  }),
+                ],
+              )
+              : Text(widget._currentUser.city + ", " + widget._currentUser.address,
+                style: TextStyle(fontSize: 18)),
+            SizedBox(width: 15,),
+            Icon(Icons.home_outlined),             
             ],
           ),
         ],
@@ -279,22 +289,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Future<void> _updateEmailInDB(String newEmail) async {
+  Future<void> _updateDataInDB() async {
     String _userId = widget._currentUser.userId;
     DatabaseReference firebaseDB = FirebaseDatabase.instance.ref('https://appo-ae26e-default-rtdb.firebaseio.com/customers/${_userId}');
 
     try {
       await firebaseDB.update({
-        'email': newEmail });
+        'email': widget._currentUser.email,
+        'phoneNumber': widget._currentUser.phoneNumber,
+        'address': widget._currentUser.address,
+        'city': widget._currentUser.city });
     } catch (error) {
       throw error;
     }
 
-    firebaseDB = FirebaseDatabase.instance.ref('https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyAV3px-slgo-jPGEgUJBYJbDaTledtXIj8/${_userId}');
-     
+    
      try {
-      await firebaseDB.update({
-        'email': newEmail });
+      var authInstance =  Provider.of<Authentication>(context);
+      var response = await http.post(Uri.parse('https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyAV3px-slgo-jPGEgUJBYJbDaTledtXIj8'), 
+      body: json.encode(
+          {
+            'idToken':authInstance.token,
+            'email': widget._currentUser.email,
+            'returnSecureToken': true,
+          },
+      ),);
+      var responseData = json.decode(response.body);
+        if(responseData['error'] != null) {
+          throw HttpException(responseData['error']['message']);
+        }
+        
+      authInstance.token = responseData['idToken'];
+      authInstance.expiryDate = responseData['expiresIn'];
+  
     } catch (error) {
       throw error;
     }

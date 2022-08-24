@@ -147,7 +147,7 @@ class DB_Helper {
     return DateTime(year, month, day, hour, min);
   }
 
-  static Future<List<TimeSlot>> getTimes(int businessId, DateTime date) async 
+  static Future<List<TimeSlot>> getTimes(String businessId, DateTime date) async 
   {
     String dateKey = _getDateKey(date);
     List<TimeSlot> res = [];
@@ -172,7 +172,7 @@ class DB_Helper {
     return res;
   }
 
-  static Future<void> uploadNewBooking(int businessId, int userId, DateTime date,
+  static Future<void> uploadNewBooking(String businessId, int userId, DateTime date,
      DateTime startTime, DateTime endTime) async
   {
     final dateKey = _getDateKey(date);

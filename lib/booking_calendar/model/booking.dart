@@ -2,7 +2,7 @@
 import 'package:flutter/foundation.dart';
 class Booking {
   //final int userId;
-  final int businessId;
+  final String businessId;
   //final String serviceType;
   DateTime date;
   DateTime startTime;
@@ -19,7 +19,7 @@ class Booking {
 
   Booking.fromJson(Map<String, dynamic> json)
       : //userId = json['userId'] as int,
-        businessId = json['businessId'] as int,
+        businessId = json['businessId'] as String,
         date = DateTime.parse(json['date'] as String),
         startTime = DateTime.parse(json['startTime'] as String),
         endTime = DateTime.parse(json['endTime'] as String);

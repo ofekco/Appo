@@ -1,6 +1,7 @@
 import 'package:Appo/Business_side/screens/business_home_page.dart';
+import 'package:Appo/screens/profile_screen.dart';
 import 'package:Appo/screens/registration_screen.dart';
-import 'Business_side/screens/registration_screen.dart';
+import 'Business_side/screens/registration_screen1.dart';
 import 'package:Appo/models/authentication.dart';
 import 'package:Appo/models/businesses.dart';
 import 'package:Appo/screens/chooce_login.dart';
@@ -14,6 +15,7 @@ import './models/colors.dart';
 import './models/businesses.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import './screens/splash.dart';
+import 'Business_side/screens/registration_explanation_screen.dart';
 
 
 void main() {
@@ -64,7 +66,9 @@ class MyApp extends StatelessWidget {
             '/register': (ctx) => RegistrationScreen(), 
             '/first': (ctx) => TabsScreen(),
             '/business_home' : (ctx) => BusinessHomeScreen(3),
-            '/register_business' : (ctx) => BusinessRegistrationScreen(),
+            '/register_business1' : (ctx) => BusinessRegistrationScreen1(),
+            '/explain' : (ctx) => RegisterationExplenationScreen(),
+            '/customer_profile' : (ctx) => ProfileScreen(Provider.of<Authentication>(ctx).currentUser),
           }
         ),
     ));  

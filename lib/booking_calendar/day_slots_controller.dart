@@ -13,7 +13,7 @@ class DaySlotsController extends ChangeNotifier {
   }
 
   DateTime date;
-  final int businessId;
+  final String businessId;
   //DateTime get Date => date;
   List<TimeSlot> times;
   
