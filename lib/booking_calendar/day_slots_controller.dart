@@ -12,13 +12,13 @@ class DaySlotsController extends ChangeNotifier {
 
   DateTime date;
   final int businessId;
-  //DateTime get Date => date;
+
   List<TimeSlot> times;
   
-  List<DateTime> _allBookingSlots = [];
+  List<DateTime> _allBookingSlots = []; //all business slots
   List<DateTime> get allBookingSlots => _allBookingSlots;
 
-  List<DateTimeRange> bookedSlots = [];
+  List<DateTimeRange> bookedSlots = []; //the booked slots
 
   int _selectedSlot = (-1);
   bool _isUploading = false;
@@ -94,4 +94,20 @@ class DaySlotsController extends ChangeNotifier {
     return newBooking;
     //});
   }
+
+  Future<void> uploadBusinessSlot(int businessId, DateTime slot) async
+  {
+    await DB_Helper.postDateTimeToBusiness(businessId, slot, slot, slot.add(Duration(hours: 1)));
+    _allBookingSlots.add(slot);
+    notifyListeners();
+  }
+
+  Future<void> deleteBusinessSlot() async
+  {
+    DateTime slot = allBookingSlots.elementAt(selectedSlot);
+    await DB_Helper.deleteSlot(businessId, slot);
+    _allBookingSlots.remove(slot);
+    notifyListeners();
+  }
+  
 }

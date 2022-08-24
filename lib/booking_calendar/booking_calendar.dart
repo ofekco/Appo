@@ -167,7 +167,7 @@ class _BookingCalendarState extends State<BookingCalendar> {
                   ),
 
               CommonButton(
-                text: 'BOOK',
+                text: 'הזמן',
                 onTap: () => showDialog(
                               context: context, 
                               builder: (ctx) => 

@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:Appo/booking_calendar/model/time_slot.dart';
 import 'package:Appo/models/customer.dart';
 import 'package:Appo/helpers/DB_helper.dart';
-import '../screens/create_slots_screen.dart';
+import 'add_edit_slots_screen.dart';
 
 class BusinessCalendarScreen extends StatefulWidget {
   int businessID = 3;

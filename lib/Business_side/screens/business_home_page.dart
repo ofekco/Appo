@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:Appo/Business_side/screens/create_slots_screen.dart';
+import 'package:Appo/Business_side/screens/add_edit_slots_screen.dart';
 import 'package:Appo/helpers/DB_helper.dart';
 import 'package:Appo/models/colors.dart';
 import 'package:calendar_view/calendar_view.dart';
@@ -61,7 +61,7 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
             Navigator.of(context).push(MaterialPageRoute(
               builder: (_) 
               {
-                return CreateSlotsScreen(widget.businessID);
+                return AddOrEditSlotsScreen(widget.businessID);
               })
             );
           }

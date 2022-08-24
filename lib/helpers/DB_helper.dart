@@ -286,4 +286,24 @@ class DB_Helper {
     }
   }
 
+  //This method gets slot and business id and removes the slot from business times in DB
+  static Future<void> deleteSlot(int businessId, DateTime slot) async
+  {
+    final dateKey = _getDateKey(slot);
+    final String dateTimeKey = '$dateKey${slot.hour.toString()}${slot.minute.toString()}';
+
+    //add time to businesses times list
+    try {
+      final url = Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey/$dateTimeKey.json');
+        final response = await http.delete(url);
+        if(response.statusCode >= 400) {
+          throw HttpException('Could not delete slot!');
+        }
+    }
+    catch(err) {
+      print(err);
+      throw err;
+    }
+  }
+
 }
