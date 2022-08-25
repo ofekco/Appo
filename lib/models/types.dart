@@ -1,6 +1,5 @@
 import 'package:Appo/helpers/DB_helper.dart';
 import 'package:flutter/material.dart';
-
 import 'package:Appo/models/type.dart';
 
 class Types with ChangeNotifier

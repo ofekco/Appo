@@ -10,15 +10,16 @@ class RegisterationExplenationScreen extends StatelessWidget {
     final _deviceSize = MediaQuery.of(context).size;
 
     return Scaffold(backgroundColor: Color.fromARGB(255, 159, 195, 212),
-    body: Padding(
-      child: SingleChildScrollView(
+    body: SingleChildScrollView(
         child: Column(children: [
-          SizedBox(height: 30),
+          SizedBox(height: 70),
           Text("תודה שבחרת בנו!", 
             style: TextStyle(fontSize: 24),),
-          SizedBox(height: 5),
-          Text("הגדירו את פרופיל העסק שלכם, שעות הפעילות והשירותים הניתנים בעסק"),
-          SizedBox(height: 5),
+          SizedBox(height: 40),
+          Text("הגדירו את פרופיל העסק שלכם, שעות הפעילות והשירותים הניתנים בעסק",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 18),),
+          SizedBox(height: 550),
           RaisedButton(
             child: Text("המשך"),
             onPressed: () {
@@ -26,7 +27,6 @@ class RegisterationExplenationScreen extends StatelessWidget {
             })
 
         ]),)
-      )
-    );
+      );
   }
 }

@@ -2,6 +2,7 @@ import 'package:Appo/models/Business.dart';
 import 'package:Appo/widgets/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:Appo/models/type.dart';
 
 class BusinessTypeListItem extends StatefulWidget {
   final Type _type;
@@ -57,7 +58,7 @@ class _BusinessTypeListItemState extends State<BusinessTypeListItem> {
                               children: <Widget>[
 
                                 //type
-                                Text(widget._type.name, textAlign: TextAlign.left, style: TextStyle(
+                                Text(widget._type.title, textAlign: TextAlign.left, style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 22,),
                                     ),

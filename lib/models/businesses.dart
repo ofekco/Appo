@@ -1,15 +1,11 @@
 import 'package:Appo/models/authentication.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import '../booking_calendar/model/booking.dart';
 import './Business.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import './consts.dart' as consts;
 import '../helpers/DB_helper.dart';
-import '../models/types.dart';
-import './Type.dart';
+import 'package:Appo/models/type.dart';
+import 'package:Appo/models/types.dart';
 
 //All the businesses data from the server
 class Businesses with ChangeNotifier{

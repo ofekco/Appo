@@ -235,7 +235,7 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
                 Padding(padding: const EdgeInsets.only(top: 20.0),
                   child: Directionality(textDirection: TextDirection.rtl,
                     child: TextFormField(//phone
-                         focusNode: phoneNumberFocusNode,
+                         focusNode: passwordFocusNode,
                          showCursor: true,
                          cursorColor: Colors.black,
                          decoration: InputDecoration(
@@ -328,6 +328,7 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
                     child:
                         const Text('המשך'),
                     onPressed: (){
+                      //_submit();
                       Navigator.of(context).pushNamed('/register2');
                     },
                     shape: RoundedRectangleBorder(

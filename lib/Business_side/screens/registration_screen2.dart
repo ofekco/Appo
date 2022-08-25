@@ -100,7 +100,7 @@ class _BusinessRegistrationScreen2State extends State<BusinessRegistrationScreen
     FocusNode nameFocusNode = FocusNode();
     
     return Scaffold(backgroundColor: Color.fromARGB(255, 159, 195, 212),
-      body: Expanded(
+      body: Container(
         child: ListView.builder(
         itemCount: _types.TypesList.length, 
         padding: const EdgeInsets.only(top: 8),

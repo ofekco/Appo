@@ -9,6 +9,7 @@ import 'package:Appo/screens/login_screen.dart';
 import 'package:Appo/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'Business_side/screens/registration_screen2.dart';
 import 'models/types.dart';
 import 'screens/tabs_screen.dart';
 import './models/colors.dart';
@@ -67,8 +68,10 @@ class MyApp extends StatelessWidget {
             '/first': (ctx) => TabsScreen(),
             '/business_home' : (ctx) => BusinessHomeScreen(3),
             '/register_business1' : (ctx) => BusinessRegistrationScreen1(),
+            '/register_business2'  : (ctx) => BusinessRegistrationScreen2(),
             '/explain' : (ctx) => RegisterationExplenationScreen(),
             '/customer_profile' : (ctx) => ProfileScreen(Provider.of<Authentication>(ctx).currentUser),
+            
           }
         ),
     ));  

@@ -33,17 +33,17 @@ class _BusinessesListState extends State<BusinessesList> {
     }
     else {
       return ListView.builder(
-            itemCount: _businesses.FilteredList.length, 
-            padding: const EdgeInsets.only(top: 8),
-            scrollDirection: Axis.vertical,
-            itemBuilder: (BuildContext context, int index) {
-              return Padding( 
-                      padding: const EdgeInsets.only(
-                      left: 24, right: 24, top: 8, bottom: 16),
-                      child: WrapInkWell(BusinessListItem(_businesses.FilteredList[index]), () => itemClicked(context, _businesses.FilteredList[index]))
-                );                 
-              },
-            );
-          }   
-      }
+        itemCount: _businesses.FilteredList.length, 
+        padding: const EdgeInsets.only(top: 8),
+        scrollDirection: Axis.vertical,
+        itemBuilder: (BuildContext context, int index) {
+          return Padding( 
+                  padding: const EdgeInsets.only(
+                  left: 24, right: 24, top: 8, bottom: 16),
+                  child: WrapInkWell(BusinessListItem(_businesses.FilteredList[index]), () => itemClicked(context, _businesses.FilteredList[index]))
+            );                 
+          },
+        );
+      }   
+    }
   }
