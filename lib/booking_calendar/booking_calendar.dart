@@ -1,8 +1,6 @@
 import 'package:Appo/booking_calendar/day_slots_controller.dart';
-import 'package:Appo/booking_calendar/model/times_slots.dart';
 import 'package:Appo/booking_calendar/widgets/booking_confirmation.dart';
 import 'package:Appo/booking_calendar/widgets/booking_slot-widget.dart';
-import 'package:Appo/helpers/DB_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -12,9 +10,9 @@ import 'package:Appo/booking_calendar/widgets/common_button.dart';
 import 'package:Appo/booking_calendar/widgets/common_card.dart';
 import 'package:Appo/booking_calendar/widgets/booking_dialog.dart';
 import 'package:intl/intl.dart';
-
 import 'model/booking.dart';
 
+//This widget is the booking calendar in client side
 class BookingCalendar extends StatefulWidget {
 
   final businessId;

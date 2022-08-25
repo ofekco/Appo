@@ -119,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 alignment: Alignment.centerRight,
                 child: Text(
                   'פרטים אישיים',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
                 ),
               ),
             ],

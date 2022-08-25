@@ -3,6 +3,7 @@ import 'package:Appo/booking_calendar/model/booking.dart';
 import 'package:Appo/helpers/DB_helper.dart';
 import 'package:flutter/material.dart';
 
+//The model of the calendar. holds the selected date and the list of slots (free and booked)
 class DaySlotsController extends ChangeNotifier {
 
   DaySlotsController({@required this.date, @required this.businessId})
