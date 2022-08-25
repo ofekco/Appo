@@ -1,6 +1,7 @@
 
 import 'package:Appo/Business_side/model/colors.dart';
-import 'package:Appo/models/types.dart' as types;
+import 'package:Appo/models/types.dart';
+import 'package:Appo/models/type.dart';
 import 'package:Appo/widgets/business_type_item.dart';
 import 'package:Appo/widgets/wrap_inkwell.dart';
 import 'package:flutter/material.dart';
@@ -87,7 +88,7 @@ class _BusinessRegistrationScreen2State extends State<BusinessRegistrationScreen
 
   @override
   Widget build(BuildContext context) {
-    final _types = Provider.of<types.Types>(context);
+    final _types = Provider.of<Types>(context);
 
     final _deviceSize = MediaQuery.of(context).size;
     FocusNode emailFocusNode = FocusNode();
@@ -111,7 +112,7 @@ class _BusinessRegistrationScreen2State extends State<BusinessRegistrationScreen
             child: WrapInkWell(BusinessTypeListItem(_types.TypesList[index]), () => itemClicked(context, _types.TypesList[index]))
           );                 
           },
-        );
+        )
       )
     );
   }
