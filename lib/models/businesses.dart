@@ -2,14 +2,17 @@ import 'package:Appo/models/authentication.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import '../booking_calendar/model/booking.dart';
-import './Business.dart';
+import 'package:http/http.dart' as http;
 import '../helpers/DB_helper.dart';
 import 'package:Appo/models/type.dart';
 import 'package:Appo/models/types.dart';
+import 'package:Appo/models/business.dart';
+
 
 //All the businesses data from the server
 class Businesses with ChangeNotifier{
 
+  String _clientId;
   List<Business> _businesses;
   List<Business> _filteredList;
   List<Business> _favorites;
@@ -21,6 +24,10 @@ class Businesses with ChangeNotifier{
     _favorites = [];
     _myBookings = [];
   }
+
+  String get ClientId { return _clientId; }
+  
+  void set ClientId(value) { _clientId = value; }
 
   List<Business> get BusinessesList {
     return _businesses;
@@ -65,10 +72,9 @@ class Businesses with ChangeNotifier{
   }
 
   //gets from database the favorites businesses. for now - favorites of customer 
-  Future<List<Business>> getFavorites(BuildContext context) async 
+  Future<List<Business>> getFavorites() async 
   {
-    var jsonData = await DB_Helper.getFavorites(Provider.of<Authentication>(context, listen: false).currentUser.userId); //returns json
-
+    var jsonData = await DB_Helper.getFavorites(_clientId) as Map<String, dynamic>; //returns json
     List<Business> favoritesList = [];
 
     if(jsonData != null)
@@ -77,7 +83,7 @@ class Businesses with ChangeNotifier{
       {
         await DB_Helper.getAllBusinesses();
       }
-      for(var item in jsonData) 
+      for(var item in jsonData.values) 
       {
         if(item != null)
         {
@@ -94,9 +100,10 @@ class Businesses with ChangeNotifier{
   }
 
   //gets from DB the upcoming appointments of the specific user id
-  Future<void> getMyUpComingBookings(String userId) async
+
+  Future<void> getMyUpComingBookings() async
   {
-    _myBookings = await DB_Helper.getUserUpComingAppointments(userId);
+    _myBookings = await DB_Helper.getUserUpComingAppointments(_clientId);
     notifyListeners();
   }
 

@@ -43,15 +43,15 @@ class Business with ChangeNotifier {
     );
   }
 
-  void toggleFavoriteStatus() 
+  void toggleFavoriteStatus(String userId) 
   {
     isFavorite = !isFavorite;
     if(isFavorite == true)
     {
-      DB_Helper.postFavorite(this);
+      DB_Helper.postFavorite(userId, this);
     }
     else{
-      DB_Helper.removeFromFavorites(this);
+      DB_Helper.removeFromFavorites(userId, this);
     }
     notifyListeners();
   }

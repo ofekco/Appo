@@ -38,10 +38,10 @@ class DB_Helper {
     return res;
   }
 
-  static Future<void> postFavorite(Business itemToAdd) async
+  static Future<void> postFavorite(String userId, Business itemToAdd) async
   {
     try {
-        await http.patch(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/0/favorites/${itemToAdd.id}.json'), body: json.encode({ //encode gets a map
+        await http.patch(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/${userId}/favorites/${itemToAdd.id}.json'), body: json.encode({ //encode gets a map
           'businessId': itemToAdd.id
       })).then((res) {
         if(res.statusCode >= 400)
@@ -56,10 +56,10 @@ class DB_Helper {
     }
   }
 
-  static Future<void> removeFromFavorites(Business itemToRemove) async
+  static Future<void> removeFromFavorites(String userId, Business itemToRemove) async
   {
     try {
-        final response = await http.delete(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/0/favorites/${itemToRemove.id}.json'));
+        final response = await http.delete(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/${userId}/favorites/${itemToRemove.id}.json'));
         if(response.statusCode >= 400) {
           throw HttpException('Could not delete product!');
         }
@@ -172,14 +172,16 @@ class DB_Helper {
     return res;
   }
 
-  static Future<void> uploadNewBooking(String businessId, int userId, DateTime date,
-     DateTime startTime, DateTime endTime) async
+
+  static Future<void> uploadNewBooking(String businessId, String userId, DateTime date,
+
+  DateTime startTime, DateTime endTime) async
   {
     final dateKey = _getDateKey(date);
     final String dateTimeKey = '$dateKey${date.hour.toString()}${date.minute.toString()}';
 
     try { //add booking to customers appointment list
-        await http.patch(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/0/appointments/$dateTimeKey.json'), 
+        await http.patch(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/${userId}/appointments/$dateTimeKey.json'), 
         body: json.encode({ //encode gets a map
           'businessId': businessId,
           'date': date.toString(),
@@ -221,7 +223,7 @@ class DB_Helper {
   static Future<dynamic> getFavorites(String userId) async 
   {
     try {
-      http.Response response = await http.get(Uri.parse(consts.dummy_favorites));
+      http.Response response = await http.get(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/${userId}/favorites.json'));
       var jsonData = jsonDecode(response.body);
 
       return jsonData;
@@ -232,7 +234,7 @@ class DB_Helper {
     }
   }
 
-  static Future<Map> findCustomerById(int id) async
+  static Future<Map> findCustomerById(String userId) async
   {
     try {
       final url = Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers.json');
@@ -241,7 +243,7 @@ class DB_Helper {
 
       for(var item in jsonData.entries)
       {
-        if(item.value['id'] == id)
+        if(item.key == userId)
         {
           return item.value;
         }
@@ -254,4 +256,56 @@ class DB_Helper {
       throw err;
     }
   }
+
+  static Future<void> postDateTimeToBusiness(String businessId, DateTime date, 
+    DateTime startTime, DateTime endTime) async 
+  {
+    final dateKey = _getDateKey(date);
+    final String dateTimeKey = '$dateKey${startTime.hour.toString()}${startTime.minute.toString()}';
+
+    //add time to businesses times list
+    try {
+      final url = Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey/$dateTimeKey.json');
+      await http.patch(url,
+      body: json.encode({
+        'userId': null,
+        'startTime': startTime.toString(),
+        'endTime': endTime.toString(),
+        'isBooked': false
+        }
+      )).then((res) {
+        if(res.statusCode >= 400)
+        {
+          print(res.body);
+          throw Exception('Could not update time ${startTime.toString()} in businesses table. HTTP status code = ${res.statusCode}');
+        }
+      });
+
+    }
+    catch(err) {
+      print(err);
+      throw err;
+    }
+  }
+
+  //This method gets slot and business id and removes the slot from business times in DB
+  static Future<void> deleteSlot(String businessId, DateTime slot) async
+  {
+    final dateKey = _getDateKey(slot);
+    final String dateTimeKey = '$dateKey${slot.hour.toString()}${slot.minute.toString()}';
+
+    //add time to businesses times list
+    try {
+      final url = Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey/$dateTimeKey.json');
+        final response = await http.delete(url);
+        if(response.statusCode >= 400) {
+          throw HttpException('Could not delete slot!');
+        }
+    }
+    catch(err) {
+      print(err);
+      throw err;
+    }
+  }
+
 }

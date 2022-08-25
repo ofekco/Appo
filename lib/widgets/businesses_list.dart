@@ -19,7 +19,7 @@ class _BusinessesListState extends State<BusinessesList> {
   void itemClicked(BuildContext ctx, Business bis) 
   {
     Navigator.of(ctx).push(MaterialPageRoute(builder: (_) {
-      return BusinessDetailsScreen(bis);
+      return BusinessDetailsScreen(bis, Provider.of<Businesses>(context, listen: false).ClientId);
       })
     );
   }

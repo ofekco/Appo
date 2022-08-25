@@ -11,14 +11,12 @@ import 'package:path_provider/path_provider.dart' as syspath;
 import 'package:http/http.dart' as http;
 import 'package:firebase_database/firebase_database.dart';
 
-
 class ProfileScreen extends StatefulWidget {
   static const routeName = '/customer_profile';  
   final Customer _currentUser;
 
   ProfileScreen(this._currentUser);
 
-  
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
@@ -63,15 +61,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     buildPersonalInfo(),
                   ],
                 ),
-            
                 ),
-              ),
+              ),  
           ]
         )
-            )
-            )
-        );        
-  }
+      )
+    )
+  );        
+}
+
 
  Future<void> _getImage() async {
     var imageFile;
@@ -137,13 +135,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
    return Container(
     padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
      child: CircleAvatar(
-      radius: size.width*0.32,
+      radius: size.width*0.22,
       backgroundColor: Colors.white,
       child: CircleAvatar(
-        radius: size.width*0.30, 
+        radius: size.width*0.2, 
         backgroundImage: _shownImage as ImageProvider,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(190, 110, 0, 0),
+          padding: const EdgeInsets.fromLTRB(110, 110, 0, 0),
           child: MaterialButton(
             onPressed: _getImage,
             color: Colors.blueGrey,
@@ -154,7 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             padding: EdgeInsets.all(16),
             shape: CircleBorder(),
-          )  
+          ),  
         ),
       ),
     ),
@@ -187,7 +185,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 alignment: Alignment.centerRight,
                 child: Text(
                   'פרטים אישיים',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
                 ),
               ),
             ],

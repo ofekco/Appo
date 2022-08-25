@@ -1,8 +1,6 @@
 import 'package:Appo/booking_calendar/day_slots_controller.dart';
-import 'package:Appo/booking_calendar/model/times_slots.dart';
 import 'package:Appo/booking_calendar/widgets/booking_confirmation.dart';
 import 'package:Appo/booking_calendar/widgets/booking_slot-widget.dart';
-import 'package:Appo/helpers/DB_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -12,14 +10,15 @@ import 'package:Appo/booking_calendar/widgets/common_button.dart';
 import 'package:Appo/booking_calendar/widgets/common_card.dart';
 import 'package:Appo/booking_calendar/widgets/booking_dialog.dart';
 import 'package:intl/intl.dart';
-
 import 'model/booking.dart';
 
+//This widget is the booking calendar in client side
 class BookingCalendar extends StatefulWidget {
 
   final businessId;
+  final clientId;
 
-  const BookingCalendar({Key key, this.businessId}) : super(key: key); //ctor
+  const BookingCalendar({Key key, this.businessId, this.clientId}) : super(key: key); //ctor
 
   @override
   State<BookingCalendar> createState() => _BookingCalendarState();
@@ -55,7 +54,7 @@ class _BookingCalendarState extends State<BookingCalendar> {
   void onBookButtonTap(BuildContext ctx) async
   {
     controller.toggleUploading();
-    Booking book = await controller.uploadBooking();
+    Booking book = await controller.uploadBooking(widget.clientId);
     controller.toggleUploading();
 
     showModalBottomSheet(
@@ -80,12 +79,12 @@ class _BookingCalendarState extends State<BookingCalendar> {
         child: (controller.isUploading || controller.times == null)
           ? const BookingDialog()
           : Column(
-            children: [
+            children: [ 
               CommonCard(
                 child: TableCalendar(
                       locale: 'iw_IL',
                       firstDay: DateTime.now(),
-                      lastDay: DateTime.now().add(const Duration(days: 1000)),
+                      lastDay: DateTime.now().add(const Duration(days: 35)),
                       focusedDay: _focusedDay,
                       calendarFormat: _calendarFormat,
                       calendarStyle:
@@ -160,14 +159,13 @@ class _BookingCalendarState extends State<BookingCalendar> {
                           ),
                         ),
                       ),
-                    
                   
               const SizedBox(
                     height: 16,
                   ),
 
               CommonButton(
-                text: 'BOOK',
+                text: 'הזמן',
                 onTap: () => showDialog(
                               context: context, 
                               builder: (ctx) => 

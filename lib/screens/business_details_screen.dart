@@ -5,17 +5,19 @@ import 'package:Appo/widgets/favorite_button.dart';
 import 'package:Appo/widgets/business_details_screen_widgets/section_button.dart';
 import 'package:flutter/material.dart';
 import '../models/Business.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../widgets/curve_painter.dart';
 import '../widgets/drawer.dart';
 
 class BusinessDetailsScreen extends StatefulWidget {
 
   final Business business;
+  final String clientId;
   static const routeName = 'business-details';
-  static const sectionsNames = const ['ביקורות', 'מיקום', 'לוח זמנים' ];
+  static const sectionsNames = const ['ביקורות', 'מיקום', 'אודות' ];
   List<SectionButton> sectionButtonsList;
 
-  BusinessDetailsScreen(this.business);
+  BusinessDetailsScreen(this.business, this.clientId);
 
   @override
   State<BusinessDetailsScreen> createState() => _BusinessDetailsScreenState();
@@ -61,17 +63,73 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
 
   Widget showSelectedSection()
   {
-    if(_selectedSection == 0) //Sceduale
+    if(_selectedSection == 0) //reviews
     {
-      return Container();
+      return Container(); //TO DO 
     }
-    else if(_selectedSection == 1)
+    else if(_selectedSection == 1) //location
     {
       return GoogleMapsView(widget.business.latitude, widget.business.longitude);
     }
-    else if(_selectedSection == 2){ //reviews
-      return Container();
+    else if(_selectedSection == 2){ //about
+      return aboutSection(); 
     }
+    else 
+      return Container();
+  }
+
+  Widget aboutSection()
+  {
+    return Container(
+      child: Column(mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(height: 20),
+
+          Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(widget.business.phoneNumber,
+                    style: TextStyle(fontSize: 14)),
+                  SizedBox(width: 15,),
+                  Icon(Icons.phone_outlined),             
+                ],
+          ),
+          SizedBox(height: 10),
+          Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(widget.business.address + ", " + widget.business.city,
+                    style: TextStyle(fontSize: 14)),
+                  SizedBox(width: 15,),
+                  Icon(Icons.home_outlined),             
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(widget.business.owner,
+                      style: TextStyle(fontSize: 14)),
+                SizedBox(width: 15,),
+                Text(':בעלים',
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),               
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('ראשון - חמישי',
+                      style: TextStyle(fontSize: 14, )),
+                SizedBox(width: 15,),
+                Text(':ימי עבודה',
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),         
+            ],
+          ),
+          SizedBox(height: 10),
+        ]
+      )  
+    );
   }
 
   @override
@@ -128,28 +186,29 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
       
                       //business name
                       Text("${widget.business.name}", style: 
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18, letterSpacing: 1.15),
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 22, letterSpacing: 1.15),
                       ),
                       //favorite button
                       FavoriteButton(widget.business),
                     ], 
                   ),
       
-                  SizedBox(height: 5,),
+                  SizedBox(height: 3,),
       
                   //business type
-                  Text("${widget.business.serviceType}", style: TextStyle(color: Colors.grey.shade400),
+                  Text("${widget.business.serviceType}", style: 
+                    TextStyle(color: Colors.grey.shade400, fontSize: 18, fontWeight: FontWeight.w600),
                   ),
       
                   SizedBox(
-                    height: 3,
+                    height: 5,
                   ),
       
-                  Text( //business address 
-                    "${widget.business.address}, ${widget.business.city}",
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                    ),
+                  IconButton(
+                    icon: Icon(FontAwesomeIcons.instagram),
+                    iconSize: 30,
+                    
+                    onPressed: () {},
                   ),
       
                   SizedBox(
@@ -165,7 +224,7 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
                     child: const Text('קבע תור'),
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-                          return BookingCalendarScreen(widget.business.id);
+                          return BookingCalendarScreen(widget.business.id, widget.clientId);
                           })
                         );
                     },
