@@ -6,7 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:Appo/models/type.dart';
 import '../models/http_exception.dart';
 import '../models/consts.dart' as consts;
-import 'package:intl/intl.dart';
+import 'package:Appo/models/business.dart';
+
 
 class DB_Helper {
   
@@ -147,7 +148,7 @@ class DB_Helper {
     return DateTime(year, month, day, hour, min);
   }
 
-  static Future<List<TimeSlot>> getTimes(String businessId, DateTime date) async 
+  static Future<List<TimeSlot>> getTimes(int businessId, DateTime date) async 
   {
     String dateKey = _getDateKey(date);
     List<TimeSlot> res = [];
@@ -173,7 +174,7 @@ class DB_Helper {
   }
 
 
-  static Future<void> uploadNewBooking(String businessId, String userId, DateTime date,
+  static Future<void> uploadNewBooking(int businessId, String userId, DateTime date,
 
   DateTime startTime, DateTime endTime) async
   {
@@ -257,7 +258,7 @@ class DB_Helper {
     }
   }
 
-  static Future<void> postDateTimeToBusiness(String businessId, DateTime date, 
+  static Future<void> postDateTimeToBusiness(int businessId, DateTime date, 
     DateTime startTime, DateTime endTime) async 
   {
     final dateKey = _getDateKey(date);
@@ -289,7 +290,7 @@ class DB_Helper {
   }
 
   //This method gets slot and business id and removes the slot from business times in DB
-  static Future<void> deleteSlot(String businessId, DateTime slot) async
+  static Future<void> deleteSlot(int businessId, DateTime slot) async
   {
     final dateKey = _getDateKey(slot);
     final String dateTimeKey = '$dateKey${slot.hour.toString()}${slot.minute.toString()}';

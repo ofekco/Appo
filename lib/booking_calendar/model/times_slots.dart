@@ -6,7 +6,7 @@ import './time_slot.dart';
 //this class represents the business time slots for 1 day
 
 class TimeSlots {
-  final String businessId;
+  final int businessId;
   //final String serviceType;
   DateTime date;
   List<TimeSlot> times;
@@ -21,7 +21,7 @@ class TimeSlots {
   }
 
   TimeSlots.fromJson(Map<String, dynamic> json)
-      : businessId = json['businessId'] as String,
+      : businessId = json['businessId'],
         times = (json as List).map((val) => TimeSlot.fromJson(val)).toList(),
         date =  DateTime.parse(json['date'] as String);
 

@@ -10,9 +10,10 @@ class DaySlotsController extends ChangeNotifier {
   {
     getTimesFromDB();
   }
-
+  
   DateTime date;
-  final String businessId;
+  final int businessId;
+
   List<TimeSlot> times;
   
   List<DateTime> _allBookingSlots = []; //all business slots
@@ -95,7 +96,7 @@ class DaySlotsController extends ChangeNotifier {
     //});
   }
 
-  Future<void> uploadBusinessSlot(String businessId, DateTime slot) async
+  Future<void> uploadBusinessSlot(int businessId, DateTime slot) async
   {
     await DB_Helper.postDateTimeToBusiness(businessId, slot, slot, slot.add(Duration(hours: 1)));
     _allBookingSlots.add(slot);

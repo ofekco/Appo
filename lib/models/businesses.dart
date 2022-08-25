@@ -57,7 +57,7 @@ class Businesses with ChangeNotifier{
     notifyListeners();
   }
 
-  Business findByID(String id)
+  Business findByID(int id)
   {
     return _businesses.firstWhere((b) => b.id == id, orElse: () => null);
   }
@@ -74,7 +74,7 @@ class Businesses with ChangeNotifier{
   //gets from database the favorites businesses. for now - favorites of customer 
   Future<List<Business>> getFavorites() async 
   {
-    var jsonData = await DB_Helper.getFavorites(_clientId) as Map<String, dynamic>; //returns json
+    var jsonData = await DB_Helper.getFavorites(_clientId); //returns json
     List<Business> favoritesList = [];
 
     if(jsonData != null)
@@ -83,7 +83,7 @@ class Businesses with ChangeNotifier{
       {
         await DB_Helper.getAllBusinesses();
       }
-      for(var item in jsonData.values) 
+      for(var item in jsonData) 
       {
         if(item != null)
         {
