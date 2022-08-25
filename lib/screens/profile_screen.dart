@@ -194,27 +194,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              isEditable == true ? TextFormField(
-                initialValue: widget._currentUser.email,
-                style: const TextStyle(color: Colors.black),
-                decoration: InputDecoration(
-                  border: new UnderlineInputBorder(
-                    borderSide: new BorderSide(
-                    color: Colors.black
+              isEditable == true ? Expanded(
+                child: TextFormField(
+                  initialValue: widget._currentUser.email,
+                  style: const TextStyle(color: Colors.black),
+                  decoration: InputDecoration(
+                    border: new UnderlineInputBorder(
+                      borderSide: new BorderSide(
+                      color: Colors.black
+                      )
                     )
-                  )
-                ),
-                showCursor: true,
-                cursorColor: Colors.black,
-                validator: (value) {
-                  if (value.isEmpty || !value.contains('@')) {
-                    return 'כתובת מייל לא חוקית';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  widget._currentUser.email = value; 
-                }): Text(widget._currentUser.email,
+                  ),
+                  showCursor: true,
+                  cursorColor: Colors.black,
+                  validator: (value) {
+                    if (value.isEmpty || !value.contains('@')) {
+                      return 'כתובת מייל לא חוקית';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    widget._currentUser.email = value; 
+                  }),
+              ): Text(widget._currentUser.email,
                   style: TextStyle(fontSize: 18)),
                 
                 SizedBox(width: 15,),
@@ -225,20 +227,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              isEditable == true ? TextFormField(
-               initialValue: widget._currentUser.phoneNumber,
-                keyboardType: TextInputType.number,
-                showCursor: true,
-                decoration: InputDecoration(
-                  border: new UnderlineInputBorder(
-                    borderSide: new BorderSide(
-                    color: Colors.black
+              isEditable == true ? Expanded(
+                child: TextFormField(
+                 initialValue: widget._currentUser.phoneNumber,
+                  keyboardType: TextInputType.number,
+                  showCursor: true,
+                  decoration: InputDecoration(
+                    border: new UnderlineInputBorder(
+                      borderSide: new BorderSide(
+                      color: Colors.black
+                      )
                     )
-                  )
-                ),
-                onSaved: (value) {
-                  widget._currentUser.phoneNumber = value; 
-                }): Text(widget._currentUser.phoneNumber,
+                  ),
+                  onSaved: (value) {
+                    widget._currentUser.phoneNumber = value; 
+                  }),
+              ): Text(widget._currentUser.phoneNumber,
                 style: TextStyle(fontSize: 18)),
               SizedBox(width: 15,),
               Icon(Icons.phone_outlined),             
@@ -250,32 +254,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               isEditable == true ? Column(
                 children: [
-                  TextFormField(
-                    initialValue: widget._currentUser.city,
-                    showCursor: true,
-                    decoration: InputDecoration(
-                     border: new UnderlineInputBorder(
-                      borderSide: new BorderSide(
-                      color: Colors.black
-                    )
-                  )
-                ),
-                    onSaved: (value) {
-                      widget._currentUser.city = value;
-                  }),
-                  TextFormField(
-                    initialValue: widget._currentUser.address,
-                    showCursor: true,
-                    decoration: InputDecoration(
-                      border: new UnderlineInputBorder(
+                  Expanded(
+                    child: TextFormField(
+                      initialValue: widget._currentUser.city,
+                      showCursor: true,
+                      decoration: InputDecoration(
+                       border: new UnderlineInputBorder(
                         borderSide: new BorderSide(
                         color: Colors.black
+                      )
                     )
-                  )
-                ),
-                    onSaved: (value) {
-                      widget._currentUser.address = value; 
-                  }),
+                                  ),
+                      onSaved: (value) {
+                        widget._currentUser.city = value;
+                    }),
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      initialValue: widget._currentUser.address,
+                      showCursor: true,
+                      decoration: InputDecoration(
+                        border: new UnderlineInputBorder(
+                          borderSide: new BorderSide(
+                          color: Colors.black
+                      )
+                    )
+                                  ),
+                      onSaved: (value) {
+                        widget._currentUser.address = value; 
+                    }),
+                  ),
                 ],
               )
               : Text(widget._currentUser.city + ", " + widget._currentUser.address,
