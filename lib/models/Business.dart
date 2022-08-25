@@ -31,7 +31,7 @@ class Business with ChangeNotifier {
 
   factory Business.fromJson(Map<String, dynamic> json) {
     return Business(
-      id: json['id'],
+      id: json['id'] as int,
       name: json['name'] as String,
       owner: json['owner'] as String,
       city: json['city'] as String,
