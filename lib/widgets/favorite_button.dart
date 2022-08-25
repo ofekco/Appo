@@ -1,4 +1,4 @@
-import 'package:Appo/models/Business.dart';
+import 'package:Appo/models/business.dart';
 import 'package:Appo/models/authentication.dart';
 import 'package:Appo/models/businesses.dart';
 import 'package:flutter/material.dart'; 

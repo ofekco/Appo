@@ -328,7 +328,7 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
                     child:
                         const Text('המשך'),
                     onPressed: (){
-                      //_submit();
+                      //save data in business
                       Navigator.of(context).pushNamed('/register2');
                     },
                     shape: RoundedRectangleBorder(

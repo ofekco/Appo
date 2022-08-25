@@ -19,7 +19,9 @@ class NavDrawer extends StatelessWidget {
   void _onTapBecomeBusiness(BuildContext context) async {
     Navigator.of(context).pop();
     await Provider.of<Authentication>(context, listen: false).logout();
-    Navigator.of(context).pushNamed(AuthScreen.routeName);
+    //Navigator.of(context).pushNamed(AuthScreen.routeName);
+    Navigator.of(context).pushNamed(BusinessHomeScreen.routeName);
+
   }
 
   Widget buildNavItem(Function onTap, String title, Icon icon)

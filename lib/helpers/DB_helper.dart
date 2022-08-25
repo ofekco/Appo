@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:Appo/booking_calendar/model/booking.dart';
 import 'package:Appo/booking_calendar/model/time_slot.dart';
-import 'package:Appo/models/Business.dart';
+import 'package:Appo/models/business.dart';
 import 'package:http/http.dart' as http;
 import 'package:Appo/models/type.dart';
 import '../models/http_exception.dart';

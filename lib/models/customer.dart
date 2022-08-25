@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:Appo/models/Business.dart';
+import 'package:Appo/models/business.dart';
 import 'package:flutter/material.dart';
 
 class Customer{

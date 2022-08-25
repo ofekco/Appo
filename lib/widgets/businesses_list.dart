@@ -1,6 +1,6 @@
 import 'package:Appo/widgets/wrap_inkwell.dart';
 import 'package:flutter/material.dart';
-import '../models/Business.dart';
+import '../models/business.dart';
 import '../models/businesses.dart';
 import '../screens/business_details_screen.dart';
 import './business_list_item.dart';

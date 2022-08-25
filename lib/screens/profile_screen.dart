@@ -196,6 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               isEditable == true ? TextFormField(
                 initialValue: widget._currentUser.email,
+                style: const TextStyle(color: Colors.black),
                 decoration: InputDecoration(
                   border: new UnderlineInputBorder(
                     borderSide: new BorderSide(
@@ -204,6 +205,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   )
                 ),
                 showCursor: true,
+                cursorColor: Colors.black,
                 validator: (value) {
                   if (value.isEmpty || !value.contains('@')) {
                     return 'כתובת מייל לא חוקית';

@@ -4,7 +4,7 @@ import 'package:Appo/widgets/business_details_screen_widgets/google_maps_widget.
 import 'package:Appo/widgets/favorite_button.dart';
 import 'package:Appo/widgets/business_details_screen_widgets/section_button.dart';
 import 'package:flutter/material.dart';
-import '../models/Business.dart';
+import '../models/business.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../widgets/curve_painter.dart';
 import '../widgets/drawer.dart';
@@ -105,17 +105,17 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
             ],
           ),
           SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(widget.business.owner,
-                      style: TextStyle(fontSize: 14)),
-                SizedBox(width: 15,),
-                Text(':בעלים',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),               
-            ],
-          ),
-          SizedBox(height: 10),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       Text(widget.business.owner,
+          //             style: TextStyle(fontSize: 14)),
+          //       SizedBox(width: 15,),
+          //       Text(':בעלים',
+          //             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),               
+          //   ],
+          // ),
+          // SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
               children: [

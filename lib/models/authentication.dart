@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:Appo/models/Business.dart';
+import 'package:Appo/models/business.dart';
 import 'package:Appo/models/http_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
