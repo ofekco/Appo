@@ -18,6 +18,7 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
     'name': '',
     'phone number': '',
     'email': '',
+    'password':'',
     'address': '',
     'city': '',
   };
@@ -201,6 +202,7 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
                   child: Directionality(textDirection: TextDirection.rtl,
                     child: TextFormField(//owner name
                         focusNode: emailFocusNode,
+                        keyboardType: TextInputType.emailAddress,
                         showCursor: true,
                         cursorColor: Colors.black,
                         decoration: InputDecoration(
@@ -226,6 +228,39 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
                           }
                           return null;
                         },
+                       ),
+                  ),
+                ),
+
+                Padding(padding: const EdgeInsets.only(top: 20.0),
+                  child: Directionality(textDirection: TextDirection.rtl,
+                    child: TextFormField(//phone
+                         focusNode: phoneNumberFocusNode,
+                         showCursor: true,
+                         cursorColor: Colors.black,
+                         decoration: InputDecoration(
+                          labelText: 'סיסמה',
+                          labelStyle: TextStyle(color: passwordFocusNode.hasFocus ? Colors.blue : Colors.black),
+                          fillColor: Colors.white,
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0),
+                          borderSide: const BorderSide(color: Colors.blue,),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0),
+                          borderSide: const BorderSide(color: Colors.grey),
+                            ),
+                          ),
+                         validator: (Value) {
+                           if(Value.length < 6) {
+                             return 'הסיסמה קצרה מידי';
+                           }
+                           return null;
+                         },
+                         onSaved: (value) {
+                           _registrationData['password'] = value;
+                         },
                        ),
                   ),
                 ),

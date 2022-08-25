@@ -1,4 +1,7 @@
+import 'package:Appo/models/authentication.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 import '../booking_calendar/model/booking.dart';
 import './Business.dart';
 import 'package:http/http.dart' as http;
@@ -65,10 +68,10 @@ class Businesses with ChangeNotifier{
     notifyListeners();
   }
 
-  //gets from database the favorites businesses. for now - favorites of customer id:0
-  Future<List<Business>> getFavorites() async 
+  //gets from database the favorites businesses. for now - favorites of customer 
+  Future<List<Business>> getFavorites(BuildContext context) async 
   {
-    var jsonData = await DB_Helper.getFavorites(0); //returns json
+    var jsonData = await DB_Helper.getFavorites(Provider.of<Authentication>(context, listen: false).currentUser.userId); //returns json
 
     List<Business> favoritesList = [];
 
@@ -95,7 +98,7 @@ class Businesses with ChangeNotifier{
   }
 
   //gets from DB the upcoming appointments of the specific user id
-  Future<void> getMyUpComingBookings(int userId) async
+  Future<void> getMyUpComingBookings(String userId) async
   {
     _myBookings = await DB_Helper.getUserUpComingAppointments(userId);
     notifyListeners();

@@ -87,7 +87,7 @@ class DB_Helper {
     }
   }
 
-  static Future<List<Booking>> getUserUpComingAppointments(int userId) async 
+  static Future<List<Booking>> getUserUpComingAppointments(String userId) async 
   {
     List<Booking> res = [];
 
@@ -218,7 +218,7 @@ class DB_Helper {
   }
 
   //gets from database the favorites businesses. for now - favorites of customer id:0
-  static Future<dynamic> getFavorites(int userId) async 
+  static Future<dynamic> getFavorites(String userId) async 
   {
     try {
       http.Response response = await http.get(Uri.parse(consts.dummy_favorites));

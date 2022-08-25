@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:Appo/booking_calendar/model/time_slot.dart';
 import 'package:Appo/helpers/DB_helper.dart';
 class BusinessCalendarScreen extends StatefulWidget {
-  int businessID = 3;
+  String businessID = "3";
 
   @override
   State<BusinessCalendarScreen> createState() => _BusinessCalendarScreenState();

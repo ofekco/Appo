@@ -1,4 +1,5 @@
 import 'package:Appo/models/Business.dart';
+import 'package:Appo/models/authentication.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:Appo/models/businesses.dart';
@@ -35,9 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
     typesProvider.getTypes(); //load types list 
     userBusinessesInstance = Provider.of<Businesses>(context, listen: false);
     userBusinessesInstance.getAllBusinesses();
-    userBusinessesInstance.getFavorites();
-    userBusinessesInstance.getMyUpComingBookings(0); //change the id according to the id of the user
-    super.initState();
+    userBusinessesInstance.getFavorites(context);
+    userBusinessesInstance.getMyUpComingBookings(Provider.of<Authentication>(context, listen: false).currentUser.userId);
   }
 
   void itemClicked(BuildContext ctx, Business bis) 
