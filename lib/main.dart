@@ -18,8 +18,10 @@ import 'package:intl/date_symbol_data_local.dart';
 import './screens/splash.dart';
 import 'Business_side/screens/registration_explanation_screen.dart';
 
+ 
 
 void main() {
+  
   initializeDateFormatting()
     .then((_) => runApp(MyApp()));
 }

@@ -14,112 +14,111 @@ import '../screens/business_details_screen.dart';
 import '../widgets/favorite_item.dart';
 
 class MyCustomScrollBehavior extends MaterialScrollBehavior {
-  // Override behavior methods and getters like dragDevices
-  @override
-  Set<PointerDeviceKind> get dragDevices => {
-        PointerDeviceKind.touch,
-        PointerDeviceKind.mouse,
-  };
+// Override behavior methods and getters like dragDevices
+@override
+Set<PointerDeviceKind> get dragDevices => {
+      PointerDeviceKind.touch,
+      PointerDeviceKind.mouse,
+};
 }
 
 class HomeScreen extends StatefulWidget {
-  static const routeName = '/home';
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
+static const routeName = '/home';
+@override
+State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Businesses userBusinessesInstance;
-  Types typesProvider;
+Businesses userBusinessesInstance;
+Types typesProvider;
 
-  void initState() { 
-    Types typesProvider = Provider.of<Types>(context, listen: false);
-    typesProvider.getTypes(); //load types list 
-    userBusinessesInstance = Provider.of<Businesses>(context, listen: false);
-    userBusinessesInstance.ClientId = Provider.of<Authentication>(context, listen: false).currentUser.userId;
-    userBusinessesInstance.getAllBusinesses();
+void initState() { 
+  Types typesProvider = Provider.of<Types>(context, listen: false);
+  typesProvider.getTypes(); //load types list 
+  userBusinessesInstance = Provider.of<Businesses>(context, listen: false);
+  userBusinessesInstance.ClientId = Provider.of<Authentication>(context, listen: false).currentUser.userId;
+  userBusinessesInstance.getAllBusinesses();
 
-    userBusinessesInstance.getFavorites();
-    userBusinessesInstance.getMyUpComingBookings(); //change the id according to the id of the user
-    super.initState();
+  userBusinessesInstance.getFavorites();
+  userBusinessesInstance.getMyUpComingBookings(); //change the id according to the id of the user
+  super.initState();
+}
+
+void itemClicked(BuildContext ctx, Business bis) 
+{
+  Navigator.of(ctx).push(MaterialPageRoute(builder: (_) {
+    return BusinessDetailsScreen(bis, userBusinessesInstance.ClientId);
+    })
+  );
+}
+
+Widget buildSectionTitle(BuildContext context, String title){
+  return Container(
+    margin: EdgeInsets.symmetric(vertical: 20, horizontal: 15), 
+    width: double.infinity, alignment: Alignment.topRight, height: 30,
+    child: Text(title, 
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)
+        ),
+  );
+}
+
+List<Widget> buildUserAppointmentsList() {
+  List<Widget> res = [];
+  //userBusinessesInstance.MyBookings.map((appo) 
+  if(userBusinessesInstance.MyBookings.isNotEmpty)
+  { 
+    userBusinessesInstance.MyBookings.forEach((appo) {
+      if(!(appo.date.isBefore(DateTime.now())))
+      {
+        Business bis = userBusinessesInstance.findByID(appo.businessId);
+        res.add(WrapInkWell(MyNextItem(appo, bis), () => itemClicked(context, bis)));
+      }
+    });
   }
 
-  void itemClicked(BuildContext ctx, Business bis) 
-  {
-    Navigator.of(ctx).push(MaterialPageRoute(builder: (_) {
-      return BusinessDetailsScreen(bis, userBusinessesInstance.ClientId);
-      })
-    );
-  }
+  return res;
+}
 
-  Widget buildSectionTitle(BuildContext context, String title){
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 20, horizontal: 15), 
-      width: double.infinity, alignment: Alignment.topRight, height: 30,
-      child: Text(title, 
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)
-          ),
-    );
-  }
-  
-  List<Widget> buildUserAppointmentsList() {
-    List<Widget> res = [];
-    //userBusinessesInstance.MyBookings.map((appo) 
-    if(userBusinessesInstance.MyBookings.isNotEmpty)
-    { 
-      userBusinessesInstance.MyBookings.forEach((appo) {
-        if(!(appo.date.isBefore(DateTime.now())))
-        {
-          Business bis = userBusinessesInstance.findByID(appo.businessId);
-          res.add(WrapInkWell(MyNextItem(appo, bis), () => itemClicked(context, bis)));
-        }
-      });
-    }
+void searchIconClick(BuildContext ctx)
+{
+  print('clicked');
+  Navigator.of(ctx).push(MaterialPageRoute(builder: (_) {
+    return BusinessListScreen();
+    })
+  );
+}
 
-    return res;
-  }
+@override
+Widget build(BuildContext context) {
+  var size = MediaQuery.of(context).size;
+  var PageHeight = size.height;
+  var PageWidth = size.width;
 
-  void searchIconClick(BuildContext ctx)
-  {
-    print('clicked');
-    Navigator.of(ctx).push(MaterialPageRoute(builder: (_) {
-      return BusinessListScreen();
-      })
-    );
-  }
+  return SingleChildScrollView(
+    controller: ScrollController(),
+    child: ChangeNotifierProvider.value( //listen to changes in Businesses
+      value: typesProvider,
+      child: Column(children: [
+        SizedBox(height: 20,),
 
-  @override
-  Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    var PageHeight = size.height;
-    var PageWidth = size.width;
-
-    return SingleChildScrollView(
-      controller: ScrollController(),
-      child: ChangeNotifierProvider.value( //listen to changes in Businesses
-        value: typesProvider,
-        child: Column(children: [
-          SizedBox(height: 20,),
-
-          //seacrh box
-          Container(
-            height: PageWidth/6, 
-            child: SearchBar(() => searchIconClick(context))
-          ),
-      
-          buildSectionTitle(context, 'התורים הקרובים שלי'),
-          
-          Container(height: PageHeight*0.35, width: double.infinity, alignment: Alignment.topRight,
-            child: Consumer<Businesses>( builder: (_, userBusinessesInstance, __) => 
-              userBusinessesInstance.BusinessesList.length < 1 || 
-              userBusinessesInstance.MyBookings.length < 1 ? //check if the data is there
-                Container() :
-                ListView(padding: const EdgeInsets.all(10), shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  reverse: true,
-                  children: buildUserAppointmentsList(),
-                  
-                ),
+        //seacrh box
+        Container(
+          height: PageWidth/6, 
+          child: SearchBar(() => searchIconClick(context))
+        ),
+        buildSectionTitle(context, 'התורים הקרובים שלי'),
+        
+        Container(height: PageHeight*0.35, width: double.infinity, alignment: Alignment.topRight,
+          child: Consumer<Businesses>( builder: (_, userBusinessesInstance, __) => 
+            userBusinessesInstance.BusinessesList.length < 1 || 
+            userBusinessesInstance.MyBookings.length < 1 ? //check if the data is there
+              Container() :
+              ListView(padding: const EdgeInsets.all(10), shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                reverse: true,
+                children: buildUserAppointmentsList(),
+                
+              ),
             ),
           ),
           

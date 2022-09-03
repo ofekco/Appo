@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as syspath;
 import 'package:http/http.dart' as http;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -29,11 +30,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      body: SingleChildScrollView(
+    return SingleChildScrollView(
         child: SingleChildScrollView(child: 
-            Column(children: <Widget>[
-              Container(
+          Container(
                 width: size.width,
                 height: size.height,
                 color: Colors.white,
@@ -51,6 +50,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center, 
                       children:[
+                        //Name
                         Text(widget._currentUser.name, style: 
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 28, letterSpacing: 1.15),
                         ),
@@ -58,18 +58,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     //details
                     SizedBox(height: 30),
-                    buildPersonalInfo(),
+                    Expanded(child: buildPersonalInfo()),
                   ],
                 ),
-                ),
-              ),  
-          ]
-        )
+            ),
+          ),  
       )
-    )
-  );        
+    );      
 }
-
 
  Future<void> _getImage() async {
     var imageFile;
@@ -104,7 +100,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
     }
 
-    Future<File> _openCamera(BuildContext context) async {
+  Future<File> _openCamera(BuildContext context) async {
       final _pickedFile = await ImagePicker().pickImage(
         source: ImageSource.camera, maxWidth: 600);
 
@@ -114,9 +110,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       Navigator.pop(context);
       return File(_pickedFile.path);
-    }
+  }
 
-    Future<File> _openGallery(BuildContext context) async {
+  Future<File> _openGallery(BuildContext context) async {
       final _pickedFile = await ImagePicker().pickImage(
         source: ImageSource.gallery, maxWidth: 600);
 
@@ -126,7 +122,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       Navigator.pop(context);
       return File(_pickedFile.path);
-    }
+  }
 
   Widget buildProfileImage(var size) {
     _shownImage = widget._currentUser.image != null ? FileImage(widget._currentUser.image)
@@ -164,6 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       padding: EdgeInsets.symmetric(horizontal: 48),
       child: Column(
         children: [
+          //title and save/edit icon
           Row(
             children: [
               Container(
@@ -190,108 +187,150 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
+
           SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              isEditable == true ? Expanded(
-                child: TextFormField(
-                  initialValue: widget._currentUser.email,
-                  style: const TextStyle(color: Colors.black),
-                  decoration: InputDecoration(
-                    border: new UnderlineInputBorder(
-                      borderSide: new BorderSide(
-                      color: Colors.black
-                      )
-                    )
+
+          //email
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                isEditable == true ? Expanded(
+                  child: SizedBox(width: 200, height: 100,
+                    child: TextFormField(
+                          //textDirection: TextDirection.rtl,
+                          initialValue: widget._currentUser.email,
+                          style: const TextStyle(color: Colors.black),
+                          decoration: InputDecoration(
+                            border: new UnderlineInputBorder(
+                              borderSide: new BorderSide(
+                              color: Colors.black
+                              )
+                            )
+                          ),
+                          showCursor: true,
+                          cursorColor: Colors.black,
+                          validator: (value) {
+                            if (value.isEmpty || !value.contains('@')) {
+                              return 'כתובת מייל לא חוקית';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            widget._currentUser.email = value; 
+                          },
+                      
+                    
+                          ),
                   ),
-                  showCursor: true,
-                  cursorColor: Colors.black,
-                  validator: (value) {
-                    if (value.isEmpty || !value.contains('@')) {
-                      return 'כתובת מייל לא חוקית';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    widget._currentUser.email = value; 
-                  }),
-              ): Text(widget._currentUser.email,
+                ): Text(widget._currentUser.email,
                   style: TextStyle(fontSize: 18)),
                 
                 SizedBox(width: 15,),
                 Icon(Icons.email_outlined),  
             ]
-          ), 
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              isEditable == true ? Expanded(
-                child: TextFormField(
-                 initialValue: widget._currentUser.phoneNumber,
-                  keyboardType: TextInputType.number,
-                  showCursor: true,
-                  decoration: InputDecoration(
-                    border: new UnderlineInputBorder(
-                      borderSide: new BorderSide(
-                      color: Colors.black
-                      )
-                    )
-                  ),
-                  onSaved: (value) {
-                    widget._currentUser.phoneNumber = value; 
-                  }),
-              ): Text(widget._currentUser.phoneNumber,
-                style: TextStyle(fontSize: 18)),
-              SizedBox(width: 15,),
-              Icon(Icons.phone_outlined),             
-            ],
-          ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              isEditable == true ? Column(
-                children: [
-                  Expanded(
+          )), 
+
+          //phone number
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                isEditable == true ? Expanded(
+                  child: SizedBox(height: 100, width: 200,
                     child: TextFormField(
-                      initialValue: widget._currentUser.city,
-                      showCursor: true,
-                      decoration: InputDecoration(
-                       border: new UnderlineInputBorder(
-                        borderSide: new BorderSide(
-                        color: Colors.black
-                      )
-                    )
-                                  ),
-                      onSaved: (value) {
-                        widget._currentUser.city = value;
-                    }),
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      initialValue: widget._currentUser.address,
+                     textDirection: TextDirection.rtl,
+                     initialValue: widget._currentUser.phoneNumber,
+                      keyboardType: TextInputType.number,
                       showCursor: true,
                       decoration: InputDecoration(
                         border: new UnderlineInputBorder(
                           borderSide: new BorderSide(
                           color: Colors.black
-                      )
-                    )
-                                  ),
+                          )
+                        )
+                      ),
                       onSaved: (value) {
-                        widget._currentUser.address = value; 
-                    }),
+                        widget._currentUser.phoneNumber = value; 
+                      }),
                   ),
-                ],
-              )
-              : Text(widget._currentUser.city + ", " + widget._currentUser.address,
-                style: TextStyle(fontSize: 18)),
-            SizedBox(width: 15,),
-            Icon(Icons.home_outlined),             
-            ],
+                ): Text(widget._currentUser.phoneNumber,
+                  style: TextStyle(fontSize: 18)),
+
+                SizedBox(width: 15,),
+
+                Icon(Icons.phone_outlined),             
+              ],
+            ),
           ),
+
+          //city
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                isEditable == true ? Expanded(
+                  child: SizedBox(height: 100, width: 200,
+                        child: TextFormField(
+                          textDirection: TextDirection.rtl,
+                          initialValue: widget._currentUser.city,
+                          showCursor: true,
+                          decoration: InputDecoration(
+                           border: new UnderlineInputBorder(
+                            borderSide: new BorderSide(
+                            color: Colors.black
+                          )
+                        )
+                                      ),
+                          onSaved: (value) {
+                            widget._currentUser.city = value;
+                        }),
+                      ),
+                )
+                : Text(widget._currentUser.city,
+                  style: TextStyle(fontSize: 18)),
+
+              SizedBox(width: 15,),
+
+              Icon(Icons.location_city),  
+
+              ],
+            ),
+          ),
+
+          //address
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                isEditable == true ? 
+                Expanded(
+                  child: SizedBox(height: 100, width: 200,
+                          child: TextFormField(
+                            textDirection: TextDirection.rtl,
+                            initialValue: widget._currentUser.address,
+                            showCursor: true,
+                            decoration: InputDecoration(
+                              border: new UnderlineInputBorder(
+                                borderSide: new BorderSide(
+                                color: Colors.black
+                            )
+                          )
+                                        ),
+                            onSaved: (value) {
+                              widget._currentUser.address = value; 
+                          }),
+                        ),
+                ) :
+                Text(widget._currentUser.address,
+                  style: TextStyle(fontSize: 18)),
+
+                SizedBox(width: 15,),
+
+                Icon(Icons.home_outlined),  
+
+            ]
+          )), 
         ],
       ),
     );
@@ -299,7 +338,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _updateDataInDB() async {
     String _userId = widget._currentUser.userId;
-    DatabaseReference firebaseDB = FirebaseDatabase.instance.ref('https://appo-ae26e-default-rtdb.firebaseio.com/customers/${_userId}');
+    await Firebase.initializeApp();
+    DatabaseReference firebaseDB = await FirebaseDatabase.instance.ref('https://appo-ae26e-default-rtdb.firebaseio.com/customers/${_userId}');
 
     try {
       await firebaseDB.update({
