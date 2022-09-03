@@ -30,7 +30,7 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
             title: const Text('התרחשה שגיאה'),
             content: Text(message),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: const Text('OK'),
                 onPressed: () {
                   Navigator.of(ctx).pop();
@@ -324,20 +324,25 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
                 if (_isLoading)
                  const CircularProgressIndicator()
                 else
-                  RaisedButton(
+                   ElevatedButton(
                     child:
-                        const Text('המשך'),
+                        const Text('המשך',),
                     onPressed: (){
                       //save data in business
                       Navigator.of(context).pushNamed('/register2');
                     },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
-                    color: Palette.kToDark[600],
-                    textColor: Colors.white
+                      style: ElevatedButton.styleFrom(
+                      primary: Palette.kToDark[600],
+                      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                      textStyle: TextStyle(
+                      color: Colors.white)),
+                    // padding:
+                    //     const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+                   // color: Palette.kToDark[600],
+                   // textColor: Colors.white
                   ),
               ]),   
           ),

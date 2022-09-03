@@ -33,7 +33,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             title: Text('התרחשה שגיאה'),
             content: Text(message),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text('OK'),
                 onPressed: () {
                   Navigator.of(ctx).pop();
@@ -222,28 +222,31 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 if (_isLoading)
                   CircularProgressIndicator()
                 else
-                  RaisedButton(
+                  ElevatedButton(
                     child:
                         Text('הירשם'),
                     onPressed: _submit,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                    
+                    //shape: RoundedRectangleBorder(
+                     // borderRadius: BorderRadius.circular(30),
                     ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
-                    color: Theme.of(context).primaryColor,
-                    textColor: Theme.of(context).primaryTextTheme.button.color,
+                    //padding:
+                      //  EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+                   // color: Theme.of(context).primaryColor,
+                    //textColor: Theme.of(context).primaryTextTheme.button.color,
+                  
+                  Padding(padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+                    child: TextButton(
+                    child: Text('יש לך כבר חשבון? היכנס', style: TextStyle(color: Theme.of(context).primaryColor),),
+                    onPressed: () { Navigator.push<dynamic>(context,
+                      MaterialPageRoute<dynamic>(
+                        builder: (BuildContext context) => AuthScreen(),
+                        fullscreenDialog: true));},
+                   // padding: 
+                   // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    //textColor: Theme.of(context).primaryColor,
+                                  ),
                   ),
-                  FlatButton(
-                  child: Text('יש לך כבר חשבון? היכנס'),
-                  onPressed: () { Navigator.push<dynamic>(context,
-                    MaterialPageRoute<dynamic>(
-                      builder: (BuildContext context) => AuthScreen(),
-                      fullscreenDialog: true));},
-                  padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  textColor: Theme.of(context).primaryColor,
-                ),
               ]),   
           ),
         )

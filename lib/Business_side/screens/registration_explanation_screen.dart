@@ -20,7 +20,7 @@ class RegisterationExplenationScreen extends StatelessWidget {
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 18),),
           SizedBox(height: 550),
-          RaisedButton(
+           ElevatedButton(
             child: Text("המשך"),
             onPressed: () {
               Navigator.of(context).popAndPushNamed(BusinessRegistrationScreen1.routeName);

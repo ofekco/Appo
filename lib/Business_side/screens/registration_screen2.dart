@@ -26,7 +26,7 @@ class _BusinessRegistrationScreen2State extends State<BusinessRegistrationScreen
             title: const Text('התרחשה שגיאה'),
             content: Text(message),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: const Text('OK'),
                 onPressed: () {
                   Navigator.of(ctx).pop();

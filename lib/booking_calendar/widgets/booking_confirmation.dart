@@ -37,21 +37,34 @@ class BookingConfirmation extends StatelessWidget
             margin:const EdgeInsets.all(15.0),
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                RaisedButton( 
+                 ElevatedButton( 
                   
-                  color: Palette.kToDark[50],
                   onPressed: () => Navigator.of(context).pushReplacementNamed(TabsScreen.routeName),
-                  padding: const EdgeInsets.all(10), 
-                  textColor:  Colors.white, // Color.fromARGB(255, 102, 102, 102),
-                  child:const Text('הוסף ליומן גוגל', style: TextStyle(fontWeight: FontWeight.w700),),),
+                  //padding: const EdgeInsets.all(10), 
+                  //textColor:  Colors.white, // Color.fromARGB(255, 102, 102, 102),
+                  child: const Text('הוסף ליומן גוגל', style: TextStyle(fontWeight: FontWeight.w700),),
+                  style: ElevatedButton.styleFrom(
+                    primary:  Palette.kToDark[50],
+                    padding: const EdgeInsets.all(10), 
+                    textStyle: TextStyle(
+                    color: Colors.white,
+                   )),
+                  ),
 
 
-                RaisedButton(
-                  color: Palette.kToDark[50],
+                 ElevatedButton(
+                  //color: Palette.kToDark[50],
                   onPressed:  () => Navigator.of(context).pushReplacementNamed(TabsScreen.routeName),
-                  padding: const EdgeInsets.all(10), 
-                  textColor:   Colors.white, // Color.fromARGB(255, 102, 102, 102),
-                  child:const Text('סגור', style: TextStyle(fontWeight: FontWeight.w700),),
+                  //padding: const EdgeInsets.all(10), 
+                  //textColor:   Colors.white, // Color.fromARGB(255, 102, 102, 102),
+                  child:const Text('סגור', style: TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary:  Palette.kToDark[50],
+                    padding: const EdgeInsets.all(10), 
+                    textStyle: TextStyle(
+                    color: Colors.white,
+                   )),
                 ),
               ])
             )

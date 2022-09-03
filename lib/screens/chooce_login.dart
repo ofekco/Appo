@@ -48,39 +48,50 @@ class ChooseLoginScreen extends StatelessWidget {
                   ),
               ),
               Flexible(
-               child: RaisedButton(
+               child:  ElevatedButton(
                onPressed: () {
                 _showLoginScreen(context, AuthMode.BUSINESS);}, 
                child: Text("התחבר כעסק",
                 style: TextStyle(
-                    fontSize: 18
+                    fontSize: 18,
+                    color: Theme.of(context).primaryTextTheme.button.color,
                   )), 
-               shape: RoundedRectangleBorder(
+               style: ElevatedButton.styleFrom(
+                primary: Palette.kToDark[500],
+                padding: EdgeInsets.symmetric(horizontal: 60.0, vertical: 10.0),
+                shape: RoundedRectangleBorder(
                  borderRadius: BorderRadius.circular(30),
-               ),
-               padding:
-                 EdgeInsets.symmetric(horizontal: 60.0, vertical: 10.0),
-               color: Palette.kToDark[500],
-               textColor: Theme.of(context).primaryTextTheme.button.color,
+               )),
+               //padding:
+                 //EdgeInsets.symmetric(horizontal: 60.0, vertical: 10.0),
+               //color: Palette.kToDark[500],
+               //textColor: Theme.of(context).primaryTextTheme.button.color,
                ),
               ),
               Flexible(
                 child: SizedBox(height: 10),
               ),
               Flexible(
-               child: RaisedButton(
+               child:  ElevatedButton(
                onPressed: () {
                 _showLoginScreen(context, AuthMode.CUSTOMER);},
                child: Text("התחבר כלקוח", 
                 style: TextStyle(
-                  fontSize: 18
+                  fontSize: 18,
+                  color: Theme.of(context).primaryTextTheme.button.color
                 )),
-               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30)),
-               padding:
-                EdgeInsets.symmetric(horizontal: 60.0, vertical: 10.0),
-               color: Palette.kToDark[500],
-               textColor: Theme.of(context).primaryTextTheme.button.color,
+                style: ElevatedButton.styleFrom(
+                primary: Palette.kToDark[500],
+                padding: EdgeInsets.symmetric(horizontal: 60.0, vertical: 10.0),
+                shape: RoundedRectangleBorder(
+                 borderRadius: BorderRadius.circular(30),
+               )),
+              //  shape: RoundedRectangleBorder(
+              //   borderRadius: BorderRadius.circular(30)),
+              //  padding:
+              //   EdgeInsets.symmetric(horizontal: 60.0, vertical: 10.0),
+              //  color: Palette.kToDark[500],
+              //  textColor: Theme.of(context).primaryTextTheme.button.color,
               ),
             )
           ]
@@ -88,11 +99,6 @@ class ChooseLoginScreen extends StatelessWidget {
       )
     )]
   ));
-          
-  
-    
-    
-    
   }
 
   void _showLoginScreen(BuildContext context, AuthMode authMode) {

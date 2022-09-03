@@ -142,7 +142,7 @@ class _AuthCardState extends State<AuthCard> {
             title: Text('התרחשה שגיאה'),
             content: Text(message),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text('OK'),
                 onPressed: () {
                   Navigator.of(ctx).pop();
@@ -206,20 +206,24 @@ class _AuthCardState extends State<AuthCard> {
                 if (_isLoading)
                   CircularProgressIndicator()
                 else
-                  RaisedButton(
+                   ElevatedButton(
                     child:
-                      Text('התחבר'),
+                      Text('התחבר', style: TextStyle(color: Theme.of(context).primaryTextTheme.button.color,),),
                     onPressed: _submit,
-                    shape: RoundedRectangleBorder(
+                    style: 
+                      ElevatedButton.styleFrom(
+                          primary: Theme.of(context).primaryColor,
+                          padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+                      shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
-                    ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
-                    color: Theme.of(context).primaryColor,
-                    textColor: Theme.of(context).primaryTextTheme.button.color,
+                    )),
+                    // padding:
+                    //     EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+                    // color: Theme.of(context).primaryColor,
+                    // textColor: Theme.of(context).primaryTextTheme.button.color,
                   ),
-                FlatButton(
-                  child: Text('עדיין אין לך חשבון? הירשם'),
+                 ElevatedButton(
+                  child: Text('עדיין אין לך חשבון? הירשם', style: TextStyle(color: Theme.of(context).primaryColor,)),
                   onPressed: () {
                     if(authProvider.authMode == AuthMode.CUSTOMER) {
                        Navigator.of(context).pushNamed(RegistrationScreen.routeName);
@@ -227,10 +231,15 @@ class _AuthCardState extends State<AuthCard> {
                     else {
                       Navigator.of(context).pushNamed(RegisterationExplenationScreen.routeName);
                     }
-                     },
-                  padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  textColor: Theme.of(context).primaryColor,
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.transparent,
+                    padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap
+                  )
+                  //padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+                  //materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                 // textColor: Theme.of(context).primaryColor,
                 ),
               ],
             ),

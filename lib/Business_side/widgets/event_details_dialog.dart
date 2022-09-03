@@ -73,7 +73,7 @@ class _EventDetailsDialogState extends State<EventDetailsDialog> {
               //close button
               Align(
                 alignment: Alignment.bottomRight,
-                child: FlatButton(
+                child: TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
