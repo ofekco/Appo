@@ -103,11 +103,9 @@ class _AuthCardState extends State<AuthCard> {
         }
         case AuthMode.BUSINESS: {
           Provider.of<Authentication>(context, listen: false).loginAsBusiness(_authData['email'], _authData['password']);
-
           break;
         }
       }
-     
     }
     on HttpException catch (error) {
       var errorMessage = 'ההרשמה נכשלה';

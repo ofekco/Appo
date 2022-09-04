@@ -6,7 +6,7 @@ class Business with ChangeNotifier {
   final int id;
   final String name;
   final String owner;
-  //final String email;
+  final String email;
   final String city;
   final String address;
   final String phoneNumber;
@@ -14,19 +14,21 @@ class Business with ChangeNotifier {
   final String serviceType;
   final double latitude;
   final double longitude;
+  String instagramUrl;
   bool isFavorite = false;
 
   Business({
     @required this.id,
     @required this.name,
     @required this.owner,
-   // @required this.email,
+    @required this.email,
     @required this.city,
     @required this.address,
     @required this.phoneNumber,
     this.imageUrl,
     @required this.serviceType,
-    this.longitude, this.latitude
+    this.longitude, this.latitude,
+    this.instagramUrl,
   });
 
   factory Business.fromJson(Map<String, dynamic> json) {
@@ -41,6 +43,7 @@ class Business with ChangeNotifier {
       serviceType: json['serviceType'] as String,
       latitude: json['latitude'],
       longitude: json['longitude'],
+      instagramUrl: json['instagram']
     );
   }
 

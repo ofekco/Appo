@@ -173,46 +173,57 @@ class DB_Helper {
     return res;
   }
 
-
-  static Future<void> uploadNewBooking(int businessId, String userId, DateTime date,
+  //create new booking in DB. return false if the slot is already booked
+  static Future<bool> uploadNewBooking(int businessId, String userId, DateTime date,
 
   DateTime startTime, DateTime endTime) async
   {
     final dateKey = _getDateKey(date);
     final String dateTimeKey = '$dateKey${date.hour.toString()}${date.minute.toString()}';
+    final url =Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey/$dateTimeKey.json');
 
-    try { //add booking to customers appointment list
-        await http.patch(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/${userId}/appointments/$dateTimeKey.json'), 
-        body: json.encode({ //encode gets a map
-          'businessId': businessId,
-          'date': date.toString(),
+    try { 
+
+      //check if the slot is still available 
+      http.Response response = await http.get(url);
+      var jsonData = jsonDecode(response.body);
+
+      if(jsonData['isBooked'] == true) //not available
+      {
+        return false;
+      }
+      else { //available
+        //add booking to businesses times list
+        await http.patch(url,
+        body: json.encode({
+          'userId': userId,
           'startTime': startTime.toString(),
-          'endTime': endTime.toString()
-      })).then((res) {
-        if(res.statusCode >= 400)
-        {
-          throw HttpException('Could not add booking to user appointments');
-        }
+          'endTime': endTime.toString(),
+          'isBooked': true
+          }
+        )).then((res) {
+          if(res.statusCode >= 400)
+          {
+            throw HttpException('Could not update booking in businesses table. HTTP status code = ${res.statusCode}');
+          }
       });
 
-  
-      //add booking to businesses times list
-      final url =Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey/$dateTimeKey.json');
-      await http.patch(url,
-      body: json.encode({
-        'userId': userId,
-        'startTime': startTime.toString(),
-        'endTime': endTime.toString(),
-        'isBooked': true
-        }
-      )).then((res) {
-        if(res.statusCode >= 400)
-        {
-          print(res.body);
-          throw HttpException('Could not update booking in businesses table. HTTP status code = ${res.statusCode}');
-        }
-      });
+      //add booking to customers appointment list
+      await http.patch(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/${userId}/appointments/$dateTimeKey.json'), 
+          body: json.encode({ //encode gets a map
+            'businessId': businessId,
+            'date': date.toString(),
+            'startTime': startTime.toString(),
+            'endTime': endTime.toString()
+        })).then((res) {
+          if(res.statusCode >= 400)
+          {
+            throw HttpException('Could not add booking to user appointments');
+          }
+        });
+      }
 
+      return true;
     }
     catch(err) {
       print(err);

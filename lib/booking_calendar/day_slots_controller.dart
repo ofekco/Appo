@@ -57,6 +57,23 @@ class DaySlotsController extends ChangeNotifier {
     return result;
   }
 
+  //This method checks if there are no other slots for this client in this date 
+  bool isValidBooking(String clientId) 
+  {
+    for(int i=0; i<times.length; i++)
+    {
+      if(times[i].isBooked == true) {
+        if(times[i].userId == clientId)
+        {
+          return false; //there is another booking  
+        }
+      }
+    }
+
+    return true;
+  
+  }
+
   void selectSlot(int idx) {
     _selectedSlot = idx;
     notifyListeners();
@@ -83,17 +100,27 @@ class DaySlotsController extends ChangeNotifier {
     return newAppo;
   }
 
+  //This method create a booking and post it to DB 
   Future<dynamic> uploadBooking(String clientId) async {
+
     Booking newBooking = createNewBooking();
 
-    await DB_Helper.uploadNewBooking(newBooking.businessId, 
+    bool isBooked = await DB_Helper.uploadNewBooking(
+      newBooking.businessId, 
       clientId, newBooking.date, 
-      newBooking.startTime, newBooking.endTime);
-      //.then((res) {
-    times[selectedSlot].isBooked = true;
-    notifyListeners();
-    return newBooking;
-    //});
+      newBooking.startTime, 
+      newBooking.endTime
+    );
+
+    if(isBooked) {
+      times[selectedSlot].isBooked = true;
+      bookedSlots.add(DateTimeRange(start: times[selectedSlot].startTime, end: times[selectedSlot].endTime));
+      notifyListeners();
+      return newBooking;
+    }
+    else {
+      return null;
+    }
   }
 
   Future<void> uploadBusinessSlot(int businessId, DateTime slot) async

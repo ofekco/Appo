@@ -1,5 +1,4 @@
 import 'package:Appo/models/colors.dart';
-import 'package:Appo/screens/home_screen.dart';
 import 'package:Appo/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -23,7 +22,6 @@ class BookingConfirmation extends StatelessWidget
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center, 
           children: <Widget> [
-          
           Container(height: 70,
             child: Column(children: [
               Text('נקבע עבורך תור', style: TextStyle(fontWeight: FontWeight.bold),),
@@ -38,10 +36,7 @@ class BookingConfirmation extends StatelessWidget
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                  ElevatedButton( 
-                  
                   onPressed: () => Navigator.of(context).pushReplacementNamed(TabsScreen.routeName),
-                  //padding: const EdgeInsets.all(10), 
-                  //textColor:  Colors.white, // Color.fromARGB(255, 102, 102, 102),
                   child: const Text('הוסף ליומן גוגל', style: TextStyle(fontWeight: FontWeight.w700),),
                   style: ElevatedButton.styleFrom(
                     primary:  Palette.kToDark[50],
@@ -53,10 +48,7 @@ class BookingConfirmation extends StatelessWidget
 
 
                  ElevatedButton(
-                  //color: Palette.kToDark[50],
                   onPressed:  () => Navigator.of(context).pushReplacementNamed(TabsScreen.routeName),
-                  //padding: const EdgeInsets.all(10), 
-                  //textColor:   Colors.white, // Color.fromARGB(255, 102, 102, 102),
                   child:const Text('סגור', style: TextStyle(fontWeight: FontWeight.w700),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -68,8 +60,6 @@ class BookingConfirmation extends StatelessWidget
                 ),
               ])
             )
-              
-              
         ]),
       )
     );

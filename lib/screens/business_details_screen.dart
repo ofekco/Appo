@@ -3,11 +3,14 @@ import 'package:Appo/screens/booking_screen.dart';
 import 'package:Appo/widgets/business_details_screen_widgets/google_maps_widget.dart';
 import 'package:Appo/widgets/favorite_button.dart';
 import 'package:Appo/widgets/business_details_screen_widgets/section_button.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../models/business.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../widgets/curve_painter.dart';
 import '../widgets/drawer.dart';
+import 'package:uri/uri.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BusinessDetailsScreen extends StatefulWidget {
 
@@ -132,6 +135,50 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
     );
   }
 
+  Future<void> openInstagram() async {
+    if (await canLaunch(widget.business.instagramUrl)) {
+      await launch(
+        widget.business.instagramUrl,
+        forceWebView: true,
+        universalLinksOnly: true,
+      );
+    } else {
+      throw 'There was a problem to open Instagram profile';
+    }
+  }
+
+  Future<void> _launchInBrowser(Uri url) async {
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Future<void> _launchInWebViewOrVC(Uri url) async {
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.inAppWebView,
+      webViewConfiguration: const WebViewConfiguration(
+          headers: <String, String>{'my_header_key': 'my_header_value'}),
+    )) {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Future<void> _launchInWebViewWithoutJavaScript(Uri url) async {
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.inAppWebView,
+      webViewConfiguration: const WebViewConfiguration(enableJavaScript: false),
+    )) {
+      throw 'Could not launch $url';
+    }
+  }
+
+  
+
   @override
   Widget build(BuildContext context) {
 
@@ -142,13 +189,13 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
       endDrawer: NavDrawer(),
       
       body: SingleChildScrollView(
-        child: Stack(children: <Widget>[
+        child: Stack(children: <Widget> [
           Container(
             color: Colors.white, //screen background color
           ),
       
           SingleChildScrollView(child: 
-            Column(children: <Widget>[
+            Column(children: <Widget> [
                   Container(
                     width: size.width,
                     height: size.height,
@@ -208,7 +255,9 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
                     icon: Icon(FontAwesomeIcons.instagram),
                     iconSize: 30,
                     
-                    onPressed: () {},
+                    onPressed: () async {
+                      await openInstagram();
+                    },
                   ),
       
                   SizedBox(
