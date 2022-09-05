@@ -20,22 +20,8 @@ class TimeSlots {
     print(times);
   }
 
-  void getMockData()
-  {
-    times = [
-        TimeSlot(startTime: DateTime(2022, 8, 4, 11, 0, 0),
-        endTime: DateTime(2022, 8, 4, 12, 0, 0),
-        isBooked: false),
-
-        TimeSlot(startTime: DateTime(2022, 8, 4, 12, 0, 0),
-        endTime: DateTime(2022, 8, 4, 13, 0, 0),
-        isBooked: false),
-
-      ];
-  }
-
   TimeSlots.fromJson(Map<String, dynamic> json)
-      : businessId = json['businessId'] as int,
+      : businessId = json['businessId'],
         times = (json as List).map((val) => TimeSlot.fromJson(val)).toList(),
         date =  DateTime.parse(json['date'] as String);
 
@@ -45,4 +31,3 @@ class TimeSlots {
         'times': jsonEncode(times),
   };
 }
-

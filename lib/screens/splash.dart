@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/authentication.dart';
-import 'auth_screen.dart';
+import 'login_screen.dart';
 import 'home_screen.dart';
 
 class Splash extends StatefulWidget {

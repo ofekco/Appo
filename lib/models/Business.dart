@@ -1,0 +1,62 @@
+import 'package:Appo/helpers/DB_helper.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+
+class Business with ChangeNotifier {
+  final int id;
+  final String name;
+  final String owner;
+  final String email;
+  final String city;
+  final String address;
+  final String phoneNumber;
+  String imageUrl;
+  final String serviceType;
+  final double latitude;
+  final double longitude;
+  String instagramUrl;
+  bool isFavorite = false;
+
+  Business({
+    @required this.id,
+    @required this.name,
+    @required this.owner,
+    @required this.email,
+    @required this.city,
+    @required this.address,
+    @required this.phoneNumber,
+    this.imageUrl,
+    @required this.serviceType,
+    this.longitude, this.latitude,
+    this.instagramUrl,
+  });
+
+  factory Business.fromJson(Map<String, dynamic> json) {
+    return Business(
+      id: json['id'] as int,
+      name: json['name'] as String,
+      owner: json['owner'] as String,
+      city: json['city'] as String,
+      address: json['address'] as String,
+      phoneNumber: json['phoneNumber'] as String,
+      imageUrl: json['imageUrl'] as String,
+      serviceType: json['serviceType'] as String,
+      latitude: json['latitude'],
+      longitude: json['longitude'],
+      instagramUrl: json['instagram']
+    );
+  }
+
+  void toggleFavoriteStatus(String userId) 
+  {
+    isFavorite = !isFavorite;
+    if(isFavorite == true)
+    {
+      DB_Helper.postFavorite(userId, this);
+    }
+    else{
+      DB_Helper.removeFromFavorites(userId, this);
+    }
+    notifyListeners();
+  }
+}

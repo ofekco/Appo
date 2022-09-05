@@ -1,20 +1,23 @@
-
 import 'package:Appo/models/colors.dart';
 import 'package:Appo/screens/business_list_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/authentication.dart';
 import 'home_screen.dart';
-import 'profil_screen.dart';
+import 'profile_screen.dart';
 import '../widgets/drawer.dart';
 
 class TabsScreen extends StatefulWidget {
-  static const routeName = '/first';
+    static const routeName = '/first';
+
   @override
   _TabsScreenState createState() => _TabsScreenState();
 }
 
 class _TabsScreenState extends State<TabsScreen> {
+
   Widget home = HomeScreen();
-  Widget profile = ProfileScreen();
+  Widget profile;
 
   List<Map<String, Object>> _pages = [
     {'page': HomeScreen, 'title': 'Home'},
@@ -22,6 +25,12 @@ class _TabsScreenState extends State<TabsScreen> {
   ];
 
   int _selectedPageIndex = 0;
+
+  @override
+  void initState() {
+    profile = ProfileScreen(Provider.of<Authentication>(context, listen: false).currentUser);
+    super.initState();
+  }
 
   void _selectPage(int index) {
     setState(() {
@@ -36,8 +45,6 @@ class _TabsScreenState extends State<TabsScreen> {
         children: [
           Text('Appo', style: TextStyle(fontWeight: FontWeight.bold, color: Palette.kToDark[800], fontSize: 24),),
           Image.asset('assets/images/logo.JPG', width: 50, height: 50,),
-          
-          //Drawer(backgroundColor: Palette.kToDark[800], child: Icon(Icons.line_style, color: Palette.kToDark[800],))
             ],
           ),
          ),

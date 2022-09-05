@@ -1,9 +1,10 @@
+import 'package:Appo/Business_side/screens/business_home_page.dart';
 import 'package:Appo/models/colors.dart';
-import 'package:Appo/screens/home_screen.dart';
+import 'package:Appo/screens/login_screen.dart';
+import 'package:Appo/screens/profile_screen.dart';
 import 'package:Appo/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../models/authentication.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -13,6 +14,14 @@ class NavDrawer extends StatelessWidget {
     Navigator.of(context).pop();
     Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (BuildContext context) => navigationPage));
+  }
+
+  void _onTapBecomeBusiness(BuildContext context) async {
+    Navigator.of(context).pop();
+    await Provider.of<Authentication>(context, listen: false).logout();
+    //Navigator.of(context).pushNamed(AuthScreen.routeName);
+    Navigator.of(context).pushNamed(BusinessHomeScreen.routeName);
+
   }
 
   Widget buildNavItem(Function onTap, String title, Icon icon)
@@ -38,11 +47,12 @@ class NavDrawer extends StatelessWidget {
               color: Palette.kToDark[500],
             ),
             child: ListTile(
-                title: Text("Profile Name", textAlign: TextAlign.right, 
+                title: Text(Provider.of<Authentication>(context).currentUser.name, textAlign: TextAlign.right, 
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18, color: Colors.white),),
                 trailing: IconButton(
                   icon: Icon(Icons.account_circle, color: Colors.white, size: 40,),
-                  onPressed: () {},
+                  onPressed: () {
+                  },
                 ),
                 onTap: () {},
             ),
@@ -56,7 +66,7 @@ class NavDrawer extends StatelessWidget {
 
           Divider(color: Colors.grey),
 
-          buildNavItem(() =>_onTap(context, TabsScreen()),"הרשם כעסק", Icon(Icons.business)),
+          buildNavItem(() =>_onTapBecomeBusiness(context),"הרשם כעסק", Icon(Icons.business)),
 
           Divider(color: Colors.grey),
 
@@ -64,7 +74,7 @@ class NavDrawer extends StatelessWidget {
 
           Divider(color: Colors.grey),
 
-          buildNavItem(() =>_onTap(context, HomeScreen()),"הגדרות", Icon(Icons.settings)),
+          buildNavItem(() =>_onTap(context, TabsScreen()),"הגדרות", Icon(Icons.settings)),
 
           Divider(color: Colors.grey),
 

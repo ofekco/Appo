@@ -1,9 +1,9 @@
 import 'package:Appo/models/authentication.dart';
-import 'package:Appo/screens/home_screen.dart';
+import 'package:Appo/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/http_exception.dart';
-import 'auth_screen.dart';
+import 'login_screen.dart';
 
 
 class RegistrationScreen extends StatefulWidget {
@@ -22,6 +22,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     'password': '',
     'name': '',
     'phone number': '',
+    'address': '',
     'city': '',
   };
 
@@ -29,11 +30,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-            title: Text('An Error Occurred!'),
+            title: Text('התרחשה שגיאה'),
             content: Text(message),
             actions: <Widget>[
-              FlatButton(
-                child: Text('Okay'),
+              TextButton(
+                child: Text('OK'),
                 onPressed: () {
                   Navigator.of(ctx).pop();
                 },
@@ -55,31 +56,27 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     try {
       await Provider.of<Authentication>(context, listen: false)
       .signup(_registrationData['email'], _registrationData['password'], _registrationData['name'],
-      _registrationData['phone number'], _registrationData['city'],);
-      // Navigator.push<dynamic>(context,
-      //               MaterialPageRoute<dynamic>(
-      //                 builder: (BuildContext context) => HomeScreen(),
-      //                 fullscreenDialog: true));
+      _registrationData['phone number'], _registrationData['address'], _registrationData['city'],);
       Navigator.of(context).pop();
-      Navigator.of(context).pushNamed(HomeScreen.routeName);
+      Navigator.of(context).pushNamed(TabsScreen.routeName);
     }
     on HttpException catch (error) {
-      var errorMessage = 'Authentication failed';
+      var errorMessage = 'ההרשמה נכשלה';
       if (error.toString().contains('EMAIL_EXISTS')) {
-        errorMessage = 'This email address is already in use.';
+        errorMessage = 'כתובת מייל כבר רשומה';
       } else if (error.toString().contains('INVALID_EMAIL')) {
-        errorMessage = 'This is not a valid email address';
+        errorMessage = 'כתובת מייל לא חוקית';
       } else if (error.toString().contains('WEAK_PASSWORD')) {
-        errorMessage = 'This password is too weak.';
+        errorMessage = 'הסיסמה חלשה מידי';
       } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
-        errorMessage = 'Could not find a user with that email.';
+        errorMessage = 'כתובת מייל לא נמצאה';
       } else if (error.toString().contains('INVALID_PASSWORD')) {
-        errorMessage = 'Invalid password.';
+        errorMessage = 'סיסמה לא נכונה';
       }
       _showErrorDialog(errorMessage);
     }
     catch(error) {
-      var errorMessage = 'Something went wrong, please try again later';
+      var errorMessage = 'משהו השתבש, נסה שנית מאוחר יותר';
        _showErrorDialog(errorMessage);
 
     }
@@ -96,12 +93,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     FocusNode passwordFocusNode = new FocusNode();
     FocusNode confirmPasswordFocusNode = new FocusNode();
     FocusNode phoneNumberFocusNode = new FocusNode();
+    FocusNode addressFocusNode = new FocusNode();
     FocusNode cityFocusNode = new FocusNode();
     FocusNode nameFocusNode = new FocusNode();
     
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign Up')),
+        title: Text('הירשם')),
       body: Container(
         width: (_deviceSize.width * 0.95),
         padding: EdgeInsets.only(left: 20),
@@ -112,14 +110,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               children: <Widget>[
                 TextFormField(
                   focusNode: emailFocusNode,
+                  showCursor: true,
+                  cursorColor: Colors.black,
                   decoration: InputDecoration(
-                    labelText: 'E-Mail', 
+                    labelText: 'כתובת מייל', 
                     labelStyle: TextStyle(
 	                    color: emailFocusNode.hasFocus ? Colors.blue : Colors.black)),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value.isEmpty || !value.contains('@')) {
-                      return 'Invalid email!';
+                      return 'כתובת מייל לא חוקית';
                     }
                     return null;
                   },
@@ -129,15 +129,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
                 TextFormField(
                   focusNode: passwordFocusNode,
+                  showCursor: true,
+                  cursorColor: Colors.black,
                   decoration: InputDecoration(
-                    labelText: 'Password',
+                    labelText: 'סיסמה',
                     labelStyle: TextStyle(
 	                    color: passwordFocusNode.hasFocus ? Colors.blue : Colors.black)),
                   obscureText: true,
                   controller: _passwordController,
                   validator: (value) {
                     if (value.isEmpty || value.length < 5) {
-                      return 'Password is too short!';
+                      return 'הסיסמה קצרה מידי';
                     }
                   },
                   onSaved: (value) {
@@ -146,39 +148,43 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
                 TextFormField(
                   focusNode: confirmPasswordFocusNode,
+                  showCursor: true,
+                  cursorColor: Colors.black,
                   decoration: InputDecoration(
-                    labelText: 'Confirm Password',
+                    labelText: 'אימות סיסמה',
                     labelStyle: TextStyle(
 	                    color: confirmPasswordFocusNode.hasFocus ? Colors.blue : Colors.black)),
                   obscureText: true,
                   validator: (value) {
-                          if (value != _passwordController.text) {
-                            return 'Passwords do not match!';
-                          }
+                    if (value != _passwordController.text) {
+                      return 'הסיסמאות לא זהות';
+                    }
                   }
                 ),
                 TextFormField(
                     focusNode: nameFocusNode,
-                     decoration: InputDecoration(
-                      labelText: 'Name',
-                      labelStyle: TextStyle(
-	                    color: nameFocusNode.hasFocus ? Colors.blue : Colors.black)),
-                      onSaved: (value) {
-                        _registrationData['name'] = value;
-                      },
+                    showCursor: true,
+                    cursorColor: Colors.black,
+                    decoration: InputDecoration(
+                    labelText: 'שם מלא',
+                    labelStyle: TextStyle(
+                    color: nameFocusNode.hasFocus ? Colors.blue : Colors.black)),
+                    onSaved: (value) {
+                      _registrationData['name'] = value;
+                    },
                    ),
-                TextFormField(
+                  TextFormField(
                      focusNode: phoneNumberFocusNode,
                      keyboardType: TextInputType.number,
+                     showCursor: true,
+                     cursorColor: Colors.black,
                      decoration: InputDecoration(
-                      
-                      labelText: 'Phone Number',
+                      labelText: 'מספר טלפון',
                       labelStyle: TextStyle(
 	                    color: phoneNumberFocusNode.hasFocus ? Colors.blue : Colors.black)),
                      validator: (Value) {
-                       //final range = RegExp(r'^[0-9]+$').hasMatch(Value);
                        if(Value.length < 4 && Value.length > 16) {
-                         return 'Illegal input!';
+                         return 'מספר טלפון לא חוקי';
                        }
                        return null;
                      },
@@ -186,15 +192,29 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                        _registrationData['phone number'] = value;
                      },
                    ),
-                   TextFormField(
+                  TextFormField(
+                    focusNode: addressFocusNode,
+                    showCursor: true,
+                    cursorColor: Colors.black,
+                    decoration: InputDecoration(
+                    labelText: 'כתובת',
+                    labelStyle: TextStyle(
+                    color: cityFocusNode.hasFocus ? Colors.blue : Colors.black)),
+                    onSaved: (value) {
+                      _registrationData['address'] = value;
+                    },
+                   ),
+                  TextFormField(
                     focusNode: cityFocusNode,
-                     decoration: InputDecoration(
-                      labelText: 'City',
-                      labelStyle: TextStyle(
-	                    color: cityFocusNode.hasFocus ? Colors.blue : Colors.black)),
-                      onSaved: (value) {
-                        _registrationData['city'] = value;
-                      },
+                    showCursor: true,
+                    cursorColor: Colors.black,
+                    decoration: InputDecoration(
+                    labelText: 'עיר',
+                    labelStyle: TextStyle(
+                    color: cityFocusNode.hasFocus ? Colors.blue : Colors.black)),
+                    onSaved: (value) {
+                      _registrationData['city'] = value;
+                    },
                    ),
                    SizedBox(
                   height: 20,
@@ -202,28 +222,31 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 if (_isLoading)
                   CircularProgressIndicator()
                 else
-                  RaisedButton(
+                  ElevatedButton(
                     child:
-                        Text('SIGNUP'),
+                        Text('הירשם'),
                     onPressed: _submit,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                    
+                    //shape: RoundedRectangleBorder(
+                     // borderRadius: BorderRadius.circular(30),
                     ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
-                    color: Theme.of(context).primaryColor,
-                    textColor: Theme.of(context).primaryTextTheme.button.color,
+                    //padding:
+                      //  EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+                   // color: Theme.of(context).primaryColor,
+                    //textColor: Theme.of(context).primaryTextTheme.button.color,
+                  
+                  Padding(padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+                    child: TextButton(
+                    child: Text('יש לך כבר חשבון? היכנס', style: TextStyle(color: Theme.of(context).primaryColor),),
+                    onPressed: () { Navigator.push<dynamic>(context,
+                      MaterialPageRoute<dynamic>(
+                        builder: (BuildContext context) => AuthScreen(),
+                        fullscreenDialog: true));},
+                   // padding: 
+                   // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    //textColor: Theme.of(context).primaryColor,
+                                  ),
                   ),
-                  FlatButton(
-                  child: Text('Already a member? Login'),
-                  onPressed: () { Navigator.push<dynamic>(context,
-                    MaterialPageRoute<dynamic>(
-                      builder: (BuildContext context) => AuthScreen(),
-                      fullscreenDialog: true));},
-                  padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  textColor: Theme.of(context).primaryColor,
-                ),
               ]),   
           ),
         )
@@ -231,13 +254,3 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 }
-
-
-                
-                
-
-              
-                  
-
-                
-                    
