@@ -1,7 +1,10 @@
 
 import 'package:Appo/Business_side/model/colors.dart';
+import 'package:Appo/Business_side/screens/registration_screen2.dart';
+import 'package:Appo/models/authentication.dart';
+import 'package:Appo/models/http_exception.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 
 class BusinessRegistrationScreen1 extends StatefulWidget {
   static const routeName = '/register_business1';
@@ -41,47 +44,46 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
     );
   }
 
-  //  Future<void> _submit() async {
-  //   if (!_formKey.currentState!.validate()) {
-  //     // Invalid!
-  //     return;
-  //   }
-  //   _formKey.currentState!.save();
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
-  //   try {
-  //     await Provider.of<Authentication>(context, listen: false)
-  //     .signup(_registrationData['email'], _registrationData['password'], _registrationData['name'],
-  //     _registrationData['phone number'], _registrationData['address'], _registrationData['city'],);
-  //     Navigator.of(context).pop();
-  //     Navigator.of(context).pushNamed(TabsScreen.routeName);
-  //   }
-  //   on HttpException catch (error) {
-  //     var errorMessage = 'ההרשמה נכשלה';
-  //     if (error.toString().contains('EMAIL_EXISTS')) {
-  //       errorMessage = 'כתובת מייל כבר רשומה';
-  //     } else if (error.toString().contains('INVALID_EMAIL')) {
-  //       errorMessage = 'כתובת מייל לא חוקית';
-  //     } else if (error.toString().contains('WEAK_PASSWORD')) {
-  //       errorMessage = 'הסיסמה חלשה מידי';
-  //     } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
-  //       errorMessage = 'כתובת מייל לא נמצאה';
-  //     } else if (error.toString().contains('INVALID_PASSWORD')) {
-  //       errorMessage = 'סיסמה לא נכונה';
-  //     }
-  //     _showErrorDialog(errorMessage);
-  //   }
-  //   catch(error) {
-  //     var errorMessage = 'משהו השתבש, נסה שנית מאוחר יותר';
-  //      _showErrorDialog(errorMessage);
+   Future<void> _submit() async {
+    if (!_formKey.currentState.validate()) {
+      // Invalid!
+      return;
+    }
+    _formKey.currentState.save();
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      await Provider.of<Authentication>(context, listen: false)
+      .createLocalBusiness(_registrationData['email'], _registrationData['password'], _registrationData['name'],
+      _registrationData['phone number'], _registrationData['address'], _registrationData['city'],);
+      Navigator.of(context).pushNamed(BusinessRegistrationScreen2.routeName);
+    }
+    on HttpException catch (error) {
+      var errorMessage = 'ההרשמה נכשלה';
+      if (error.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = 'כתובת מייל כבר רשומה';
+      } else if (error.toString().contains('INVALID_EMAIL')) {
+        errorMessage = 'כתובת מייל לא חוקית';
+      } else if (error.toString().contains('WEAK_PASSWORD')) {
+        errorMessage = 'הסיסמה חלשה מידי';
+      } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
+        errorMessage = 'כתובת מייל לא נמצאה';
+      } else if (error.toString().contains('INVALID_PASSWORD')) {
+        errorMessage = 'סיסמה לא נכונה';
+      }
+      _showErrorDialog(errorMessage);
+    }
+    catch(error) {
+      var errorMessage = 'משהו השתבש, נסה שנית מאוחר יותר';
+       _showErrorDialog(errorMessage);
 
-  //   }
+    }
     
-  //   setState(() {
-  //     _isLoading = false;
-  //   });
-  // }
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   Widget buildProfileImage(var size) {
     return Container(
@@ -236,6 +238,7 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
                   child: Directionality(textDirection: TextDirection.rtl,
                     child: TextFormField(//phone
                          focusNode: passwordFocusNode,
+                         controller: _passwordController,
                          showCursor: true,
                          cursorColor: Colors.black,
                          decoration: InputDecoration(
@@ -264,6 +267,38 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
                        ),
                   ),
                 ),
+                Padding(padding: const EdgeInsets.only(top: 20.0),
+                  child: Directionality(textDirection: TextDirection.rtl,
+                    child: TextFormField(//confirm password
+                      focusNode: confirmPasswordFocusNode,
+                      showCursor: true,
+                      cursorColor: Colors.black,
+                      decoration: InputDecoration(
+                      labelText: 'אימות סיסמה',
+                      labelStyle: TextStyle(color: confirmPasswordFocusNode.hasFocus ? Colors.blue : Colors.black),
+                      fillColor: Colors.white,
+                      filled: true,
+                      focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: const BorderSide(color: Colors.blue,),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: const BorderSide(color: Colors.grey),
+                        ),
+                      ),
+                      validator: (value) {
+                      if (value != _passwordController.text) {
+                        return 'הסיסמאות לא זהות';
+                      }
+                      },
+                      onSaved: (value) {
+                        _registrationData['password'] = value;
+                      },
+                    ),
+                  ),
+                ),
+                
 
                 Padding(padding: const EdgeInsets.only(top: 20.0),
                   child: Directionality(textDirection: TextDirection.rtl,
@@ -328,8 +363,7 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
                     child:
                         const Text('המשך'),
                     onPressed: (){
-                      //save data in business
-                      Navigator.of(context).pushNamed('/register2');
+                      _submit();
                     },
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),

@@ -19,8 +19,7 @@ class NavDrawer extends StatelessWidget {
   void _onTapBecomeBusiness(BuildContext context) async {
     Navigator.of(context).pop();
     await Provider.of<Authentication>(context, listen: false).logout();
-    //Navigator.of(context).pushNamed(AuthScreen.routeName);
-    Navigator.of(context).pushNamed(BusinessHomeScreen.routeName);
+    Navigator.of(context).pushNamed(AuthScreen.routeName);
 
   }
 
@@ -80,7 +79,7 @@ class NavDrawer extends StatelessWidget {
 
           buildNavItem(() { 
             Provider.of<Authentication>(context, listen: false).logout();
-            Navigator.of(context).pop(); 
+            Navigator.of(context).popUntil(ModalRoute.withName('/auth'));
           },"התנתק", Icon(Icons.logout)),
         ],
       ) ,

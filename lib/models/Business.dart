@@ -24,7 +24,7 @@ class Business with ChangeNotifier {
     @required this.address,
     @required this.phoneNumber,
     this.imageUrl,
-    @required this.serviceType,
+    this.serviceType,
     this.longitude, this.latitude
   });
 
@@ -48,10 +48,10 @@ class Business with ChangeNotifier {
     isFavorite = !isFavorite;
     if(isFavorite == true)
     {
-      DB_Helper.postFavorite(userId, this);
+      //DB_Helper.postFavorite(userId, this);
     }
     else{
-      DB_Helper.removeFromFavorites(userId, this);
+      //DB_Helper.removeFromFavorites(userId, this);
     }
     notifyListeners();
   }

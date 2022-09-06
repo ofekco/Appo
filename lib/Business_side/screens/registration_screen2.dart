@@ -1,5 +1,6 @@
 
 import 'package:Appo/Business_side/model/colors.dart';
+import 'package:Appo/models/authentication.dart';
 import 'package:Appo/models/types.dart';
 import 'package:Appo/models/type.dart';
 import 'package:Appo/widgets/business_type_item.dart';
@@ -17,6 +18,7 @@ class BusinessRegistrationScreen2 extends StatefulWidget {
 class _BusinessRegistrationScreen2State extends State<BusinessRegistrationScreen2> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   var _isLoading = false;
+  var _typeSelected;
   
 
   void _showErrorDialog(String message) {
@@ -79,12 +81,9 @@ class _BusinessRegistrationScreen2State extends State<BusinessRegistrationScreen
   //   });
   // }
 
-  void itemClicked(BuildContext ctx, Type type) 
-  {
-    //save type in business
+  void itemClicked(BuildContext ctx, Type type) {
+   _typeSelected = type;
   }
-
- 
 
   @override
   Widget build(BuildContext context) {
@@ -98,22 +97,40 @@ class _BusinessRegistrationScreen2State extends State<BusinessRegistrationScreen
     FocusNode addressFocusNode = FocusNode();
     FocusNode cityFocusNode = FocusNode();
     FocusNode nameFocusNode = FocusNode();
+
+  
     
     return Scaffold(backgroundColor: Color.fromARGB(255, 159, 195, 212),
-      body: Container(
-        child: ListView.builder(
-        itemCount: _types.TypesList.length, 
-        padding: const EdgeInsets.only(top: 8),
-        scrollDirection: Axis.vertical,
-        itemBuilder: (BuildContext context, int index) {
-          return Padding( 
-            padding: const EdgeInsets.only(
-            left: 24, right: 24, top: 8, bottom: 16),
-            child: WrapInkWell(BusinessTypeListItem(_types.TypesList[index]), () => itemClicked(context, _types.TypesList[index]))
-          );                 
-          },
-        )
-      )
+      body: Column(children: [
+        Container(
+          child: ListView.builder(
+            itemCount: _types.TypesList.length -1, 
+            padding: const EdgeInsets.only(top: 8),
+            scrollDirection: Axis.vertical,
+            itemBuilder: (BuildContext context, int index) {
+              return Padding( 
+                padding: const EdgeInsets.only(
+                left: 24, right: 24, top: 8, bottom: 16),
+                child: WrapInkWell(BusinessTypeListItem(_types.TypesList[index+1]), () => itemClicked(context, _types.TypesList[index+1]))
+              );                 
+            },
+          )
+      ),
+      RaisedButton(
+        child:
+          const Text('המשך'),
+        onPressed: (){
+          Provider.of<Authentication>(context, listen: false).currentUser.type = _typeSelected;
+        },
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        padding:
+            const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+        color: Palette.kToDark[600],
+        textColor: Colors.white
+      ),
+      ],)
     );
   }
 }
