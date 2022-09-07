@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import '../helpers/DB_helper.dart';
 import 'package:Appo/models/type.dart';
 import 'package:Appo/models/types.dart';
-import 'package:Appo/models/business.dart';
+import 'package:Appo/models/Business.dart';
 
 
 //All the businesses data from the server

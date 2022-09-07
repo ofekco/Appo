@@ -27,37 +27,33 @@ class Business with ChangeNotifier {
     @required this.phoneNumber,
     this.imageUrl,
     @required this.serviceType,
-    this.longitude, this.latitude,
+    this.longitude,
+    this.latitude,
     this.instagramUrl,
   });
 
   factory Business.fromJson(Map<String, dynamic> json) {
     return Business(
-      id: json['id'] as int,
-      name: json['name'] as String,
-      owner: json['owner'] as String,
-      city: json['city'] as String,
-      address: json['address'] as String,
-      phoneNumber: json['phoneNumber'] as String,
-      imageUrl: json['imageUrl'] as String,
-      serviceType: json['serviceType'] as String,
-      latitude: json['latitude'],
-      longitude: json['longitude'],
-      instagramUrl: json['instagram']
-    );
+        id: json['id'] as int,
+        name: json['name'] as String,
+        owner: json['owner'] as String,
+        city: json['city'] as String,
+        address: json['address'] as String,
+        phoneNumber: json['phoneNumber'] as String,
+        imageUrl: json['imageUrl'] as String,
+        serviceType: json['serviceType'] as String,
+        latitude: json['latitude'],
+        longitude: json['longitude'],
+        instagramUrl: json['instagram']);
   }
 
-  void toggleFavoriteStatus(String userId) 
-  {
+  void toggleFavoriteStatus(String userId) {
     isFavorite = !isFavorite;
-    if(isFavorite == true)
-    {
+    if (isFavorite == true) {
       DB_Helper.postFavorite(userId, this);
-    }
-    else{
+    } else {
       DB_Helper.removeFromFavorites(userId, this);
     }
     notifyListeners();
   }
 }
-

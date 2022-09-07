@@ -1,7 +1,7 @@
 import 'package:Appo/helpers/DB_helper.dart';
 import 'package:flutter/material.dart';
 import '../booking_calendar/model/booking.dart';
-import '../models/business.dart';
+import '../models/Business.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../models/types.dart';

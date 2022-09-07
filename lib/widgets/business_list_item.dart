@@ -1,4 +1,4 @@
-import 'package:Appo/models/business.dart';
+import 'package:Appo/models/Business.dart';
 import 'package:Appo/widgets/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

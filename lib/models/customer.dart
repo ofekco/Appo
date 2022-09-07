@@ -1,19 +1,28 @@
+import 'dart:convert';
 import 'dart:io';
-import 'package:Appo/models/business.dart';
+import 'dart:typed_data';
+import 'package:Appo/helpers/DB_helper.dart';
+import 'package:Appo/models/Business.dart';
 import 'package:flutter/material.dart';
 
-class Customer{
-  final String _userId; 
+class Customer {
+  final String _userId;
   String _firebaseToken;
   String _name;
   String _email;
   String _phoneNumber;
   String _address;
   String _city;
+  Uint8List base64image;
   File _image;
   List<Business> _favoriteBusiness;
-  
-  Customer(this._userId, this._firebaseToken, this._email, this._name, this._address, this._city, this._phoneNumber);
+
+  Customer(this._userId, this._firebaseToken, this._email, this._name,
+      this._address, this._city, this._phoneNumber, String imageUrl) {
+    if (imageUrl != null && imageUrl.isNotEmpty) {
+      base64image = base64Decode(imageUrl);
+    }
+  }
 
   String get userId {
     return _userId;
@@ -28,7 +37,7 @@ class Customer{
   }
 
   void set name(String newName) {
-     _name = newName; 
+    _name = newName;
   }
 
   String get email {
@@ -36,33 +45,32 @@ class Customer{
   }
 
   void set email(String newEmail) {
-     _email = newEmail; 
+    _email = newEmail;
   }
 
   String get address {
     return _address;
   }
 
-   void set address(String newAddress) {
-     _address = newAddress; 
+  void set address(String newAddress) {
+    _address = newAddress;
   }
 
   String get city {
     return _city;
   }
 
-   void set city(String newCity) {
-     _city = newCity; 
+  void set city(String newCity) {
+    _city = newCity;
   }
 
   String get phoneNumber {
     return _phoneNumber;
   }
 
-   void set phoneNumber(String newNumber) {
-     _phoneNumber = newNumber; 
+  void set phoneNumber(String newNumber) {
+    _phoneNumber = newNumber;
   }
-  
 
   File get image {
     return _image;
@@ -70,6 +78,7 @@ class Customer{
 
   void set image(File imageToSet) {
     _image = imageToSet;
+    base64image = _image.readAsBytesSync();
   }
 
   List<Business> get favoriteBusiness {
@@ -77,8 +86,23 @@ class Customer{
   }
 
   factory Customer.fromJson(Map<String, dynamic> json) {
-    return Customer(json.keys.first, json.keys.first, json['email'], json['name'], json['address'], json['city'], json['phone number']
+    return Customer(
+      json.keys.first,
+      json.keys.first,
+      json['email'],
+      json['name'],
+      json['address'],
+      json['city'],
+      json['phone number'],
+      json['imageUrl'],
     );
   }
-}
 
+  void updateImage() async {
+    if (_image != null) {
+      var bytes = await _image.readAsBytes();
+      var base64img = base64Encode(bytes);
+      await DB_Helper.updateCustomerImage(this._userId, base64img);
+    }
+  }
+}

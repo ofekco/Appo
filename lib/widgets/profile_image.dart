@@ -6,112 +6,109 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as syspaths;
 
 class ProfileImage extends StatefulWidget {
-  final Function onSelectImage;
+  //final Function onSelectImage;
   final Customer _currentCustomer;
 
-  ProfileImage(this.onSelectImage, this._currentCustomer);
+  ProfileImage(this._currentCustomer);
 
   @override
   State<ProfileImage> createState() => _ProfileImageState();
 }
 
 class _ProfileImageState extends State<ProfileImage> {
-  File _storedImage;
+  File _pickedImage;
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
     return Container(
-    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-     child: CircleAvatar(
-      radius: size.width*0.32,
-      backgroundColor: Colors.white,
+      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
       child: CircleAvatar(
-        radius: size.width*0.30, 
-        backgroundImage: widget._currentCustomer.image != null ? FileImage(widget._currentCustomer.image)
-          : AssetImage('assets/images/client.jpg'),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(190, 110, 0, 0),
-          child: MaterialButton(
-            onPressed: _getImage,
-            color: Colors.blueGrey,
-            textColor: Colors.white,
-            child: Icon(
-              Icons.camera_alt,
-              size: 26,
-            ),
-            padding: EdgeInsets.all(16),
-            shape: CircleBorder(),
-          )  
+        radius: size.width * 0.32,
+        backgroundColor: Colors.white,
+        child: CircleAvatar(
+          radius: size.width * 0.30,
+          backgroundImage: widget._currentCustomer.base64image != null
+              ? MemoryImage(widget._currentCustomer.base64image)
+              : AssetImage('assets/images/client.jpg'),
+          child: Padding(
+              padding: const EdgeInsets.fromLTRB(180, 140, 0, 0),
+              child: CircleAvatar(
+                radius: 25,
+                backgroundColor: Colors.blueGrey,
+                child: IconButton(
+                  alignment: Alignment.center,
+                  onPressed: _getImage,
+                  padding: EdgeInsets.zero,
+                  color: Colors.white,
+                  icon: Icon(
+                    Icons.camera_alt,
+                    size: 30,
+                  ),
+                ),
+              )),
         ),
       ),
-    ),
-  );
+    );
   }
 
-
   Future<void> _getImage() async {
-    var imageFile;
+    //var imageFile;
     showDialog(
-      context: context, 
-      builder: (context) {
-        return AlertDialog(
-        title: const Text('בחר אפשרות'),
-        actions: <Widget>[
-          ListTile(
-            title: const Text('צלם תמונה'),
-            onTap: () async {
-              await _openCamera(context, imageFile);
-          }),
-          ListTile(
-            title: const Text('גלריה'),
-            onTap: () async {
-              await _openGallery(context, imageFile);
-            }),  
-          ],
-        );   
-      }
-    );
-
-      
-      if (imageFile == null) {
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('בחר אפשרות'),
+            actions: <Widget>[
+              ListTile(
+                  title: const Text('צלם תמונה'),
+                  onTap: () async {
+                    await _openCamera(context);
+                    Navigator.of(context).pop();
+                  }),
+              ListTile(
+                  title: const Text('גלריה'),
+                  onTap: () async {
+                    await _openGallery(context);
+                    Navigator.of(context).pop();
+                  }),
+            ],
+          );
+        }).then((_) async {
+      if (_pickedImage == null) {
         return;
       }
 
       final appDir = await syspaths.getApplicationDocumentsDirectory();
-      final fileName = path.basename(imageFile.path);
-      final savedImage = await _storedImage.copy('${appDir.path}/${fileName}');
-      
-
-     setState(() {
-      widget._currentCustomer.image = savedImage;
-      _storedImage = savedImage;
-      });
-  
-    }
-
-    void _openCamera(BuildContext context, File imageFile) async {
-      final pickedFile = await ImagePicker().pickImage(
-        source: ImageSource.camera,
-        maxWidth: 600);
+      final fileName = path.basename(_pickedImage.path);
+      final savedImage = await _pickedImage.copy('${appDir.path}/${fileName}');
 
       setState(() {
-        imageFile = File(pickedFile.path);
+        widget._currentCustomer.image = savedImage;
+        _pickedImage = savedImage;
       });
 
-      Navigator.pop(context);
-    }
+      await widget._currentCustomer.updateImage();
+    });
+  }
 
-    void _openGallery(BuildContext context, File imageFile) async {
-      final pickedFile = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-        maxWidth: 600);
+  void _openCamera(BuildContext context) async {
+    final picker = ImagePicker();
+    final pickedImageFile =
+        await picker.pickImage(source: ImageSource.camera, maxWidth: 600);
 
-      setState(() {
-          imageFile = File(pickedFile.path);
-      });
+    setState(() {
+      _pickedImage = File(pickedImageFile.path);
+    });
+  }
 
-      Navigator.pop(context);
-    }
+  void _openGallery(BuildContext context) async {
+    final pickedFile = await ImagePicker()
+        .pickImage(source: ImageSource.gallery, maxWidth: 600);
+
+    setState(() {
+      _pickedImage = File(pickedFile.path);
+    });
+  }
 }
