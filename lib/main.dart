@@ -1,22 +1,29 @@
 import 'package:Appo/Business_side/screens/business_home_page.dart';
+import 'package:Appo/screens/profile_screen.dart';
+import 'package:Appo/screens/registration_screen.dart';
+import 'Business_side/screens/registration_screen1.dart';
 import 'package:Appo/models/authentication.dart';
 import 'package:Appo/models/businesses.dart';
-import 'package:Appo/screens/auth_screen.dart';
+import 'package:Appo/screens/chooce_login.dart';
+import 'package:Appo/screens/login_screen.dart';
 import 'package:Appo/screens/home_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'Business_side/screens/registration_screen2.dart';
 import 'models/types.dart';
 import 'screens/tabs_screen.dart';
 import './models/colors.dart';
 import './models/businesses.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import './screens/splash.dart';
-
+import 'Business_side/screens/registration_explanation_screen.dart';
+import 'package:http/http.dart';
+ 
 
 void main() {
+  
   initializeDateFormatting()
-      .then((_) => runApp(MyApp()));
+    .then((_) => runApp(MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -30,6 +37,7 @@ class MyApp extends StatelessWidget {
           create: (_)=> Types()),
         ChangeNotifierProvider<Authentication>(
           create: (_) => Authentication()),
+
       ],
       child: Consumer<Authentication>(
         builder: (ctx, auth, _) => 
@@ -53,14 +61,19 @@ class MyApp extends StatelessWidget {
                     authResultSnapshot.connectionState ==
                             ConnectionState.waiting
                         ? Splash()
-                        : AuthScreen(),
+                        : ChooseLoginScreen(),
               ),
           routes: {
             '/home': (ctx) => HomeScreen(),
             '/auth': (ctx) => AuthScreen(),
-            '/register': (ctx) => AuthScreen(), 
+            '/register': (ctx) => RegistrationScreen(), 
             '/first': (ctx) => TabsScreen(),
             '/business_home' : (ctx) => BusinessHomeScreen(3),
+            '/register_business1' : (ctx) => BusinessRegistrationScreen1(),
+            '/register_business2'  : (ctx) => BusinessRegistrationScreen2(),
+            '/explain' : (ctx) => RegisterationExplenationScreen(),
+            '/customer_profile' : (ctx) => ProfileScreen(Provider.of<Authentication>(ctx).currentUser),
+            
           }
         ),
     ));  

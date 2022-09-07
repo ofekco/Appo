@@ -1,8 +1,6 @@
 import 'package:Appo/booking_calendar/day_slots_controller.dart';
-import 'package:Appo/booking_calendar/model/times_slots.dart';
 import 'package:Appo/booking_calendar/widgets/booking_confirmation.dart';
 import 'package:Appo/booking_calendar/widgets/booking_slot-widget.dart';
-import 'package:Appo/helpers/DB_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -12,14 +10,15 @@ import 'package:Appo/booking_calendar/widgets/common_button.dart';
 import 'package:Appo/booking_calendar/widgets/common_card.dart';
 import 'package:Appo/booking_calendar/widgets/booking_dialog.dart';
 import 'package:intl/intl.dart';
-
 import 'model/booking.dart';
 
+//This widget is the booking calendar in client side
 class BookingCalendar extends StatefulWidget {
 
   final businessId;
+  final clientId;
 
-  const BookingCalendar({Key key, this.businessId}) : super(key: key); //ctor
+  const BookingCalendar({Key key, this.businessId, this.clientId}) : super(key: key); //ctor
 
   @override
   State<BookingCalendar> createState() => _BookingCalendarState();
@@ -46,29 +45,91 @@ class _BookingCalendarState extends State<BookingCalendar> {
   }
 
   void selectNewDateRange() {
-    //replace controller to another day (create new controller)
+    //replace controller to another day 
     controller.date = _selectedDay;
     controller.getTimesFromDB();
     controller.resetSelectedSlot();
   }
 
+  Widget showAreYouSureAlertDialog(BuildContext ctx)
+  {
+    return AlertDialog(
+      alignment: Alignment.topRight,
+      title: Icon(Icons.report, 
+        color: Palette.kToDark[50], size: 50,),
+        content: Text('?בטוח שאת/ה רוצה להזמין את התור', style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold,),),
+        backgroundColor: Colors.white,
+        actions: [
+          ElevatedButton(
+            style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Palette.kToDark[500]), ),
+            onPressed: () {
+              Navigator.of(ctx).pop(false);
+            }, 
+            child: Text('לא', style: TextStyle(color: Colors.white),)
+          ),
+
+          ElevatedButton(
+            style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Palette.kToDark[500]), ),
+            child: Text('כן', style:TextStyle(color: Colors.white)),
+            onPressed: () {
+              onBookButtonTap(context);
+              Navigator.of(ctx).pop(true);
+            },
+          ),
+        ],
+      );
+  }
+
+  Widget showErrorAlertDialog(BuildContext ctx, String errText)
+  {
+    return AlertDialog(
+      alignment: Alignment.topRight,
+      title: Icon(Icons.report, 
+        color: Palette.kToDark[50], size: 50,),
+        content: Text(errText, style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold,),),
+        backgroundColor: Colors.white,
+        actions: [
+          ElevatedButton(
+            style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Palette.kToDark[500]), ),
+            onPressed: () {
+              Navigator.of(ctx).pop(false);
+            }, 
+            child: Text('הבנתי', style: TextStyle(color: Colors.white),)
+          ),
+
+        ],
+      );
+  }
+
   void onBookButtonTap(BuildContext ctx) async
   {
     controller.toggleUploading();
-    Booking book = await controller.uploadBooking();
+    Booking book = await controller.uploadBooking(widget.clientId);
     controller.toggleUploading();
 
-    showModalBottomSheet(
-      backgroundColor: Colors.white,
-      context: ctx,
-      builder: (_) {
-        return BookingConfirmation(book);
-      },
-    );
-
+    if(book != null)
+    {
+      showModalBottomSheet(
+        backgroundColor: Colors.white,
+        context: ctx,
+        builder: (_) {
+          return BookingConfirmation(book);
+        },
+      );
+    }
+    else {
+      showDialog(
+        context: ctx,
+        builder: (_) {
+          return showErrorAlertDialog(ctx, 'התור הזה כבר נתפס');
+        },
+      );
+    }
+    
     setState(() {
-      controller.resetSelectedSlot();
-    });              
+        controller.resetSelectedSlot();
+    });   
+    
   }
 
   @override
@@ -80,12 +141,12 @@ class _BookingCalendarState extends State<BookingCalendar> {
         child: (controller.isUploading || controller.times == null)
           ? const BookingDialog()
           : Column(
-            children: [
+            children: [ 
               CommonCard(
                 child: TableCalendar(
                       locale: 'iw_IL',
                       firstDay: DateTime.now(),
-                      lastDay: DateTime.now().add(const Duration(days: 1000)),
+                      lastDay: DateTime.now().add(const Duration(days: 35)),
                       focusedDay: _focusedDay,
                       calendarFormat: _calendarFormat,
                       calendarStyle:
@@ -160,40 +221,20 @@ class _BookingCalendarState extends State<BookingCalendar> {
                           ),
                         ),
                       ),
-                    
                   
               const SizedBox(
                     height: 16,
                   ),
 
               CommonButton(
-                text: 'BOOK',
+                text: 'הזמן',
                 onTap: () => showDialog(
                               context: context, 
                               builder: (ctx) => 
-                                AlertDialog(alignment: Alignment.topRight,
-                                  title: Icon(Icons.report, color: Palette.kToDark[50], size: 50,),
-                                  content: Text('?בטוח שאת/ה רוצה להזמין את התור', style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold,),),
-                                  backgroundColor: Colors.white,
-                                  actions: [
-                                    ElevatedButton(
-                                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Palette.kToDark[500]), ),
-                                      onPressed: () {
-                                        Navigator.of(ctx).pop(false);
-                                      }, 
-                                      child: Text('לא', style: TextStyle(color: Colors.white),)
-                                    ),
-                                    ElevatedButton(
-                                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Palette.kToDark[500]), ),
-                                      child: Text('כן', style:TextStyle(color: Colors.white)),
-                                      onPressed: () {
-                                        onBookButtonTap(context);
-                                        Navigator.of(ctx).pop(true);
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                controller.isValidBooking(widget.clientId) ? 
+                                  showAreYouSureAlertDialog(ctx)
+                                  : showErrorAlertDialog(ctx, 'כבר קיימת הזמנה לאותו יום')
+                            ),
                 isDisabled: controller.selectedSlot == -1,
                 buttonActiveColor: Palette.kToDark[800],
               ),

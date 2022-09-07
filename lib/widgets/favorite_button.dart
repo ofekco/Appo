@@ -1,4 +1,5 @@
-import 'package:Appo/models/Business.dart';
+import 'package:Appo/models/business.dart';
+import 'package:Appo/models/authentication.dart';
 import 'package:Appo/models/businesses.dart';
 import 'package:flutter/material.dart'; 
 import 'package:provider/provider.dart';
@@ -13,13 +14,15 @@ class FavoriteButton extends StatefulWidget {
 }
 
 class _FavoriteButtonState extends State<FavoriteButton> {
+
+  
   @override
   Widget build(BuildContext context) {
     return IconButton(
         onPressed: () {
           setState(() {
-            widget._business.toggleFavoriteStatus();
             final businesses = Provider.of<Businesses>(context, listen: false);
+            widget._business.toggleFavoriteStatus(businesses.ClientId);
             widget._business.isFavorite ? businesses.addFavorite(widget._business) : businesses.removeFavorite(widget._business);
           });
         },

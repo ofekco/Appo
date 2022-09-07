@@ -27,10 +27,10 @@ class _SectionButtonState extends State<SectionButton> {
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
-        textColor: widget.IsPressed ? Colors.blue : Colors.grey,
+    return TextButton(
+       // textColor: widget.IsPressed ? Colors.blue : Colors.grey,
         onPressed: widget.onPressed,  
-        child: Text(widget.title)
+        child: Text(widget.title, style: TextStyle(color: widget.IsPressed ? Colors.blue : Colors.grey,))
     );
   }
 }

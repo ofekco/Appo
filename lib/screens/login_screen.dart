@@ -1,17 +1,18 @@
-import 'dart:math';
-import 'dart:ui';
 import 'package:Appo/models/colors.dart';
 import 'package:Appo/models/http_exception.dart';
 import 'package:Appo/screens/registration_screen.dart';
 import 'package:Appo/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:Appo/Business_side/screens/registration_screen1.dart' as businessSide;
 import 'registration_screen.dart';
 import '../models/authentication.dart';
+import 'package:Appo/Business_side/screens/registration_explanation_screen.dart';
 
 class AuthScreen extends StatelessWidget {
   static const routeName = '/auth';
-  
+
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -26,43 +27,42 @@ class AuthScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Flexible(
-                    child: Container(width: double.infinity, height: deviceSize.height/8,
-                      margin: EdgeInsets.only(bottom: 20.0),
-                      child: Center(child: Image.asset('assets/images/logo.JPG',)),
-                    )),
-
-                  Flexible(
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: 50.0),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 65.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Palette.kToDark[500],
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 8,
-                            offset: Offset(0, 2),
-                          )
-                        ],
-                      ),
-                      child: Text(
-                        'Welcome To Appo!',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 26,
-                          fontWeight: FontWeight.normal,
-                        ),
+                 Flexible(
+                  child: Container(width: double.infinity, height: deviceSize.height/8,
+                  margin: EdgeInsets.only(bottom: 20.0),
+                   child: Center(child: Image.asset('assets/images/logo.JPG',)),
+                 )),
+                 Flexible(
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 50.0),
+                    padding:
+                     EdgeInsets.symmetric(vertical: 8.0, horizontal: 65.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Palette.kToDark[500],
+                      boxShadow: [ 
+                       BoxShadow(
+                        blurRadius: 8,
+                        offset: Offset(0, 2),
+                       )
+                      ],
+                    ),
+                    child: Text(
+                      'התחברות',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.normal,
                       ),
                     ),
                   ),
-                  Flexible(
-                    flex: deviceSize.width > 600 ? 2 : 1,
-                    child: AuthCard(),
-                  ),
-                ],
-              ),
+                ),
+                Flexible(
+                  flex: deviceSize.width > 600 ? 2 : 1,
+                  child: AuthCard(),
+                ),
+              ],
+            ),
             ),
           ),
         ],
@@ -72,10 +72,6 @@ class AuthScreen extends StatelessWidget {
 }
 
 class AuthCard extends StatefulWidget {
-  const AuthCard({
-    Key key,
-  }) : super(key: key);
-
   @override
   _AuthCardState createState() => _AuthCardState();
 }
@@ -87,8 +83,7 @@ class _AuthCardState extends State<AuthCard> {
     'password': '',
   };
   var _isLoading = false;
-  final _passwordController = TextEditingController();
-
+  final _passwordController = TextEditingController();  
 
   Future<void> _submit() async {
     if (!_formKey.currentState.validate()) {
@@ -100,8 +95,17 @@ class _AuthCardState extends State<AuthCard> {
       _isLoading = true;
     });
     try {
-      await Provider.of<Authentication>(context, listen: false).login(_authData['email'], _authData['password']);
-      Navigator.of(context).pushNamed(TabsScreen.routeName);
+      switch (Provider.of<Authentication>(context, listen: false).authMode) {
+        case AuthMode.CUSTOMER: {
+          await Provider.of<Authentication>(context, listen: false).login(_authData['email'], _authData['password']);
+          Navigator.of(context).pushNamed(TabsScreen.routeName);
+          break;
+        }
+        case AuthMode.BUSINESS: {
+          Provider.of<Authentication>(context, listen: false).loginAsBusiness(_authData['email'], _authData['password']);
+          break;
+        }
+      }
     }
     on HttpException catch (error) {
       var errorMessage = 'ההרשמה נכשלה';
@@ -136,7 +140,7 @@ class _AuthCardState extends State<AuthCard> {
             title: Text('התרחשה שגיאה'),
             content: Text(message),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text('OK'),
                 onPressed: () {
                   Navigator.of(ctx).pop();
@@ -150,6 +154,7 @@ class _AuthCardState extends State<AuthCard> {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    var authProvider = Provider.of<Authentication>(context);
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
@@ -199,27 +204,40 @@ class _AuthCardState extends State<AuthCard> {
                 if (_isLoading)
                   CircularProgressIndicator()
                 else
-                  RaisedButton(
+                   ElevatedButton(
                     child:
-                      Text('התחבר'),
+                      Text('התחבר', style: TextStyle(color: Theme.of(context).primaryTextTheme.button.color,),),
                     onPressed: _submit,
-                    shape: RoundedRectangleBorder(
+                    style: 
+                      ElevatedButton.styleFrom(
+                          primary: Theme.of(context).primaryColor,
+                          padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+                      shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
-                    ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
-                    color: Theme.of(context).primaryColor,
-                    textColor: Theme.of(context).primaryTextTheme.button.color,
+                    )),
+                    // padding:
+                    //     EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+                    // color: Theme.of(context).primaryColor,
+                    // textColor: Theme.of(context).primaryTextTheme.button.color,
                   ),
-                FlatButton(
-                  child: Text('עדיין אין לך חשבון? הירשם'),
-                  onPressed: () {Navigator.push<dynamic>(context,
-                    MaterialPageRoute<dynamic>(
-                      builder: (BuildContext context) => RegistrationScreen(),
-                      fullscreenDialog: true)); },
-                  padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  textColor: Theme.of(context).primaryColor,
+                 ElevatedButton(
+                  child: Text('עדיין אין לך חשבון? הירשם', style: TextStyle(color: Theme.of(context).primaryColor,)),
+                  onPressed: () {
+                    if(authProvider.authMode == AuthMode.CUSTOMER) {
+                       Navigator.of(context).pushNamed(RegistrationScreen.routeName);
+                    }
+                    else {
+                      Navigator.of(context).pushNamed(RegisterationExplenationScreen.routeName);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.transparent,
+                    padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap
+                  )
+                  //padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+                  //materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                 // textColor: Theme.of(context).primaryColor,
                 ),
               ],
             ),

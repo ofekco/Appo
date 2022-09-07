@@ -4,9 +4,9 @@ class TimeSlot {
   DateTime startTime;
   DateTime endTime;
   bool isBooked;
-  int userId;
+  String userId;
 
-  TimeSlot({this.startTime, this.endTime, this.isBooked});
+  TimeSlot({this.startTime, this.endTime, this.isBooked, this.userId});
 
   TimeSlot.fromJson(Map<String, dynamic> json)
       : startTime = DateTime.parse(json['startTime'] as String),

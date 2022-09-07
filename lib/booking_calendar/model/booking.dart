@@ -19,7 +19,7 @@ class Booking {
 
   Booking.fromJson(Map<String, dynamic> json)
       : //userId = json['userId'] as int,
-        businessId = json['businessId'] as int,
+        businessId = json['businessId'],
         date = DateTime.parse(json['date'] as String),
         startTime = DateTime.parse(json['startTime'] as String),
         endTime = DateTime.parse(json['endTime'] as String);

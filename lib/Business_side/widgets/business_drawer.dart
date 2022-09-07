@@ -1,27 +1,16 @@
 import 'package:Appo/Business_side/screens/business_home_page.dart';
 import 'package:Appo/models/colors.dart';
-import 'package:Appo/screens/login_screen.dart';
-import 'package:Appo/screens/profile_screen.dart';
-import 'package:Appo/screens/tabs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/authentication.dart';
+import 'package:Appo/models/authentication.dart';
 
-class NavDrawer extends StatelessWidget {
+class BusinessDrawer extends StatelessWidget {
 
   void _onTap(BuildContext context, Widget navigationPage)
   {
     Navigator.of(context).pop();
     Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (BuildContext context) => navigationPage));
-  }
-
-  void _onTapBecomeBusiness(BuildContext context) async {
-    Navigator.of(context).pop();
-    await Provider.of<Authentication>(context, listen: false).logout();
-    //Navigator.of(context).pushNamed(AuthScreen.routeName);
-    Navigator.of(context).pushNamed(BusinessHomeScreen.routeName);
-
   }
 
   Widget buildNavItem(Function onTap, String title, Icon icon)
@@ -41,40 +30,34 @@ class NavDrawer extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: [
-
           DrawerHeader(
             decoration: BoxDecoration(
               color: Palette.kToDark[500],
             ),
             child: ListTile(
-                title: Text(Provider.of<Authentication>(context).currentUser.name, textAlign: TextAlign.right, 
+                title: Text("Profile Name", textAlign: TextAlign.right, 
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18, color: Colors.white),),
                 trailing: IconButton(
                   icon: Icon(Icons.account_circle, color: Colors.white, size: 40,),
-                  onPressed: () {
-                  },
+                  onPressed: () {},
                 ),
                 onTap: () {},
             ),
           ),
 
-          buildNavItem(() =>_onTap(context, TabsScreen()),"בית", Icon(Icons.home)),
+          buildNavItem(() =>_onTap(context, BusinessHomeScreen(3)),"בית", Icon(Icons.home)),
 
           Divider(color: Colors.grey),
 
-          buildNavItem(() =>_onTap(context, TabsScreen()),"תנאי שימוש", Icon(Icons.rule)),
+          buildNavItem(() =>_onTap(context, BusinessHomeScreen(3)),"תנאי שימוש", Icon(Icons.rule)),
 
           Divider(color: Colors.grey),
 
-          buildNavItem(() =>_onTapBecomeBusiness(context),"הרשם כעסק", Icon(Icons.business)),
+          buildNavItem(() =>_onTap(context, BusinessHomeScreen(2)),"צור קשר", Icon(Icons.chat)),
 
           Divider(color: Colors.grey),
 
-          buildNavItem(() =>_onTap(context, TabsScreen()),"צור קשר", Icon(Icons.chat)),
-
-          Divider(color: Colors.grey),
-
-          buildNavItem(() =>_onTap(context, TabsScreen()),"הגדרות", Icon(Icons.settings)),
+          buildNavItem(() =>_onTap(context, BusinessHomeScreen(1)),"הגדרות", Icon(Icons.settings)),
 
           Divider(color: Colors.grey),
 
