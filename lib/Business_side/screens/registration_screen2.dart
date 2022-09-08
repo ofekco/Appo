@@ -84,6 +84,7 @@ class _BusinessRegistrationScreen2State extends State<BusinessRegistrationScreen
   // }
 
   void itemClicked(BuildContext ctx, Type type) {
+    
    _typeSelected = type.Title;
   }
 
@@ -105,7 +106,7 @@ class _BusinessRegistrationScreen2State extends State<BusinessRegistrationScreen
                 return Padding( 
                   padding: const EdgeInsets.only(
                   left: 24, right: 24, top: 8, bottom: 16),
-                  child: WrapInkWell(BusinessTypeListItem(_types.TypesList[index+1]), () => itemClicked(context, _types.TypesList[index+1]))
+                  child: WrapInkWell(BusinessTypeListItem(_types.TypesList[index+1]), () => itemClicked(context, _types.TypesList[index+1]),)
                 );                 
               },
             ),

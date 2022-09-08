@@ -209,7 +209,7 @@ class Authentication with ChangeNotifier {
     try {
       http.Response response =  await http.get(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/${_userId}.json')); 
       var resCust = jsonDecode(response.body);
-      _currentUser = new Customer(_userId, _token,  resCust['email'],  resCust['name'],  resCust['address'],  resCust['city'], resCust['phone number']);
+      _currentUser = new Customer(_userId,  resCust['email'], resCust['password'],  resCust['name'],  resCust['address'],  resCust['city'], resCust['phone number']);
     }
     catch(err) {
       print(err);
@@ -246,14 +246,26 @@ class Authentication with ChangeNotifier {
           ),
         );
 
-        //need to change all this to business
-        await _importCustomerDataFromDB(_userId);
+        await _importBusinessDataFromDB(_userId);
         _autoLogout();
         notifyListeners();
         await storeAuthDataOnDevice();
       } catch (error) {
         throw error;
       }
+  }
+
+  void _importBusinessDataFromDB(String userId) async {
+    try {
+      http.Response response =  await http.get(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/businesses/${_userId}.json')); 
+      var resCust = jsonDecode(response.body);
+      _currentUser = new Business(_userId,  resCust['email'],  resCust['password'],  
+        resCust['name'],  resCust['phone number'],  resCust['address'], resCust['city'], resCust['latitude'], resCust['longitude'] );
+    }
+    catch(err) {
+      print(err);
+      throw err;
+    }
   }
 
  Future<void> signupAsBusiness() async {
@@ -279,7 +291,10 @@ class Authentication with ChangeNotifier {
         'phone number': phone,
         'address': address,
         'city': city,
-        'type': type })
+        'type': type,
+        'longitude': '34.855499',
+        'latitude': '32.109333'  
+        })
       );
 
       var responseData = json.decode(response.body);

@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
               focusColor: Palette.kToDark[50],
             ),
             home: auth.isAuth
-              ? TabsScreen()
+              ? auth.authMode == AuthMode.CUSTOMER ? Consumer<Businesses> (builder: (ctx, busi, _) => TabsScreen())  : BusinessHomeScreen()
               : FutureBuilder(
                   future: auth.tryAutoLogin(),
                   builder: (ctx, authResultSnapshot) =>
@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
               '/auth': (ctx) => AuthScreen(),
               '/register': (ctx) => RegistrationScreen(), 
               '/first': (ctx) => TabsScreen(),
-              '/business_home' : (ctx) => BusinessHomeScreen(3),
+              '/business_home' : (ctx) => BusinessHomeScreen(),
               '/register_business1' : (ctx) => BusinessRegistrationScreen1(),
               '/register_business2'  : (ctx) => BusinessRegistrationScreen2(),
               '/explain' : (ctx) => RegisterationExplenationScreen(),

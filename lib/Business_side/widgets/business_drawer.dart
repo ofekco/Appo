@@ -45,19 +45,19 @@ class BusinessDrawer extends StatelessWidget {
             ),
           ),
 
-          buildNavItem(() =>_onTap(context, BusinessHomeScreen(3)),"בית", Icon(Icons.home)),
+          buildNavItem(() =>_onTap(context, BusinessHomeScreen()),"בית", Icon(Icons.home)),
 
           Divider(color: Colors.grey),
 
-          buildNavItem(() =>_onTap(context, BusinessHomeScreen(3)),"תנאי שימוש", Icon(Icons.rule)),
+          buildNavItem(() =>_onTap(context, BusinessHomeScreen()),"תנאי שימוש", Icon(Icons.rule)),
 
           Divider(color: Colors.grey),
 
-          buildNavItem(() =>_onTap(context, BusinessHomeScreen(2)),"צור קשר", Icon(Icons.chat)),
+          buildNavItem(() =>_onTap(context, BusinessHomeScreen()),"צור קשר", Icon(Icons.chat)),
 
           Divider(color: Colors.grey),
 
-          buildNavItem(() =>_onTap(context, BusinessHomeScreen(1)),"הגדרות", Icon(Icons.settings)),
+          buildNavItem(() =>_onTap(context, BusinessHomeScreen()),"הגדרות", Icon(Icons.settings)),
 
           Divider(color: Colors.grey),
 

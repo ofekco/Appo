@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:Appo/Business_side/model/appointment.dart';
+import 'package:Appo/models/authentication.dart';
 import 'package:Appo/models/colors.dart';
+import 'package:provider/provider.dart';
 import '../widgets/event_details_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:calendar_view/calendar_view.dart';
@@ -11,38 +13,42 @@ import 'package:Appo/helpers/DB_helper.dart';
 import 'add_edit_slots_screen.dart';
 
 class BusinessCalendarScreen extends StatefulWidget {
-  String businessID = "3";
-
+   
   @override
   State<BusinessCalendarScreen> createState() => _BusinessCalendarScreenState();
 }
 
 class _BusinessCalendarScreenState extends State<BusinessCalendarScreen> {
   List<CalendarEventData<Appointment>> _appointments = [];
+  String businessID;
   bool isLoading = true;
 
   void initState()
   {
     super.initState();
+    businessID = Provider.of<Authentication>(context, listen: false).currentUser.userId;
     getSlots();
   }
 
   //get slots as json file - map of dates
   Future<void> getSlots() async 
   {
-    final url = Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/businesses/${widget.businessID}/times.json');
+    final url = Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/businesses/${businessID}/times.json');
     try {
       http.Response response = await http.get(url);
-      var jsonData = jsonDecode(response.body) as Map;
-    
-      for(var itemKey in jsonData.keys)
-      {
-        DateTime date = DB_Helper.convertDateKeyToDate(itemKey);
-        if(jsonData[itemKey] != null)
+      var jsonData = jsonDecode(response.body)as Map;
+
+      if(jsonData != null) {
+        for(var itemKey in jsonData.keys)
         {
-          await addDateApposToCalendar(date, jsonData[itemKey]);
+          DateTime date = DB_Helper.convertDateKeyToDate(itemKey);
+          if(jsonData[itemKey] != null)
+          {
+            await addDateApposToCalendar(date, jsonData[itemKey]);
+          }
         }
-      }
+      } 
+    
 
       setState(() {
       isLoading = false;

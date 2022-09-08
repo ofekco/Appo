@@ -1,3 +1,4 @@
+import 'package:Appo/Business_side/screens/business_home_page.dart';
 import 'package:Appo/models/colors.dart';
 import 'package:Appo/models/http_exception.dart';
 import 'package:Appo/screens/registration_screen.dart';
@@ -102,8 +103,8 @@ class _AuthCardState extends State<AuthCard> {
           break;
         }
         case AuthMode.BUSINESS: {
-          Provider.of<Authentication>(context, listen: false).loginAsBusiness(_authData['email'], _authData['password']);
-
+          await Provider.of<Authentication>(context, listen: false).loginAsBusiness(_authData['email'], _authData['password']);
+          Navigator.of(context).pushNamed(BusinessHomeScreen.routeName);
           break;
         }
       }

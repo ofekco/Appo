@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'package:Appo/Business_side/screens/add_edit_slots_screen.dart';
 import 'package:Appo/helpers/DB_helper.dart';
+import 'package:Appo/models/authentication.dart';
 import 'package:Appo/models/colors.dart';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 import './business_calendar_screen.dart';
 import './business_profile_screen.dart';
 import 'package:Appo/widgets/drawer.dart';
@@ -14,9 +17,6 @@ DateTime get _now => DateTime.now();
 
 class BusinessHomeScreen extends StatefulWidget {
   static const routeName = '/business_home';
-  int businessID;
-
-  BusinessHomeScreen(this.businessID);
 
   @override
   _BusinessHomeScreenState createState() => _BusinessHomeScreenState();
@@ -25,9 +25,14 @@ class BusinessHomeScreen extends StatefulWidget {
 class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
   Widget calendar = BusinessCalendarScreen();
   Widget profile = BusinessProfileScreen();
-  //List<CalendarEventData> _appointments = [];
-
+  String businessID;
   int _selectedPageIndex = 0;
+  
+  @override
+  void initState()
+  {
+    super.initState();
+  }
 
   void _selectPage(int index) {
     setState(() {
@@ -61,7 +66,8 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
             Navigator.of(context).push(MaterialPageRoute(
               builder: (_) 
               {
-                return AddOrEditSlotsScreen(widget.businessID);
+                businessID = Provider.of<Authentication>(context, listen: false).currentUser.userId;
+                return AddOrEditSlotsScreen(businessID);
               })
             );
           }
