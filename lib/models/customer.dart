@@ -3,73 +3,33 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:Appo/helpers/DB_helper.dart';
 import 'package:Appo/models/Business.dart';
+import 'package:Appo/models/user.dart';
 import 'package:flutter/material.dart';
 
-class Customer {
-  final String _userId;
-  String _firebaseToken;
-  String _name;
-  String _email;
-  String _phoneNumber;
-  String _address;
-  String _city;
+class Customer extends User {
+  //final String _userId;
+  //String _firebaseToken;
+  //String _name;
+  //String _email;
+  //String _phoneNumber;
+  //String _address;
+  //String _city;
   Uint8List base64image;
   File _image;
   List<Business> _favoriteBusiness;
 
-  Customer(this._userId, this._firebaseToken, this._email, this._name,
-      this._address, this._city, this._phoneNumber, String imageUrl) {
+  Customer(userId, email, password, name, address, city, phoneNumber, imageUrl)
+      : super(
+            userId: userId,
+            email: email,
+            password: password,
+            name: name,
+            phoneNumber: phoneNumber,
+            address: address,
+            city: city) {
     if (imageUrl != null && imageUrl.isNotEmpty) {
       base64image = base64Decode(imageUrl);
     }
-  }
-
-  String get userId {
-    return _userId;
-  }
-
-  String get firebaseToken {
-    return _firebaseToken;
-  }
-
-  String get name {
-    return _name;
-  }
-
-  void set name(String newName) {
-    _name = newName;
-  }
-
-  String get email {
-    return _email;
-  }
-
-  void set email(String newEmail) {
-    _email = newEmail;
-  }
-
-  String get address {
-    return _address;
-  }
-
-  void set address(String newAddress) {
-    _address = newAddress;
-  }
-
-  String get city {
-    return _city;
-  }
-
-  void set city(String newCity) {
-    _city = newCity;
-  }
-
-  String get phoneNumber {
-    return _phoneNumber;
-  }
-
-  void set phoneNumber(String newNumber) {
-    _phoneNumber = newNumber;
   }
 
   File get image {
@@ -88,8 +48,8 @@ class Customer {
   factory Customer.fromJson(Map<String, dynamic> json) {
     return Customer(
       json.keys.first,
-      json.keys.first,
       json['email'],
+      json['password'],
       json['name'],
       json['address'],
       json['city'],
@@ -102,7 +62,7 @@ class Customer {
     if (_image != null) {
       var bytes = await _image.readAsBytes();
       var base64img = base64Encode(bytes);
-      await DB_Helper.updateCustomerImage(this._userId, base64img);
+      await DB_Helper.updateCustomerImage(super.userId, base64img);
     }
   }
 }

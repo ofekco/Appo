@@ -39,10 +39,10 @@ class DB_Helper {
       await http
           .patch(
               Uri.parse(
-                  'https://appo-ae26e-default-rtdb.firebaseio.com/customers/${userId}/favorites/${itemToAdd.id}.json'),
+                  'https://appo-ae26e-default-rtdb.firebaseio.com/customers/${userId}/favorites/${itemToAdd.userId}.json'),
               body: json.encode({
                 //encode gets a map
-                'businessId': itemToAdd.id
+                'businessId': itemToAdd.userId
               }))
           .then((res) {
         if (res.statusCode >= 400) {
@@ -59,7 +59,7 @@ class DB_Helper {
       String userId, Business itemToRemove) async {
     try {
       final response = await http.delete(Uri.parse(
-          'https://appo-ae26e-default-rtdb.firebaseio.com/customers/${userId}/favorites/${itemToRemove.id}.json'));
+          'https://appo-ae26e-default-rtdb.firebaseio.com/customers/${userId}/favorites/${itemToRemove.userId}.json'));
       if (response.statusCode >= 400) {
         throw HttpException('Could not delete product!');
       }
@@ -76,7 +76,13 @@ class DB_Helper {
 
       List<Business> res = [];
 
-      res = jsonData.map<Business>((json) => Business.fromJson(json)).toList();
+      if (jsonData != null) {
+        jsonData.forEach((id, item) {
+          res.add(Business.fromJson(item));
+        });
+      }
+
+      //res = jsonData.map<Business>((json) => Business.fromJson(json)).toList();
       return res;
     } catch (err) {
       print(err);
@@ -139,7 +145,8 @@ class DB_Helper {
     return DateTime(year, month, day, hour, min);
   }
 
-  static Future<List<TimeSlot>> getTimes(int businessId, DateTime date) async {
+  static Future<List<TimeSlot>> getTimes(
+      String businessId, DateTime date) async {
     String dateKey = _getDateKey(date);
     List<TimeSlot> res = [];
     try {
@@ -162,7 +169,7 @@ class DB_Helper {
   }
 
   //create new booking in DB. return false if the slot is already booked
-  static Future<bool> uploadNewBooking(int businessId, String userId,
+  static Future<bool> uploadNewBooking(String businessId, String userId,
       DateTime date, DateTime startTime, DateTime endTime) async {
     final dateKey = _getDateKey(date);
     final String dateTimeKey =
@@ -255,7 +262,7 @@ class DB_Helper {
     }
   }
 
-  static Future<void> postDateTimeToBusiness(int businessId, DateTime date,
+  static Future<void> postDateTimeToBusiness(String businessId, DateTime date,
       DateTime startTime, DateTime endTime) async {
     final dateKey = _getDateKey(date);
     final String dateTimeKey =
@@ -287,7 +294,7 @@ class DB_Helper {
   }
 
   //This method gets slot and business id and removes the slot from business times in DB
-  static Future<void> deleteSlot(int businessId, DateTime slot) async {
+  static Future<void> deleteSlot(String businessId, DateTime slot) async {
     final dateKey = _getDateKey(slot);
     final String dateTimeKey =
         '$dateKey${slot.hour.toString()}${slot.minute.toString()}';

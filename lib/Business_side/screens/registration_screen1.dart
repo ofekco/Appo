@@ -1,24 +1,28 @@
-
 import 'package:Appo/Business_side/model/colors.dart';
+import 'package:Appo/Business_side/screens/registration_screen2.dart';
+import 'package:Appo/models/authentication.dart';
+import 'package:Appo/models/http_exception.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 
 class BusinessRegistrationScreen1 extends StatefulWidget {
   static const routeName = '/register_business1';
   @override
-  State<BusinessRegistrationScreen1> createState() => _BusinessRegistrationScreen1State();
+  State<BusinessRegistrationScreen1> createState() =>
+      _BusinessRegistrationScreen1State();
 }
 
-class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen1> {
+class _BusinessRegistrationScreen1State
+    extends State<BusinessRegistrationScreen1> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
-  final Map<String, String>_registrationData = {
+  final Map<String, String> _registrationData = {
     'name': '',
     'phone number': '',
     'email': '',
-    'password':'',
+    'password': '',
     'address': '',
     'city': '',
   };
@@ -27,87 +31,89 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-            title: const Text('התרחשה שגיאה'),
-            content: Text(message),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                },
-              )
-            ],
-          ),
+        title: const Text('התרחשה שגיאה'),
+        content: Text(message),
+        actions: <Widget>[
+          FlatButton(
+            child: const Text('OK'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          )
+        ],
+      ),
     );
   }
 
-  //  Future<void> _submit() async {
-  //   if (!_formKey.currentState!.validate()) {
-  //     // Invalid!
-  //     return;
-  //   }
-  //   _formKey.currentState!.save();
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
-  //   try {
-  //     await Provider.of<Authentication>(context, listen: false)
-  //     .signup(_registrationData['email'], _registrationData['password'], _registrationData['name'],
-  //     _registrationData['phone number'], _registrationData['address'], _registrationData['city'],);
-  //     Navigator.of(context).pop();
-  //     Navigator.of(context).pushNamed(TabsScreen.routeName);
-  //   }
-  //   on HttpException catch (error) {
-  //     var errorMessage = 'ההרשמה נכשלה';
-  //     if (error.toString().contains('EMAIL_EXISTS')) {
-  //       errorMessage = 'כתובת מייל כבר רשומה';
-  //     } else if (error.toString().contains('INVALID_EMAIL')) {
-  //       errorMessage = 'כתובת מייל לא חוקית';
-  //     } else if (error.toString().contains('WEAK_PASSWORD')) {
-  //       errorMessage = 'הסיסמה חלשה מידי';
-  //     } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
-  //       errorMessage = 'כתובת מייל לא נמצאה';
-  //     } else if (error.toString().contains('INVALID_PASSWORD')) {
-  //       errorMessage = 'סיסמה לא נכונה';
-  //     }
-  //     _showErrorDialog(errorMessage);
-  //   }
-  //   catch(error) {
-  //     var errorMessage = 'משהו השתבש, נסה שנית מאוחר יותר';
-  //      _showErrorDialog(errorMessage);
+  Future<void> _submit() async {
+    if (!_formKey.currentState.validate()) {
+      // Invalid!
+      return;
+    }
+    _formKey.currentState.save();
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      await Provider.of<Authentication>(context, listen: false)
+          .createInitialBusiness(
+        _registrationData['email'],
+        _registrationData['password'],
+        _registrationData['name'],
+        _registrationData['phone number'],
+        _registrationData['address'],
+        _registrationData['city'],
+      );
+      Navigator.of(context)
+          .popAndPushNamed(BusinessRegistrationScreen2.routeName);
+    } on HttpException catch (error) {
+      var errorMessage = 'ההרשמה נכשלה';
+      if (error.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = 'כתובת מייל כבר רשומה';
+      } else if (error.toString().contains('INVALID_EMAIL')) {
+        errorMessage = 'כתובת מייל לא חוקית';
+      } else if (error.toString().contains('WEAK_PASSWORD')) {
+        errorMessage = 'הסיסמה חלשה מידי';
+      } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
+        errorMessage = 'כתובת מייל לא נמצאה';
+      } else if (error.toString().contains('INVALID_PASSWORD')) {
+        errorMessage = 'סיסמה לא נכונה';
+      }
+      _showErrorDialog(errorMessage);
+    } catch (error) {
+      var errorMessage = 'משהו השתבש, נסה שנית מאוחר יותר';
+      _showErrorDialog(errorMessage);
+    }
 
-  //   }
-    
-  //   setState(() {
-  //     _isLoading = false;
-  //   });
-  // }
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   Widget buildProfileImage(var size) {
     return Container(
       padding: EdgeInsets.fromLTRB(10, 40, 0, 0),
       child: CircleAvatar(
-        radius: size.width*0.22,
+        radius: size.width * 0.22,
         backgroundColor: Colors.white,
         child: CircleAvatar(
-          radius: size.width*0.2, 
+          radius: size.width * 0.2,
           backgroundImage: AssetImage('assets/images/client.jpg'),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(110, 110, 0, 0),
-            child: MaterialButton(
-              onPressed: () {
-                //TODO!!
-              },
-              color: Colors.blueGrey,
-              textColor: Colors.white,
-              child: Icon(
-                Icons.camera_alt,
-                size: 26,
-              ),
-              padding: const EdgeInsets.all(16),
-              shape: const CircleBorder(),
-            )  
-          ),
+              padding: const EdgeInsets.fromLTRB(110, 110, 0, 0),
+              child: MaterialButton(
+                onPressed: () {
+                  //TODO!!
+                },
+                color: Colors.blueGrey,
+                textColor: Colors.white,
+                child: Icon(
+                  Icons.camera_alt,
+                  size: 26,
+                ),
+                padding: const EdgeInsets.all(16),
+                shape: const CircleBorder(),
+              )),
         ),
       ),
     );
@@ -115,30 +121,34 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
 
   @override
   Widget build(BuildContext context) {
-
     final _deviceSize = MediaQuery.of(context).size;
     FocusNode emailFocusNode = FocusNode();
     FocusNode passwordFocusNode = FocusNode();
-    FocusNode confirmPasswordFocusNode =  FocusNode();
+    FocusNode confirmPasswordFocusNode = FocusNode();
     FocusNode phoneNumberFocusNode = FocusNode();
     FocusNode addressFocusNode = FocusNode();
     FocusNode cityFocusNode = FocusNode();
     FocusNode nameFocusNode = FocusNode();
-    
-    return Scaffold(backgroundColor: Color.fromARGB(255, 159, 195, 212),
-      body: Container(
-        width: (_deviceSize.width * 0.95),
-        padding: const EdgeInsets.all(20),
-        child: Form(
-         key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                buildProfileImage(_deviceSize),
-                SizedBox(height: 10,),
-                Padding(padding: const EdgeInsets.only(top: 20.0),
-                  child: Directionality(textDirection: TextDirection.rtl,
-                    child: TextFormField(//owner name
+
+    return Scaffold(
+        backgroundColor: Color.fromARGB(255, 159, 195, 212),
+        body: Container(
+            width: (_deviceSize.width * 0.95),
+            padding: const EdgeInsets.all(20),
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(children: <Widget>[
+                  buildProfileImage(_deviceSize),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: TextFormField(
+                        //owner name
                         focusNode: nameFocusNode,
                         showCursor: true,
                         cursorColor: Colors.black,
@@ -149,58 +159,69 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
                           filled: true,
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25.0),
-                            borderSide: const BorderSide(color: Colors.blue,),
+                            borderSide: const BorderSide(
+                              color: Colors.blue,
+                            ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25.0),
                             borderSide: const BorderSide(color: Colors.grey),
-                            ),
                           ),
+                        ),
                         onSaved: (value) {
                           _registrationData['name'] = value;
                         },
-                       ),
+                      ),
+                    ),
                   ),
-                ),
-
-                Padding(padding: const EdgeInsets.only(top: 20.0),
-                  child: Directionality(textDirection: TextDirection.rtl,
-                    child: TextFormField(//phone
-                         focusNode: phoneNumberFocusNode,
-                         keyboardType: TextInputType.number,
-                         showCursor: true,
-                         cursorColor: Colors.black,
-                         decoration: InputDecoration(
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: TextFormField(
+                        //phone
+                        focusNode: phoneNumberFocusNode,
+                        keyboardType: TextInputType.number,
+                        showCursor: true,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
                           labelText: 'מספר טלפון',
-                          labelStyle: TextStyle(color: passwordFocusNode.hasFocus ? Colors.blue : Colors.black),
+                          labelStyle: TextStyle(
+                              color: passwordFocusNode.hasFocus
+                                  ? Colors.blue
+                                  : Colors.black),
                           fillColor: Colors.white,
                           filled: true,
                           focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide: const BorderSide(color: Colors.blue,),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide: const BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: const BorderSide(
+                              color: Colors.blue,
                             ),
                           ),
-                         validator: (Value) {
-                           //final range = RegExp(r'^[0-9]+$').hasMatch(Value);
-                           if(Value.length < 4 && Value.length > 16) {
-                             return 'מספר טלפון לא חוקי';
-                           }
-                           return null;
-                         },
-                         onSaved: (value) {
-                           _registrationData['phone number'] = value;
-                         },
-                       ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                        ),
+                        validator: (Value) {
+                          //final range = RegExp(r'^[0-9]+$').hasMatch(Value);
+                          if (Value.length < 4 && Value.length > 16) {
+                            return 'מספר טלפון לא חוקי';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          _registrationData['phone number'] = value;
+                        },
+                      ),
+                    ),
                   ),
-                ),
-
-                Padding(padding: const EdgeInsets.only(top: 20.0),
-                  child: Directionality(textDirection: TextDirection.rtl,
-                    child: TextFormField(//owner name
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: TextFormField(
+                        //owner name
                         focusNode: emailFocusNode,
                         keyboardType: TextInputType.emailAddress,
                         showCursor: true,
@@ -212,92 +233,147 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
                           filled: true,
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25.0),
-                            borderSide: const BorderSide(color: Colors.blue,),
+                            borderSide: const BorderSide(
+                              color: Colors.blue,
+                            ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25.0),
                             borderSide: const BorderSide(color: Colors.grey),
-                            ),
                           ),
+                        ),
                         onSaved: (value) {
                           _registrationData['email'] = value;
                         },
-                         validator: (value) {
+                        validator: (value) {
                           if (value.isEmpty || !value.contains('@')) {
                             return 'כתובת מייל לא חוקית';
                           }
                           return null;
                         },
-                       ),
+                      ),
+                    ),
                   ),
-                ),
-
-                Padding(padding: const EdgeInsets.only(top: 20.0),
-                  child: Directionality(textDirection: TextDirection.rtl,
-                    child: TextFormField(//phone
-                         focusNode: passwordFocusNode,
-                         showCursor: true,
-                         cursorColor: Colors.black,
-                         decoration: InputDecoration(
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: TextFormField(
+                        //phone
+                        focusNode: passwordFocusNode,
+                        controller: _passwordController,
+                        obscureText: true,
+                        showCursor: true,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
                           labelText: 'סיסמה',
-                          labelStyle: TextStyle(color: passwordFocusNode.hasFocus ? Colors.blue : Colors.black),
+                          labelStyle: TextStyle(
+                              color: passwordFocusNode.hasFocus
+                                  ? Colors.blue
+                                  : Colors.black),
                           fillColor: Colors.white,
                           filled: true,
                           focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide: const BorderSide(color: Colors.blue,),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide: const BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: const BorderSide(
+                              color: Colors.blue,
                             ),
                           ),
-                         validator: (Value) {
-                           if(Value.length < 6) {
-                             return 'הסיסמה קצרה מידי';
-                           }
-                           return null;
-                         },
-                         onSaved: (value) {
-                           _registrationData['password'] = value;
-                         },
-                       ),
-                  ),
-                ),
-
-                Padding(padding: const EdgeInsets.only(top: 20.0),
-                  child: Directionality(textDirection: TextDirection.rtl,
-                    child: TextFormField(
-                      focusNode: addressFocusNode,
-                      showCursor: true,
-                      cursorColor: Colors.black,
-                      decoration: InputDecoration(
-                        labelText: 'כתובת',
-                        labelStyle: const TextStyle(color:Colors.black),
-                        fillColor: Colors.white,
-                        filled: true,
-                        focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: const BorderSide(color: Colors.blue,),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
                         ),
-                        enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: const BorderSide(color: Colors.grey),
-                        ),
+                        validator: (Value) {
+                          if (Value.length < 6) {
+                            return 'הסיסמה קצרה מידי';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          _registrationData['password'] = value;
+                        },
                       ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: TextFormField(
+                        //confirm password
+                        focusNode: confirmPasswordFocusNode,
+                        obscureText: true,
+                        showCursor: true,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                          labelText: 'אימות סיסמה',
+                          labelStyle: TextStyle(
+                              color: confirmPasswordFocusNode.hasFocus
+                                  ? Colors.blue
+                                  : Colors.black),
+                          fillColor: Colors.white,
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: const BorderSide(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value != _passwordController.text) {
+                            return 'הסיסמאות לא זהות';
+                          }
+                        },
+                        onSaved: (value) {
+                          _registrationData['password'] = value;
+                        },
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: TextFormField(
+                        focusNode: addressFocusNode,
+                        showCursor: true,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                          labelText: 'כתובת',
+                          labelStyle: const TextStyle(color: Colors.black),
+                          fillColor: Colors.white,
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: const BorderSide(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                        ),
                         onSaved: (value) {
                           _registrationData['address'] = value;
                         },
-                       ),
+                      ),
+                    ),
                   ),
-                  ),
-
-                Padding(padding: const EdgeInsets.only(top: 20.0),
-                  child: Directionality(textDirection: TextDirection.rtl,
-                    child: TextFormField(
-                      focusNode: cityFocusNode,
-                      showCursor: true,
-                      cursorColor: Colors.black,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: TextFormField(
+                        focusNode: cityFocusNode,
+                        showCursor: true,
+                        cursorColor: Colors.black,
                         decoration: InputDecoration(
                           labelText: 'עיר',
                           labelStyle: const TextStyle(color: Colors.black),
@@ -305,59 +381,41 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
                           filled: true,
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25.0),
-                            borderSide: const BorderSide(color: Colors.blue,),
+                            borderSide: const BorderSide(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
                         ),
-                       enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: const BorderSide(color: Colors.grey),
-                        ),
+                        onSaved: (value) {
+                          _registrationData['city'] = value;
+                        },
                       ),
-                      onSaved: (value) {
-                      _registrationData['city'] = value;
-                      },
                     ),
                   ),
-                ),
-
-                const SizedBox(height: 20,),
-
-                if (_isLoading)
-                 const CircularProgressIndicator()
-                else
-                   ElevatedButton(
-                    child:
-                        const Text('המשך',),
-                    onPressed: (){
-                      //save data in business
-                      Navigator.of(context).pushNamed('/register2');
-                    },
-                      style: ElevatedButton.styleFrom(
-                      primary: Palette.kToDark[600],
-                      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                      textStyle: TextStyle(
-                      color: Colors.white)),
-                    // padding:
-                    //     const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
-                   // color: Palette.kToDark[600],
-                   // textColor: Colors.white
+                  const SizedBox(
+                    height: 20,
                   ),
-              ]),   
-          ),
-        )
-      )
-    );
+                  if (_isLoading)
+                    const CircularProgressIndicator()
+                  else
+                    RaisedButton(
+                        child: const Text('המשך'),
+                        onPressed: () {
+                          _submit();
+                        },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30.0, vertical: 8.0),
+                        color: Palette.kToDark[600],
+                        textColor: Colors.white),
+                ]),
+              ),
+            )));
   }
 }
-
-
-                
-                
-
-              
-                  
-
-                
-                    

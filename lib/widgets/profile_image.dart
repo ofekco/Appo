@@ -99,7 +99,9 @@ class _ProfileImageState extends State<ProfileImage> {
         await picker.pickImage(source: ImageSource.camera, maxWidth: 600);
 
     setState(() {
-      _pickedImage = File(pickedImageFile.path);
+      if (pickedImageFile != null) {
+        _pickedImage = File(pickedImageFile.path);
+      }
     });
   }
 
@@ -108,7 +110,9 @@ class _ProfileImageState extends State<ProfileImage> {
         .pickImage(source: ImageSource.gallery, maxWidth: 600);
 
     setState(() {
-      _pickedImage = File(pickedFile.path);
+      if (pickedFile != null) {
+        _pickedImage = File(pickedFile.path);
+      }
     });
   }
 }

@@ -279,7 +279,7 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
                               Navigator.of(context)
                                   .push(MaterialPageRoute(builder: (_) {
                                 return BookingCalendarScreen(
-                                    widget.business.id, widget.clientId);
+                                    widget.business.userId, widget.clientId);
                               }));
                             },
                           ),

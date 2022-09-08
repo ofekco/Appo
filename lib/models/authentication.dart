@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:Appo/models/Business.dart';
 import 'package:Appo/models/http_exception.dart';
+import 'package:Appo/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,14 +15,14 @@ class Authentication with ChangeNotifier {
   DateTime _expiryDate;
   String _userId;
   Timer _authTimer;
-  var _currentUser;
+  User _currentUser;
   AuthMode _authMode;
 
   bool get isAuth {
     return token != null;
   }
 
-  Customer get currentUser {
+  User get currentUser {
     return _currentUser;
   }
 
@@ -97,8 +98,7 @@ class Authentication with ChangeNotifier {
             'password': password,
             'name': name,
             'phone number': phone,
-            'city': city,
-            'imageUrl' : "",
+            'city': city
           }));
 
       var responseData = json.decode(response.body);
@@ -206,9 +206,13 @@ class Authentication with ChangeNotifier {
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
     _expiryDate = expiryDate;
-    _authMode = extractedUserData['isBusiness'];
+    extractedUserData['authMode'] == 'AuthMode.CUSTOMER'
+        ? _authMode = AuthMode.CUSTOMER
+        : _authMode = AuthMode.BUSINESS;
 
-    await _importCustomerDataFromDB(_userId);
+    _authMode == AuthMode.CUSTOMER
+        ? await _importCustomerDataFromDB(_userId)
+        : await _importBusinessDataFromDB(_userId);
     notifyListeners();
     _autoLogout();
     return true;
@@ -221,8 +225,8 @@ class Authentication with ChangeNotifier {
       var resCust = jsonDecode(response.body);
       _currentUser = new Customer(
         _userId,
-        _token,
         resCust['email'],
+        resCust['password'],
         resCust['name'],
         resCust['address'],
         resCust['city'],
@@ -264,8 +268,7 @@ class Authentication with ChangeNotifier {
         ),
       );
 
-      //need to change all this to business
-      await _importCustomerDataFromDB(_userId);
+      await _importBusinessDataFromDB(_userId);
       _autoLogout();
       notifyListeners();
       await storeAuthDataOnDevice();
@@ -274,37 +277,67 @@ class Authentication with ChangeNotifier {
     }
   }
 
-  Future<void> signupAsBusiness(String email, String password, String name,
-      String phone, String address, String city, String type) async {
-    await _setFirebaseUserAuth(email, password);
-    await _setAppBusinessAuth(
-        email, password, name, phone, address, city, type);
+  void _importBusinessDataFromDB(String userId) async {
+    try {
+      http.Response response = await http.get(Uri.parse(
+          'https://appo-ae26e-default-rtdb.firebaseio.com/businesses/${_userId}.json'));
+      var resCust = jsonDecode(response.body);
+      _currentUser = Business.fromJson(resCust);
+    } catch (err) {
+      print(err);
+      throw err;
+    }
+  }
 
-    _currentUser = new Business(
-        id: 3,
-        name: name,
-        city: city,
-        address: address,
-        phoneNumber: phone,
-        serviceType: type);
+  Future<void> signupAsBusiness() async {
+    await _setAppBusinessAuth(
+        _currentUser.email,
+        _currentUser.name,
+        _currentUser.phoneNumber,
+        _currentUser.address,
+        _currentUser.city,
+        (_currentUser as Business).serviceType);
+
     notifyListeners();
     _autoLogout();
     await storeAuthDataOnDevice();
   }
 
-  void _setAppBusinessAuth(String email, String password, String name,
-      String phone, String address, String city, String type) async {
+  void createInitialBusiness(String email, String password, String name,
+      String phone, String address, String city) async {
+    await _setFirebaseUserAuth(email, password);
+    _currentUser = new Business(
+        userId: _userId,
+        email: email,
+        password: password,
+        name: name,
+        phone: phone,
+        address: address,
+        city: city,
+        instagramUrl: "",
+        latitude: 32.109333,
+        longitude: 34.855499,
+        imageUrl: "");
+  }
+
+  void _setAppBusinessAuth(String email, String name, String phone,
+      String address, String city, String type) async {
     try {
       var response = await http.patch(
           Uri.parse(
               'https://appo-ae26e-default-rtdb.firebaseio.com/businesses/${_userId}.json'),
           body: json.encode({
+            'id': _userId,
             'email': email,
-            'password': password,
             'name': name,
             'phone number': phone,
+            'address': address,
             'city': city,
-            'type': type
+            'type': type,
+            'longitude': '34.855499',
+            'latitude': '32.109333',
+            'instagram': "",
+            'imageUrl': "",
           }));
 
       var responseData = json.decode(response.body);

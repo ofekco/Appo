@@ -8,10 +8,8 @@ import 'package:Appo/models/type.dart';
 import 'package:Appo/models/types.dart';
 import 'package:Appo/models/Business.dart';
 
-
 //All the businesses data from the server
-class Businesses with ChangeNotifier{
-
+class Businesses with ChangeNotifier {
   String _clientId;
   List<Business> _businesses;
   List<Business> _filteredList;
@@ -25,9 +23,13 @@ class Businesses with ChangeNotifier{
     _myBookings = [];
   }
 
-  String get ClientId { return _clientId; }
-  
-  void set ClientId(value) { _clientId = value; }
+  String get ClientId {
+    return _clientId;
+  }
+
+  void set ClientId(value) {
+    _clientId = value;
+  }
 
   List<Business> get BusinessesList {
     return _businesses;
@@ -45,54 +47,45 @@ class Businesses with ChangeNotifier{
     return _myBookings;
   }
 
-  void addFavorite(Business business)
-  {
+  void addFavorite(Business business) {
     _favorites.add(business);
     notifyListeners();
   }
 
-  void removeFavorite(Business businessToRemove)
-  {
+  void removeFavorite(Business businessToRemove) {
     _favorites.remove(businessToRemove);
     notifyListeners();
   }
 
-  Business findByID(int id)
-  {
-    return _businesses.firstWhere((b) => b.id == id, orElse: () => null);
+  Business findByID(String id) {
+    return _businesses.firstWhere((b) => b.userId == id, orElse: () => null);
   }
 
   //gets the businessesList from the server and stored it to Businesses list
-  Future<void> getAllBusinesses() async 
-  {
+  Future<void> getAllBusinesses() async {
     _businesses = await DB_Helper.getAllBusinesses();
     _filteredList = _businesses;
-    
+
     notifyListeners();
   }
 
-  //gets from database the favorites businesses. for now - favorites of customer 
-  Future<List<Business>> getFavorites() async 
-  {
+  //gets from database the favorites businesses. for now - favorites of customer
+  Future<List<Business>> getFavorites() async {
     var jsonData = await DB_Helper.getFavorites(_clientId); //returns json
     List<Business> favoritesList = [];
 
-    if(jsonData != null)
-    {
-      if(_businesses.length == 0)
-      {
+    if (jsonData != null) {
+      if (_businesses.length == 0) {
         await DB_Helper.getAllBusinesses();
       }
-      for(var item in jsonData) 
-      {
-        if(item != null)
-        {
-          Business bis = findByID(item['businessId']); //maybe replace with get request to the server to get the business
+      for (var item in jsonData) {
+        if (item != null) {
+          Business bis = findByID(item[
+              'businessId']); //maybe replace with get request to the server to get the business
           bis.isFavorite = true;
           favoritesList.add(bis);
         }
       }
-      
     }
     _favorites = favoritesList;
     notifyListeners();
@@ -101,25 +94,21 @@ class Businesses with ChangeNotifier{
 
   //gets from DB the upcoming appointments of the specific user id
 
-  Future<void> getMyUpComingBookings() async
-  {
+  Future<void> getMyUpComingBookings() async {
     _myBookings = await DB_Helper.getUserUpComingAppointments(_clientId);
     notifyListeners();
   }
 
-  void UpdateFilteredList()
-  {
+  void UpdateFilteredList() {
     List<Business> newFilteredList = [];
-    _businesses.forEach((item) 
-    {
+    _businesses.forEach((item) {
       Type type = Types.findTypeByTitle(item.serviceType);
-      if(type.isSelected)
-      {
+      if (type.isSelected) {
         newFilteredList.add(item);
       }
     });
 
     _filteredList = newFilteredList;
     notifyListeners();
-  } 
+  }
 }
