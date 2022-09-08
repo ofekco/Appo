@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:Appo/booking_calendar/model/booking.dart';
 import 'package:Appo/booking_calendar/model/time_slot.dart';
-import 'package:Appo/models/business.dart';
+import 'package:Appo/models/Business.dart';
 import 'package:http/http.dart' as http;
 import 'package:Appo/models/type.dart';
 import '../models/http_exception.dart';
@@ -41,8 +41,8 @@ class DB_Helper {
   static Future<void> postFavorite(String userId, Business itemToAdd) async
   {
     try {
-        await http.patch(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/${userId}/favorites/${itemToAdd.id}.json'), body: json.encode({ //encode gets a map
-          'businessId': itemToAdd.id
+        await http.patch(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/${userId}/favorites/${itemToAdd.userId}.json'), body: json.encode({ //encode gets a map
+          'businessId': itemToAdd.userId
       })).then((res) {
         if(res.statusCode >= 400)
         {
@@ -59,7 +59,7 @@ class DB_Helper {
   static Future<void> removeFromFavorites(String userId, Business itemToRemove) async
   {
     try {
-        final response = await http.delete(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/${userId}/favorites/${itemToRemove.id}.json'));
+        final response = await http.delete(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/customers/${userId}/favorites/${itemToRemove.userId}.json'));
         if(response.statusCode >= 400) {
           throw HttpException('Could not delete product!');
         }

@@ -24,7 +24,7 @@ class RegisterationExplenationScreen extends StatelessWidget {
             child:
                 const Text('המשך'),
             onPressed: (){
-              Navigator.of(context).pushNamed(BusinessRegistrationScreen1.routeName);
+              Navigator.of(context).popAndPushNamed(BusinessRegistrationScreen1.routeName);
             },
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),

@@ -1,8 +1,8 @@
-import 'package:Appo/models/business.dart';
+import 'package:Appo/models/Business.dart';
 import 'package:Appo/models/authentication.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:Appo/models/businesses.dart';
+import 'package:Appo/models/Businesses.dart';
 import 'package:Appo/widgets/myNext_item.dart';
 import 'package:Appo/widgets/wrap_inkwell.dart';
 import 'package:provider/provider.dart';

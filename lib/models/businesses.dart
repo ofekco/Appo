@@ -6,7 +6,8 @@ import 'package:http/http.dart' as http;
 import '../helpers/DB_helper.dart';
 import 'package:Appo/models/type.dart';
 import 'package:Appo/models/types.dart';
-import 'package:Appo/models/business.dart';
+import 'package:Appo/models/Business.dart';
+import 'user.dart';
 
 
 //All the businesses data from the server
@@ -59,7 +60,7 @@ class Businesses with ChangeNotifier{
 
   Business findByID(String id)
   {
-    return _businesses.firstWhere((b) => b.id == id, orElse: () => null);
+    return _businesses.firstWhere((b) => b.userId == id, orElse: () => null);
   }
 
   //gets the businessesList from the server and stored it to Businesses list

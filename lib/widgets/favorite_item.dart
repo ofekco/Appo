@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/business.dart';
+import 'package:Appo/models/Business.dart';
 import '../screens/business_details_screen.dart';
 
 class FavoriteItem extends StatelessWidget {

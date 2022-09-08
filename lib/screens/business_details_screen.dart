@@ -4,7 +4,7 @@ import 'package:Appo/widgets/business_details_screen_widgets/google_maps_widget.
 import 'package:Appo/widgets/favorite_button.dart';
 import 'package:Appo/widgets/business_details_screen_widgets/section_button.dart';
 import 'package:flutter/material.dart';
-import '../models/business.dart';
+import 'package:Appo/models/Business.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../widgets/curve_painter.dart';
 import '../widgets/drawer.dart';
@@ -224,7 +224,7 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
                     child: const Text('קבע תור'),
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-                          return BookingCalendarScreen(widget.business.id, widget.clientId);
+                          return BookingCalendarScreen(widget.business.userId, widget.clientId);
                           })
                         );
                     },

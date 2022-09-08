@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:Appo/models/Business.dart';
 import 'package:Appo/models/http_exception.dart';
+import 'package:Appo/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,14 +17,14 @@ class Authentication with ChangeNotifier {
   DateTime _expiryDate;
   String _userId;
   Timer _authTimer;
-  dynamic _currentUser; 
+  User _currentUser; 
   AuthMode _authMode;
  
   bool get isAuth {
     return token != null;
   }
 
-  dynamic get currentUser {
+  User get currentUser {
     return _currentUser;
   }
 
@@ -255,35 +256,28 @@ class Authentication with ChangeNotifier {
       }
   }
 
-
- Future<void> signupAsBusiness(String email, String password, String name, String phone, String address, String city, String type) async {
-    await _setFirebaseUserAuth(email, password);
-    await _setAppBusinessAuth(email, password, name, phone, address, city, type);
+ Future<void> signupAsBusiness() async {
+    await _setAppBusinessAuth(_currentUser.email, _currentUser.name, 
+    _currentUser.phoneNumber, _currentUser.address, _currentUser.city, (_currentUser as Business).serviceType);
 
     notifyListeners();
     _autoLogout();
     await storeAuthDataOnDevice();
   }
   
-  void createInitialBusiness(String email, String password, String name, String phone, String address, String city) {
-    _currentUser = new Business(id: _userId, name: name, city: city, address: address, phoneNumber: phone);
-    _setFirebaseUserAuth(email, password);
+  void createInitialBusiness(String email, String password, String name, String phone, String address, String city) async {
+    await _setFirebaseUserAuth(email, password);
+    _currentUser = new Business(_userId, email, password, name, phone, address, city, 32.109333, 34.855499);
   }
 
-  void setBusinessType(Type type) {
-    _currentUser.type = type;
-  }
-
-  
-
-  void _setAppBusinessAuth(String email, String password, String name, String phone, String address, String city, String type) async {
+  void _setAppBusinessAuth(String email, String name, String phone, String address, String city, String type) async {
     try {
       var response = await http.patch(Uri.parse('https://appo-ae26e-default-rtdb.firebaseio.com/businesses/${_userId}.json'), 
       body: json.encode({ 
         'email': email,
-        'password': password,
         'name': name,
         'phone number': phone,
+        'address': address,
         'city': city,
         'type': type })
       );

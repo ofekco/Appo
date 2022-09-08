@@ -55,9 +55,9 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
     });
     try {
       await Provider.of<Authentication>(context, listen: false)
-      .createLocalBusiness(_registrationData['email'], _registrationData['password'], _registrationData['name'],
+      .createInitialBusiness(_registrationData['email'], _registrationData['password'], _registrationData['name'],
       _registrationData['phone number'], _registrationData['address'], _registrationData['city'],);
-      Navigator.of(context).pushNamed(BusinessRegistrationScreen2.routeName);
+      Navigator.of(context).popAndPushNamed(BusinessRegistrationScreen2.routeName);
     }
     on HttpException catch (error) {
       var errorMessage = 'ההרשמה נכשלה';
@@ -77,7 +77,6 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
     catch(error) {
       var errorMessage = 'משהו השתבש, נסה שנית מאוחר יותר';
        _showErrorDialog(errorMessage);
-
     }
     
     setState(() {
@@ -239,6 +238,7 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
                     child: TextFormField(//phone
                          focusNode: passwordFocusNode,
                          controller: _passwordController,
+                         obscureText: true,
                          showCursor: true,
                          cursorColor: Colors.black,
                          decoration: InputDecoration(
@@ -271,6 +271,7 @@ class _BusinessRegistrationScreen1State extends State<BusinessRegistrationScreen
                   child: Directionality(textDirection: TextDirection.rtl,
                     child: TextFormField(//confirm password
                       focusNode: confirmPasswordFocusNode,
+                      obscureText: true,
                       showCursor: true,
                       cursorColor: Colors.black,
                       decoration: InputDecoration(
