@@ -81,7 +81,6 @@ List<Widget> buildUserAppointmentsList() {
 
 void searchIconClick(BuildContext ctx)
 {
-  print('clicked');
   Navigator.of(ctx).push(MaterialPageRoute(builder: (_) {
     return BusinessListScreen();
     })

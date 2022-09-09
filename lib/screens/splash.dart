@@ -29,16 +29,14 @@ class _SplashState extends State<Splash> {
 
   @override
   Widget build(BuildContext context) {
-    //final auth = Provider.of<Authentication>(context);
-    //auth.isAuth ? HomeScreen() : AuthScreen();
-     return Scaffold(
-       body: Image.asset(
-         'assets/images/splash.JPG',
-         fit: BoxFit.cover,
-         height: double.infinity,
-         width: double.infinity,
-         alignment: Alignment.center,
-       ),
-     );
+    return Scaffold(
+      body: Image.asset(
+        'assets/images/splash.JPG',
+        fit: BoxFit.cover,
+        height: double.infinity,
+        width: double.infinity,
+        alignment: Alignment.center,
+      ),
+    );
   }
 }

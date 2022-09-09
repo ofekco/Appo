@@ -17,6 +17,7 @@ import './models/businesses.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import './screens/splash.dart';
 import 'Business_side/screens/registration_explanation_screen.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 
 void main() {
   initializeDateFormatting().then((_) => runApp(MyApp()));
@@ -54,7 +55,12 @@ class MyApp extends StatelessWidget {
                       builder: (ctx, authResultSnapshot) =>
                           authResultSnapshot.connectionState ==
                                   ConnectionState.waiting
-                              ? Splash()
+                              ? AnimatedSplashScreen(
+                                  duration: 50000,
+                                  splash: Image.asset('assets/images/logo.jpg'),
+                                  nextScreen: ChooseLoginScreen(),
+                                  backgroundColor: Colors.white,
+                                )
                               : ChooseLoginScreen(),
                     ),
               routes: {
