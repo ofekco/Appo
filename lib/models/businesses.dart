@@ -78,22 +78,24 @@ class Businesses with ChangeNotifier {
       if (_businesses.length == 0) {
         await DB_Helper.getAllBusinesses();
       }
-      for (var item in jsonData) {
-        if (item != null) {
+      jsonData.forEach((id, item) {
+        if(item!=null)
+        {
           Business bis = findByID(item[
-              'businessId']); //maybe replace with get request to the server to get the business
+              'businessId']); 
           bis.isFavorite = true;
           favoritesList.add(bis);
         }
-      }
+      });
     }
+    
     _favorites = favoritesList;
     notifyListeners();
     return favoritesList;
   }
 
-  //gets from DB the upcoming appointments of the specific user id
 
+  //gets from DB the upcoming appointments of the specific user id
   Future<void> getMyUpComingBookings() async {
     _myBookings = await DB_Helper.getUserUpComingAppointments(_clientId);
     notifyListeners();

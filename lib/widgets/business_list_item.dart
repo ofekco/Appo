@@ -47,45 +47,65 @@ class _BusinessListItemState extends State<BusinessListItem> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    textDirection: TextDirection.rtl,
                     children: <Widget>[
                       Expanded(
                         child: Container(
                           child: Padding(
                             padding: const EdgeInsets.only(
-                                left: 16, top: 8, bottom: 8),
+                                right: 16, top: 8, bottom: 8),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              textDirection: TextDirection.rtl,
                               children: <Widget>[
                                 //business name
                                 Text(
                                   widget._business.name,
                                   textAlign: TextAlign.left,
+                                  textDirection: TextDirection.rtl,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 22,
                                   ),
                                 ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      widget._business.phoneNumber,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey.withOpacity(0.8)),
-                                    ),
-                                    const SizedBox(
-                                      width: 4,
-                                    ),
-                                    Icon(
-                                      Icons.home,
-                                      size: 12,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                    Expanded(
-                                      child: Text(
+
+                                //address
+                                Padding(
+                                  padding: const EdgeInsets.all(2),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    textDirection: TextDirection.rtl,
+                                    children: <Widget>[
+                                      // Icon(
+                                      //   Icons.home,
+                                      //   size: 12,
+                                      //   color: Theme.of(context).primaryColor,
+                                      // ),
+                                      Text(
+                                        "  ",
+                                      ),
+                                      Text(
+                                        widget._business.address,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color:
+                                                Colors.grey.withOpacity(0.8)),
+                                      ),
+                                      Text(
+                                        ",",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color:
+                                                Colors.grey.withOpacity(0.8)),
+                                      ),
+                                      const SizedBox(
+                                        width: 4,
+                                      ),
+                                      //City
+                                      Text(
                                         widget._business.city,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
@@ -93,13 +113,30 @@ class _BusinessListItemState extends State<BusinessListItem> {
                                             color:
                                                 Colors.grey.withOpacity(0.8)),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 4),
-                                  child: Text(widget._business.address),
-                                ),
+
+                                Row(
+                                    textDirection: TextDirection.rtl,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      // Icon(
+                                      //   Icons.phone,
+                                      //   size: 12,
+                                      //   color: Theme.of(context).primaryColor,
+                                      // ),
+                                      Text("  "),
+                                      Text(
+                                        widget._business.phoneNumber,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color:
+                                                Colors.grey.withOpacity(0.8)),
+                                      ),
+                                    ]),
                               ],
                             ),
                           ),

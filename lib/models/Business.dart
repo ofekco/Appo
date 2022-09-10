@@ -40,31 +40,7 @@ class Business extends User with ChangeNotifier {
             address: address,
             city: city);
 
-  // Business({
-  //   @required this.id,
-  //   @required this.name,
-  //   @required this.email,
-  //   @required this.city,
-  //   @required this.address,
-  //   @required this.phoneNumber,
-  //   this.imageUrl,
-  //   this.serviceType,
-  //   this.longitude, this.latitude
-  // });
-
-  // factory Business.fromJson(Map<String, dynamic> json) {
-  //   return Business(
-  //     id: json['id'] as String,
-  //     name: json['name'] as String,
-  //     city: json['city'] as String,
-  //     address: json['address'] as String,
-  //     phoneNumber: json['phoneNumber'] as String,
-  //     imageUrl: json['imageUrl'] as String,
-  //     serviceType: json['serviceType'] as String,
-  //     latitude: json['latitude'],
-  //     longitude: json['longitude'],
-  //   );
-  // }
+  
 
   factory Business.fromJson(Map<String, dynamic> json) {
     return Business(
