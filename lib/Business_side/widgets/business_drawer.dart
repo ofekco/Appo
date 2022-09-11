@@ -62,8 +62,8 @@ class BusinessDrawer extends StatelessWidget {
           Divider(color: Colors.grey),
 
           buildNavItem(() { 
+            Navigator.of(context).pushReplacementNamed('/');
             Provider.of<Authentication>(context, listen: false).logout();
-            Navigator.of(context).pop(); 
           },"התנתק", Icon(Icons.logout)),
         ],
       ) ,

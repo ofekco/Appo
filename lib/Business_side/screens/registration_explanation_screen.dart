@@ -24,7 +24,7 @@ class RegisterationExplenationScreen extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 18),
             ),
-            SizedBox(height: _deviceSize.height - 250),
+            SizedBox(height: _deviceSize.height - 300),
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),

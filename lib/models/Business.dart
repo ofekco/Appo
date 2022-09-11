@@ -1,16 +1,10 @@
 import 'package:Appo/helpers/DB_helper.dart';
-import 'package:Appo/models/type.dart';
 import 'package:Appo/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 class Business extends User with ChangeNotifier {
-  // final String id;
-  // final String name;
-  // final String email;
-  // final String city;
-  // final String address;
-  // final String phoneNumber;
+
   String imageUrl;
   String serviceType;
   final double latitude;
@@ -32,39 +26,14 @@ class Business extends User with ChangeNotifier {
       this.longitude,
       this.instagramUrl})
       : super(
-            userId: userId,
-            email: email,
-            password: password,
-            name: name,
-            phoneNumber: phone,
-            address: address,
-            city: city);
+          userId: userId,
+          email: email,
+          password: password,
+          name: name,
+          phoneNumber: phone,
+          address: address,
+          city: city);
 
-  // Business({
-  //   @required this.id,
-  //   @required this.name,
-  //   @required this.email,
-  //   @required this.city,
-  //   @required this.address,
-  //   @required this.phoneNumber,
-  //   this.imageUrl,
-  //   this.serviceType,
-  //   this.longitude, this.latitude
-  // });
-
-  // factory Business.fromJson(Map<String, dynamic> json) {
-  //   return Business(
-  //     id: json['id'] as String,
-  //     name: json['name'] as String,
-  //     city: json['city'] as String,
-  //     address: json['address'] as String,
-  //     phoneNumber: json['phoneNumber'] as String,
-  //     imageUrl: json['imageUrl'] as String,
-  //     serviceType: json['serviceType'] as String,
-  //     latitude: json['latitude'],
-  //     longitude: json['longitude'],
-  //   );
-  // }
 
   factory Business.fromJson(Map<String, dynamic> json) {
     return Business(

@@ -71,14 +71,16 @@ class Businesses with ChangeNotifier {
 
   //gets from database the favorites businesses. for now - favorites of customer
   Future<List<Business>> getFavorites() async {
-    var jsonData = await DB_Helper.getFavorites(_clientId); //returns json
+    //var jsonData = await DB_Helper.getFavorites(_clientId); //returns json
+    Map<String, dynamic> jsonData = await DB_Helper.getFavorites(_clientId);
+    List<dynamic> data = jsonData.values.toList();
     List<Business> favoritesList = [];
 
     if (jsonData != null) {
       if (_businesses.length == 0) {
         await DB_Helper.getAllBusinesses();
       }
-      for (var item in jsonData) {
+      for (var item in data) {
         if (item != null) {
           Business bis = findByID(item[
               'businessId']); //maybe replace with get request to the server to get the business

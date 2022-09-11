@@ -8,6 +8,7 @@ class User {
   String phoneNumber;
   String address;
   String city;
+  String imageUrl;
 
   User({
     @required this.userId,
@@ -17,6 +18,7 @@ class User {
     @required this.phoneNumber,
     @required this.address,
     @required this.city,
+    this.imageUrl,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -28,6 +30,11 @@ class User {
       city: json['city'] as String,
       address: json['address'] as String,
       phoneNumber: json['phoneNumber'] as String,
+      imageUrl: json['imageUrl'] as String,
     );
+  }
+
+  void set imageURL (value) {
+    imageUrl = value;
   }
 }

@@ -7,10 +7,11 @@ import 'package:Appo/models/type.dart';
 
 class BusinessTypeListItem extends StatefulWidget {
   final Type _type;
-  final Function itemClicked;
+  //final Function itemClicked;
   bool isClicked = false;
 
-  BusinessTypeListItem(this._type, this.itemClicked);
+  //BusinessTypeListItem(this._type, this.itemClicked);
+  BusinessTypeListItem(this._type);
 
   @override
   State<BusinessTypeListItem> createState() => _BusinessTypeListItemState();
@@ -19,14 +20,7 @@ class BusinessTypeListItem extends StatefulWidget {
 class _BusinessTypeListItemState extends State<BusinessTypeListItem> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        widget.itemClicked;
-        setState(() {
-          widget.isClicked = true;
-        });
-      },
-      child: Container(
+    return Container(
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(16.0)),
           boxShadow: <BoxShadow>[
@@ -94,7 +88,6 @@ class _BusinessTypeListItemState extends State<BusinessTypeListItem> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }

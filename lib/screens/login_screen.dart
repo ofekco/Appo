@@ -1,3 +1,4 @@
+import 'package:Appo/Business_side/screens/business_home_page.dart';
 import 'package:Appo/models/colors.dart';
 import 'package:Appo/models/http_exception.dart';
 import 'package:Appo/screens/registration_screen.dart';
@@ -105,13 +106,15 @@ class _AuthCardState extends State<AuthCard> {
           {
             await Provider.of<Authentication>(context, listen: false)
                 .login(_authData['email'], _authData['password']);
-            //Navigator.of(context).pushNamed(TabsScreen.routeName);
+            Navigator.of(context).pushNamed(TabsScreen.routeName);
             break;
           }
         case AuthMode.BUSINESS:
           {
             Provider.of<Authentication>(context, listen: false)
                 .loginAsBusiness(_authData['email'], _authData['password']);
+            Navigator.of(context).pushNamed(BusinessHomeScreen.routeName);
+
             break;
           }
       }
@@ -228,14 +231,14 @@ class _AuthCardState extends State<AuthCard> {
                     // color: Theme.of(context).primaryColor,
                     // textColor: Theme.of(context).primaryTextTheme.button.color,
                   ),
-                ElevatedButton(
+                TextButton(
                     child: Text('עדיין אין לך חשבון? הירשם',
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                         )),
                     onPressed: () {
                       if (authProvider.authMode == AuthMode.CUSTOMER) {
-                        //Navigator.of(context).pushNamed(RegistrationScreen.routeName);
+                        Navigator.of(context).pushNamed(RegistrationScreen.routeName);
                       } else {
                         Navigator.of(context).pushNamed(
                             RegisterationExplenationScreen.routeName);

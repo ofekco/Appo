@@ -87,8 +87,7 @@ class Authentication with ChangeNotifier {
     }
   }
 
-  void _setAppCustomerAuth(String email, String password, String name,
-      String phone, String address, String city) async {
+  void _setAppCustomerAuth(String email, String password, String name, String phone, String address, String city) async {
     try {
       var response = await http.patch(
           Uri.parse(
@@ -110,8 +109,7 @@ class Authentication with ChangeNotifier {
     }
   }
 
-  Future<void> signup(String email, String password, String name, String phone,
-      String address, String city) async {
+  Future<void> signup(String email, String password, String name, String phone,String address, String city) async {
     await _setFirebaseUserAuth(email, password);
     await _setAppCustomerAuth(email, password, name, phone, address, city);
 
@@ -166,6 +164,7 @@ class Authentication with ChangeNotifier {
       _authTimer.cancel();
       _authTimer = null;
     }
+
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
@@ -207,12 +206,12 @@ class Authentication with ChangeNotifier {
     _userId = extractedUserData['userId'];
     _expiryDate = expiryDate;
     extractedUserData['authMode'] == 'AuthMode.CUSTOMER'
-        ? _authMode = AuthMode.CUSTOMER
-        : _authMode = AuthMode.BUSINESS;
+      ? _authMode = AuthMode.CUSTOMER
+      : _authMode = AuthMode.BUSINESS;
 
     _authMode == AuthMode.CUSTOMER
-        ? await _importCustomerDataFromDB(_userId)
-        : await _importBusinessDataFromDB(_userId);
+      ? await _importCustomerDataFromDB(_userId)
+      : await _importBusinessDataFromDB(_userId);
     notifyListeners();
     _autoLogout();
     return true;
@@ -296,6 +295,7 @@ class Authentication with ChangeNotifier {
         _currentUser.phoneNumber,
         _currentUser.address,
         _currentUser.city,
+        _currentUser.imageUrl,
         (_currentUser as Business).serviceType);
 
     notifyListeners();
@@ -321,7 +321,7 @@ class Authentication with ChangeNotifier {
   }
 
   void _setAppBusinessAuth(String email, String name, String phone,
-      String address, String city, String type) async {
+      String address, String city, String imageUrl, String type) async {
     try {
       var response = await http.patch(
           Uri.parse(
@@ -334,10 +334,10 @@ class Authentication with ChangeNotifier {
             'address': address,
             'city': city,
             'type': type,
+            'imageUrl': imageUrl,
             'longitude': '34.855499',
             'latitude': '32.109333',
-            'instagram': "",
-            'imageUrl': "",
+            'instagram': ""
           }));
 
       var responseData = json.decode(response.body);
