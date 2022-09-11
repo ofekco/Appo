@@ -111,7 +111,7 @@ class _AuthCardState extends State<AuthCard> {
           }
         case AuthMode.BUSINESS:
           {
-            Provider.of<Authentication>(context, listen: false)
+            await Provider.of<Authentication>(context, listen: false)
                 .loginAsBusiness(_authData['email'], _authData['password']);
             Navigator.of(context).pushNamed(BusinessHomeScreen.routeName);
 

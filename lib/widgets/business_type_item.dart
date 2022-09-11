@@ -7,20 +7,27 @@ import 'package:Appo/models/type.dart';
 
 class BusinessTypeListItem extends StatefulWidget {
   final Type _type;
-  //final Function itemClicked;
-  bool isClicked = false;
+  final Function itemClicked;
 
-  //BusinessTypeListItem(this._type, this.itemClicked);
-  BusinessTypeListItem(this._type);
+  BusinessTypeListItem(this._type, this.itemClicked);
 
   @override
   State<BusinessTypeListItem> createState() => _BusinessTypeListItemState();
 }
 
 class _BusinessTypeListItemState extends State<BusinessTypeListItem> {
+  bool isClicked = false;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return InkWell(
+      onTap: widget.itemClicked,
+      onHighlightChanged: (param) {
+        setState(() {
+          isClicked = true;
+        });
+      },
+      child: Container(
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(16.0)),
           boxShadow: <BoxShadow>[
@@ -67,11 +74,11 @@ class _BusinessTypeListItemState extends State<BusinessTypeListItem> {
                                     widget._type.title,
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
-                                        fontWeight: widget.isClicked
+                                        fontWeight: isClicked
                                             ? FontWeight.bold
                                             : FontWeight.w600,
                                         fontSize: 22,
-                                        color: widget.isClicked
+                                        color: isClicked
                                             ? Palette.kToDark[800]
                                             : Colors.black),
                                   ),
@@ -88,6 +95,7 @@ class _BusinessTypeListItemState extends State<BusinessTypeListItem> {
             ],
           ),
         ),
-      );
+      ),
+    );
   }
 }

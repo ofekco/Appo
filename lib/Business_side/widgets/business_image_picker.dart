@@ -1,20 +1,20 @@
 import 'dart:io';
-import 'package:Appo/models/customer.dart';
+import 'package:Appo/models/Business.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as syspaths;
 
-class ProfileImage extends StatefulWidget {
-  final Customer _currentCustomer;
+class BusinessProfileImage extends StatefulWidget {
+  final Business _business;
 
-  ProfileImage(this._currentCustomer);
+  BusinessProfileImage(this._business);
 
   @override
-  State<ProfileImage> createState() => _ProfileImageState();
+  State<BusinessProfileImage> createState() => _BusinessProfileImageState();
 }
 
-class _ProfileImageState extends State<ProfileImage> {
+class _BusinessProfileImageState extends State<BusinessProfileImage> {
   File _pickedImage;
 
   @override
@@ -28,8 +28,8 @@ class _ProfileImageState extends State<ProfileImage> {
         backgroundColor: Colors.white,
         child: CircleAvatar(
           radius: size.width * 0.30,
-          backgroundImage: widget._currentCustomer.base64image != null
-              ? MemoryImage(widget._currentCustomer.base64image)
+          backgroundImage: widget._business.base64image != null
+              ? MemoryImage(widget._business.base64image)
               : AssetImage('assets/images/client.jpg'),
           child: Padding(
               padding: const EdgeInsets.fromLTRB(180, 140, 0, 0),
@@ -84,11 +84,11 @@ class _ProfileImageState extends State<ProfileImage> {
       final savedImage = await _pickedImage.copy('${appDir.path}/${fileName}');
 
       setState(() {
-        widget._currentCustomer.image = savedImage;
+        widget._business.image = savedImage;
         _pickedImage = savedImage;
       });
 
-      await widget._currentCustomer.updateImage();
+      await widget._business.updateImage();
     });
   }
 

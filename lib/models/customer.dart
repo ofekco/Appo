@@ -7,13 +7,6 @@ import 'package:Appo/models/user.dart';
 import 'package:flutter/material.dart';
 
 class Customer extends User {
-  //final String _userId;
-  //String _firebaseToken;
-  //String _name;
-  //String _email;
-  //String _phoneNumber;
-  //String _address;
-  //String _city;
   Uint8List base64image;
   File _image;
   List<Business> _favoriteBusiness;

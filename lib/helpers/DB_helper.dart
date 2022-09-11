@@ -145,12 +145,13 @@ class DB_Helper {
     return DateTime(year, month, day, hour, min);
   }
 
-  static Future<List<TimeSlot>> getTimes(String businessId, DateTime date) async {
+  static Future<List<TimeSlot>> getTimes(
+      String businessId, DateTime date) async {
     String dateKey = _getDateKey(date);
     List<TimeSlot> res = [];
     try {
       final url = Uri.parse(
-        'https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey.json');
+          'https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey.json');
       http.Response response = await http.get(url);
       var jsonData = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -168,9 +169,11 @@ class DB_Helper {
   }
 
   //create new booking in DB. return false if the slot is already booked
-  static Future<bool> uploadNewBooking(String businessId, String userId, DateTime date, DateTime startTime, DateTime endTime) async {
+  static Future<bool> uploadNewBooking(String businessId, String userId,
+      DateTime date, DateTime startTime, DateTime endTime) async {
     final dateKey = _getDateKey(date);
-    final String dateTimeKey ='$dateKey${date.hour.toString()}${date.minute.toString()}';
+    final String dateTimeKey =
+        '$dateKey${date.hour.toString()}${date.minute.toString()}';
     final url = Uri.parse(
         'https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey/$dateTimeKey.json');
 
@@ -196,7 +199,7 @@ class DB_Helper {
             .then((res) {
           if (res.statusCode >= 400) {
             throw HttpException(
-              'Could not update booking in businesses table. HTTP status code = ${res.statusCode}');
+                'Could not update booking in businesses table. HTTP status code = ${res.statusCode}');
           }
         });
 
@@ -204,7 +207,7 @@ class DB_Helper {
         await http
             .patch(
                 Uri.parse(
-                  'https://appo-ae26e-default-rtdb.firebaseio.com/customers/${userId}/appointments/$dateTimeKey.json'),
+                    'https://appo-ae26e-default-rtdb.firebaseio.com/customers/${userId}/appointments/$dateTimeKey.json'),
                 body: json.encode({
                   //encode gets a map
                   'businessId': businessId,
@@ -230,7 +233,7 @@ class DB_Helper {
   static Future<dynamic> getFavorites(String userId) async {
     try {
       http.Response response = await http.get(Uri.parse(
-        'https://appo-ae26e-default-rtdb.firebaseio.com/customers/${userId}/favorites.json'));
+          'https://appo-ae26e-default-rtdb.firebaseio.com/customers/${userId}/favorites.json'));
       var jsonData = jsonDecode(response.body);
 
       return jsonData;
@@ -259,7 +262,8 @@ class DB_Helper {
     }
   }
 
-  static Future<void> postDateTimeToBusiness(String businessId, DateTime date, DateTime startTime, DateTime endTime) async {
+  static Future<void> postDateTimeToBusiness(String businessId, DateTime date,
+      DateTime startTime, DateTime endTime) async {
     final dateKey = _getDateKey(date);
     final String dateTimeKey =
         '$dateKey${startTime.hour.toString()}${startTime.minute.toString()}';
@@ -267,7 +271,7 @@ class DB_Helper {
     //add time to businesses times list
     try {
       final url = Uri.parse(
-        'https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey/$dateTimeKey.json');
+          'https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey/$dateTimeKey.json');
       await http
           .patch(url,
               body: json.encode({
@@ -298,7 +302,7 @@ class DB_Helper {
     //add time to businesses times list
     try {
       final url = Uri.parse(
-        'https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey/$dateTimeKey.json');
+          'https://appo-ae26e-default-rtdb.firebaseio.com/businesses/$businessId/times/$dateKey/$dateTimeKey.json');
       final response = await http.delete(url);
       if (response.statusCode >= 400) {
         throw HttpException('Could not delete slot!');
@@ -308,21 +312,39 @@ class DB_Helper {
     }
   }
 
-  static Future<void> updateCustomerImage(String userID, String imagePath) async {
-    //DatabaseReference firebaseDB = await FirebaseDatabase.instance
-    //.ref('${consts.DB_url}customers/${userID}');
-
+  static Future<void> updateCustomerImage(
+      String userID, String imagePath) async {
     final url = Uri.parse('${consts.DB_url}customers/${userID}.json');
     try {
       await http
-        .patch(url,
-            body: json.encode({
-              'imageUrl': imagePath,
-            }))
-        .then((res) {
+          .patch(url,
+              body: json.encode({
+                'imageUrl': imagePath,
+              }))
+          .then((res) {
         if (res.statusCode >= 400) {
           print(res.body);
           throw Exception('Could not update image');
+        }
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static Future<void> updateBusinessImage(
+      String userID, String imagePath) async {
+    final url = Uri.parse('${consts.DB_url}businesses/${userID}.json');
+    try {
+      await http
+          .patch(url,
+              body: json.encode({
+                'imageUrl': imagePath,
+              }))
+          .then((res) {
+        if (res.statusCode >= 400) {
+          print(res.body);
+          throw Exception('Could not update business image');
         }
       });
     } catch (error) {

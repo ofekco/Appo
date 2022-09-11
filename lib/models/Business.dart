@@ -1,10 +1,14 @@
+import 'dart:io';
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:Appo/helpers/DB_helper.dart';
 import 'package:Appo/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 class Business extends User with ChangeNotifier {
-
+  Uint8List base64image;
+  File _image;
   String imageUrl;
   String serviceType;
   final double latitude;
@@ -26,14 +30,26 @@ class Business extends User with ChangeNotifier {
       this.longitude,
       this.instagramUrl})
       : super(
-          userId: userId,
-          email: email,
-          password: password,
-          name: name,
-          phoneNumber: phone,
-          address: address,
-          city: city);
+            userId: userId,
+            email: email,
+            password: password,
+            name: name,
+            phoneNumber: phone,
+            address: address,
+            city: city) {
+    if (imageUrl != null && imageUrl.isNotEmpty) {
+      base64image = base64Decode(imageUrl);
+    }
+  }
 
+  File get image {
+    return _image;
+  }
+
+  void set image(File imageToSet) {
+    _image = imageToSet;
+    base64image = _image.readAsBytesSync();
+  }
 
   factory Business.fromJson(Map<String, dynamic> json) {
     return Business(
@@ -59,5 +75,13 @@ class Business extends User with ChangeNotifier {
       DB_Helper.removeFromFavorites(userId, this);
     }
     notifyListeners();
+  }
+
+  void updateImage() async {
+    if (_image != null) {
+      var bytes = await _image.readAsBytes();
+      var base64img = base64Encode(bytes);
+      await DB_Helper.updateBusinessImage(super.userId, base64img);
+    }
   }
 }
