@@ -40,48 +40,6 @@ class _BusinessRegistrationScreen2State
     );
   }
 
-  //  Future<void> _submit() async {
-  //   if (!_formKey.currentState!.validate()) {
-  //     // Invalid!
-  //     return;
-  //   }
-  //   _formKey.currentState!.save();
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
-  //   try {
-  //     await Provider.of<Authentication>(context, listen: false)
-  //     .signup(_registrationData['email'], _registrationData['password'], _registrationData['name'],
-  //     _registrationData['phone number'], _registrationData['address'], _registrationData['city'],);
-  //     Navigator.of(context).pop();
-  //     Navigator.of(context).pushNamed(TabsScreen.routeName);
-  //   }
-  //   on HttpException catch (error) {
-  //     var errorMessage = 'ההרשמה נכשלה';
-  //     if (error.toString().contains('EMAIL_EXISTS')) {
-  //       errorMessage = 'כתובת מייל כבר רשומה';
-  //     } else if (error.toString().contains('INVALID_EMAIL')) {
-  //       errorMessage = 'כתובת מייל לא חוקית';
-  //     } else if (error.toString().contains('WEAK_PASSWORD')) {
-  //       errorMessage = 'הסיסמה חלשה מידי';
-  //     } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
-  //       errorMessage = 'כתובת מייל לא נמצאה';
-  //     } else if (error.toString().contains('INVALID_PASSWORD')) {
-  //       errorMessage = 'סיסמה לא נכונה';
-  //     }
-  //     _showErrorDialog(errorMessage);
-  //   }
-  //   catch(error) {
-  //     var errorMessage = 'משהו השתבש, נסה שנית מאוחר יותר';
-  //      _showErrorDialog(errorMessage);
-
-  //   }
-
-  //   setState(() {
-  //     _isLoading = false;
-  //   });
-  // }
-
   void itemClicked(BuildContext ctx, Type type) {
     _typeSelected = type.Title;
   }

@@ -230,21 +230,21 @@ class _AuthCardState extends State<AuthCard> {
                     // color: Theme.of(context).primaryColor,
                     // textColor: Theme.of(context).primaryTextTheme.button.color,
                   ),
-                ElevatedButton(
+                TextButton(
                     child: Text('עדיין אין לך חשבון? הירשם',
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                         )),
                     onPressed: () {
                       if (authProvider.authMode == AuthMode.CUSTOMER) {
-                        //Navigator.of(context).pushNamed(RegistrationScreen.routeName);
+                        Navigator.of(context)
+                            .pushNamed(RegistrationScreen.routeName);
                       } else {
                         Navigator.of(context).pushNamed(
                             RegisterationExplenationScreen.routeName);
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.transparent,
                         padding:
                             EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap)
