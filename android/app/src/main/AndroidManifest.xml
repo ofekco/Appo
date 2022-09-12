@@ -1,9 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.appo">
 
-    
    <application
-   
+
         android:label="appo"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
