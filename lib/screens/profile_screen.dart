@@ -25,7 +25,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   var _shownImage;
-  bool isEditable = false;
+  var isEditable = false;
 
   @override
   Widget build(BuildContext context) {

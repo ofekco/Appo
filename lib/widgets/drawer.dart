@@ -20,7 +20,6 @@ class NavDrawer extends StatelessWidget {
     Provider.of<Authentication>(context, listen: false)
         .setAuthMode(AuthMode.BUSINESS);
     Navigator.of(context).pushNamed(AuthScreen.routeName);
-    //Navigator.of(context).pushNamed(BusinessHomeScreen.routeName);
   }
 
   Widget buildNavItem(Function onTap, String title, Icon icon) {
@@ -66,19 +65,23 @@ class NavDrawer extends StatelessWidget {
           ),
           buildNavItem(
               () => _onTap(context, TabsScreen()), "בית", Icon(Icons.home)),
+
           Divider(color: Colors.grey),
-          buildNavItem(() => _onTap(context, TabsScreen()), "תנאי שימוש",
-              Icon(Icons.rule)),
+
+          buildNavItem(() =>_onTapBecomeBusiness(context),"הרשם כעסק", Icon(Icons.business)),
+
           Divider(color: Colors.grey),
-          buildNavItem(() => _onTapBecomeBusiness(context), "הרשם כעסק",
-              Icon(Icons.business)),
-          Divider(color: Colors.grey),
+
           buildNavItem(
               () => _onTap(context, TabsScreen()), "צור קשר", Icon(Icons.chat)),
+
           Divider(color: Colors.grey),
+
           buildNavItem(() => _onTap(context, TabsScreen()), "הגדרות",
               Icon(Icons.settings)),
+
           Divider(color: Colors.grey),
+
           buildNavItem(() {
             Navigator.of(context).pushReplacementNamed('/');
             Provider.of<Authentication>(context, listen: false).logout();

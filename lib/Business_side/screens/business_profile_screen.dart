@@ -45,7 +45,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
               //image
               BusinessProfileImage(_business),
               SizedBox(height: 10),
-              //customer name
+              //name
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
