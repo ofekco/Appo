@@ -101,7 +101,7 @@ class MyNextItem extends StatelessWidget {
                 radius: 37,
                 backgroundColor: Colors.white,
                 child: CircleAvatar(
-                  backgroundImage: NetworkImage(bis.imageUrl),
+                  backgroundImage: MemoryImage(bis.base64image),
                   radius: 35,
                   backgroundColor: Colors.black,
                 )),
