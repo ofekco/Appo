@@ -213,7 +213,7 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
                                 child: CircleAvatar(
                                   radius: size.width * 0.2,
                                   backgroundImage:
-                                      NetworkImage(widget.business.imageUrl),
+                                      MemoryImage(widget.business.base64image),
                                 )),
                           ),
 
