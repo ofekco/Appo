@@ -37,8 +37,8 @@ class _BusinessListItemState extends State<BusinessListItem> {
                   aspectRatio: 2,
                   child: widget._business.imageUrl == null
                       ? Container()
-                      : Image.network(
-                          widget._business.imageUrl,
+                      : Image.memory(
+                          widget._business.base64image,
                           fit: BoxFit.cover,
                         ),
                 ),

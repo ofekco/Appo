@@ -15,16 +15,20 @@ class RegisterationExplenationScreen extends StatelessWidget {
           child: Column(children: [
             SizedBox(height: 70),
             Text(
-              "תודה שבחרת בנו!",
+              "!תודה שבחרת בנו",
               style: TextStyle(fontSize: 24),
             ),
             SizedBox(height: 40),
-            Text(
-              "הגדירו את פרופיל העסק שלכם, שעות הפעילות והשירותים הניתנים בעסק",
+            Text("באפשרותכם להגדיר את פרופיל העסק שלכם ואת השירותים הניתנים בו",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 18),
             ),
-            SizedBox(height: _deviceSize.height - 300),
+            SizedBox(height: 12),
+            Text("בדף הבית תוכלו להגדיר ולערוך בכל עת את שעות העבודה שלכם בקלות וביעילות",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18),
+            ),
+            SizedBox(height: _deviceSize.height - _deviceSize.height*0.45),
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),

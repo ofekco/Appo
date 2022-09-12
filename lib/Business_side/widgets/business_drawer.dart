@@ -1,4 +1,5 @@
 import 'package:Appo/Business_side/screens/business_home_page.dart';
+import 'package:Appo/models/Business.dart';
 import 'package:Appo/models/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,7 @@ class BusinessDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Authentication _auth =  Provider.of<Authentication>(context, listen: false);
     return Drawer(
       child: ListView(
         children: [
@@ -35,7 +37,7 @@ class BusinessDrawer extends StatelessWidget {
               color: Palette.kToDark[500],
             ),
             child: ListTile(
-                title: Text("Profile Name", textAlign: TextAlign.right, 
+                title: Text(_auth.currentUser.name, textAlign: TextAlign.right, 
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18, color: Colors.white),),
                 trailing: IconButton(
                   icon: Icon(Icons.account_circle, color: Colors.white, size: 40,),
@@ -49,10 +51,6 @@ class BusinessDrawer extends StatelessWidget {
 
           Divider(color: Colors.grey),
 
-          buildNavItem(() =>_onTap(context, BusinessHomeScreen()),"תנאי שימוש", Icon(Icons.rule)),
-
-          Divider(color: Colors.grey),
-
           buildNavItem(() =>_onTap(context, BusinessHomeScreen()),"צור קשר", Icon(Icons.chat)),
 
           Divider(color: Colors.grey),
@@ -63,7 +61,7 @@ class BusinessDrawer extends StatelessWidget {
 
           buildNavItem(() { 
             Navigator.of(context).pushReplacementNamed('/');
-            Provider.of<Authentication>(context, listen: false).logout();
+           _auth.logout();
           },"התנתק", Icon(Icons.logout)),
         ],
       ) ,

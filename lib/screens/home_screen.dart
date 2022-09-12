@@ -147,12 +147,15 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Consumer<Businesses>(
                 builder: (_, userBusinessesInstance, __) =>
                     userBusinessesInstance.Favorites.length < 1
-                        ? Container(child: Text('עדיין לא שמרת עסקים מועדפים',
+                        ? Container(child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Text('עדיין לא שמרת עסקים מועדפים',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.grey,
                                   fontSize: 16,
-                                )),)
+                                )),
+                          ),)
                         : ListView.builder(
                             itemBuilder: (ctx, index) => WrapInkWell(
                                 FavoriteItem(

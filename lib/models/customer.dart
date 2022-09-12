@@ -7,6 +7,7 @@ import 'package:Appo/models/user.dart';
 import 'package:flutter/material.dart';
 
 class Customer extends User {
+
   Uint8List base64image;
   File _image;
   List<Business> _favoriteBusiness;
