@@ -20,7 +20,8 @@ class Customer extends User {
             name: name,
             phoneNumber: phoneNumber,
             address: address,
-            city: city) {
+            city: city,
+            imageUrl: imageUrl) {
     if (imageUrl != null && imageUrl.isNotEmpty) {
       base64image = base64Decode(imageUrl);
     }

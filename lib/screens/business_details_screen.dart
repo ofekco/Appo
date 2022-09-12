@@ -136,11 +136,11 @@ class _BusinessDetailsScreenState extends State<BusinessDetailsScreen> {
   }
 
   Future<void> openInstagram() async {
-    if (await canLaunchUrl (Uri.parse(widget.business.instagramUrl))) {
+    if (await canLaunchUrl(Uri.parse(widget.business.instagramUrl))) {
       await launchUrl(
         Uri.parse(widget.business.instagramUrl),
         //forceWebView: true,
-        mode: LaunchMode.platformDefault 
+        mode: LaunchMode.platformDefault,
       );
     } else {
       throw 'There was a problem to open Instagram profile';
