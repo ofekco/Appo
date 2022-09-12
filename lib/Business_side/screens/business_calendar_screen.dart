@@ -125,7 +125,7 @@ class _BusinessCalendarScreenState extends State<BusinessCalendarScreen> {
                                 fontWeight: FontWeight.bold)),
                       ),
                     ),
-                    onDoubleTap: () => onEventTap(event),
+                    onTap: () => onEventTap(event),
                   );
                 }),
           ]);

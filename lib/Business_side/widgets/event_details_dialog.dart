@@ -93,7 +93,8 @@ class _EventDetailsDialogState extends State<EventDetailsDialog> {
               radius: 45,
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(45)),
-                  child: Image.asset("assets/images/client.jpg")
+                  child: widget.client.base64image == null ?
+                  Image.asset("assets/images/client.jpg") : Image.memory(widget.client.base64image)
               ),
             ),
         ),
