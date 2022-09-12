@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:Appo/models/businesses.dart';
+import 'package:Appo/widgets/profile_image.dart';
+
+import '../widgets/business_image_picker.dart';
 
 class BusinessProfileScreen extends StatefulWidget {
   @override
@@ -40,7 +43,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                 height: size.height * 0.17,
               ),
               //image
-              buildProfileImage(size),
+              BusinessProfileImage(_business),
               SizedBox(height: 10),
               //name
               Row(
@@ -63,35 +66,6 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
         ),
       ),
     ]))));
-  }
-
-  Widget buildProfileImage(var size) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-      child: CircleAvatar(
-        radius: size.width * 0.22,
-        backgroundColor: Colors.white,
-        child: CircleAvatar(
-          radius: size.width * 0.2,
-          backgroundImage: AssetImage('assets/images/client.jpg'),
-          child: Padding(
-              padding: const EdgeInsets.fromLTRB(110, 110, 0, 0),
-              child: MaterialButton(
-                onPressed: () {
-                  //TODO!!
-                },
-                color: Colors.blueGrey,
-                textColor: Colors.white,
-                child: Icon(
-                  Icons.camera_alt,
-                  size: 26,
-                ),
-                padding: EdgeInsets.all(16),
-                shape: CircleBorder(),
-              )),
-        ),
-      ),
-    );
   }
 
   Widget buildPersonalInfo() {
@@ -122,7 +96,7 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(_business.name, style: TextStyle(fontSize: 18)),
+              Text(_business.email, style: TextStyle(fontSize: 18)),
               SizedBox(
                 width: 15,
               ),

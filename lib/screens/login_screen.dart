@@ -238,7 +238,8 @@ class _AuthCardState extends State<AuthCard> {
                         )),
                     onPressed: () {
                       if (authProvider.authMode == AuthMode.CUSTOMER) {
-                        Navigator.of(context).pushNamed(RegistrationScreen.routeName);
+                        Navigator.of(context)
+                            .pushNamed(RegistrationScreen.routeName);
                       } else {
                         Navigator.of(context).pushNamed(
                             RegisterationExplenationScreen.routeName);

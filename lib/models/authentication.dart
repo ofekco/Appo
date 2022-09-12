@@ -87,7 +87,8 @@ class Authentication with ChangeNotifier {
     }
   }
 
-  void _setAppCustomerAuth(String email, String password, String name, String phone, String address, String city) async {
+  void _setAppCustomerAuth(String email, String password, String name,
+      String phone, String address, String city) async {
     try {
       var response = await http.patch(
           Uri.parse(
@@ -109,7 +110,8 @@ class Authentication with ChangeNotifier {
     }
   }
 
-  Future<void> signup(String email, String password, String name, String phone,String address, String city) async {
+  Future<void> signup(String email, String password, String name, String phone,
+      String address, String city) async {
     await _setFirebaseUserAuth(email, password);
     await _setAppCustomerAuth(email, password, name, phone, address, city);
 
@@ -206,12 +208,12 @@ class Authentication with ChangeNotifier {
     _userId = extractedUserData['userId'];
     _expiryDate = expiryDate;
     extractedUserData['authMode'] == 'AuthMode.CUSTOMER'
-      ? _authMode = AuthMode.CUSTOMER
-      : _authMode = AuthMode.BUSINESS;
+        ? _authMode = AuthMode.CUSTOMER
+        : _authMode = AuthMode.BUSINESS;
 
     _authMode == AuthMode.CUSTOMER
-      ? await _importCustomerDataFromDB(_userId)
-      : await _importBusinessDataFromDB(_userId);
+        ? await _importCustomerDataFromDB(_userId)
+        : await _importBusinessDataFromDB(_userId);
     notifyListeners();
     _autoLogout();
     return true;

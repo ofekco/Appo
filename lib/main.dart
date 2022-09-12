@@ -33,8 +33,7 @@ class MyApp extends StatelessWidget {
               create: (_) => Authentication()),
         ],
         child: Consumer<Authentication>(
-          builder: (ctx, auth, _) => 
-          MaterialApp(
+          builder: (ctx, auth, _) => MaterialApp(
               title: 'Appo',
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
@@ -47,22 +46,22 @@ class MyApp extends StatelessWidget {
                 focusColor: Palette.kToDark[50],
               ),
               home: auth.isAuth
-                ? auth.authMode == AuthMode.CUSTOMER
-                    ? TabsScreen()
-                    : BusinessHomeScreen()
-                : FutureBuilder(
-                    future: auth.tryAutoLogin(),
-                    builder: (ctx, authResultSnapshot) =>
-                      authResultSnapshot.connectionState ==
-                        ConnectionState.waiting
-                          ? AnimatedSplashScreen(
+                  ? auth.authMode == AuthMode.CUSTOMER
+                      ? TabsScreen()
+                      : BusinessHomeScreen()
+                  : FutureBuilder(
+                      future: auth.tryAutoLogin(),
+                      builder: (ctx, authResultSnapshot) =>
+                          authResultSnapshot.connectionState ==
+                                  ConnectionState.waiting
+                              ? AnimatedSplashScreen(
                                   duration: 30000,
                                   splash: Image.asset('assets/images/logo.JPG'),
                                   nextScreen: ChooseLoginScreen(),
                                   backgroundColor: Colors.white,
                                 )
-                          : ChooseLoginScreen(),
-                  ),
+                              : ChooseLoginScreen(),
+                    ),
               routes: {
                 '/home': (ctx) => HomeScreen(),
                 '/auth': (ctx) => AuthScreen(),
