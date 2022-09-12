@@ -21,8 +21,6 @@ class NavDrawer extends StatelessWidget {
     await Provider.of<Authentication>(context, listen: false).logout();
     Provider.of<Authentication>(context, listen: false).setAuthMode(AuthMode.BUSINESS);
     Navigator.of(context).pushNamed(AuthScreen.routeName);
-    //Navigator.of(context).pushNamed(BusinessHomeScreen.routeName);
-
   }
 
   Widget buildNavItem(Function onTap, String title, Icon icon)

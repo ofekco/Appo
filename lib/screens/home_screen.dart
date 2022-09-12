@@ -112,7 +112,14 @@ Widget build(BuildContext context) {
           child: Consumer<Businesses>( builder: (_, userBusinessesInstance, __) => 
             userBusinessesInstance.BusinessesList.length < 1 || 
             userBusinessesInstance.MyBookings.length < 1 ? //check if the data is there
-              Container() :
+              Container(child: Padding(
+                padding: const EdgeInsets.only(right: 20, top: 10),
+                child: Text("אין תורים להצגה", style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                  fontSize: 16,
+                )),
+              ),) :
               ListView(padding: const EdgeInsets.all(10), shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 reverse: true,
@@ -129,7 +136,14 @@ Widget build(BuildContext context) {
               Consumer<Businesses>( 
                 builder: (_, userBusinessesInstance, __) => 
                   userBusinessesInstance.Favorites.length < 1 ? 
-                    Container() :
+                    Container(child: Padding(
+                      padding: const EdgeInsets.only(right: 20, top: 10),
+                      child: Text("עדיין לא שמרת עסקים מועדפים", style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                        fontSize: 16,
+                      )),
+                    )) :
                     ListView.builder(
                     itemBuilder: (ctx, index) =>  
                       WrapInkWell(
